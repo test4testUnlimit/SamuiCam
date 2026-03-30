@@ -6,15 +6,6 @@ import subprocess
 import sys
 from config import YOUTUBE_API_KEY
 
-# Конфиг: video_id -> поисковый запрос для замены
-STREAMS = {
-    "3N3ZwIB_X4Y": "Crystal Bay Yacht Club Lamai Koh Samui Beach Webcam",
-    "Tpj0cmMVOd0": "Baobab Cam Lamai Koh Samui Live Beach Webcam",
-    "Fw9hgttWzIg": "Crystal Bay Beach Resort Lamai Koh Samui Live Beach Webcam",
-    "NTTtqzL5OWI": "Crystal Bay Beach Resort Panoramic Lamai Koh Samui",
-    "LGNYKz4yziE": "Crystal Bay Yacht Club Lamai Koh Samui Beach Panoramic Webcam",
-}
-
 CHANNEL_ID = "UCmYyJaUxYiF5IbLx-0jFXHQ"  # The Real Samui Webcam
 
 HTML_FILES = [
@@ -22,6 +13,18 @@ HTML_FILES = [
     "180-2/360.html",
     "180-3/index.html",
 ]
+
+CONFIG_FILE = "streams_config.json"
+
+
+def load_config():
+    with open(CONFIG_FILE, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_config(config):
+    with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+        json.dump(config, f, indent=2, ensure_ascii=False)
 
 
 def api_get(url):
@@ -49,15 +52,15 @@ def check_videos(video_ids):
     return results
 
 
-def is_broken(info):
-    return not info["embeddable"] or info["live"] not in ("live", "upcoming")
+def is_ok(info):
+    return info.get("embeddable", False) and info.get("live") in ("live", "upcoming")
 
 
-def find_replacement(broken_id):
-    query = STREAMS.get(broken_id, "Koh Samui live webcam")
+def find_replacement(search_query):
+    # Сначала ищем на канале
     params = urllib.parse.urlencode({
         "part": "snippet",
-        "q": query,
+        "q": search_query,
         "channelId": CHANNEL_ID,
         "eventType": "live",
         "type": "video",
@@ -66,11 +69,11 @@ def find_replacement(broken_id):
     data = api_get(f"https://www.googleapis.com/youtube/v3/search?{params}")
     candidates = [item["id"]["videoId"] for item in data.get("items", [])]
 
+    # Если на канале не нашли — ищем глобально
     if not candidates:
-        # Попробуем без фильтра по каналу
         params2 = urllib.parse.urlencode({
             "part": "snippet",
-            "q": query,
+            "q": search_query,
             "eventType": "live",
             "type": "video",
             "key": YOUTUBE_API_KEY,
@@ -81,38 +84,40 @@ def find_replacement(broken_id):
     if not candidates:
         return None
 
-    # Проверяем embeddable
-    check = check_videos(candidates)
+    statuses = check_videos(candidates)
     for cid in candidates:
-        if not is_broken(check.get(cid, {})):
+        if is_ok(statuses.get(cid, {})):
             return cid
-
     return None
 
 
-def update_html_files(replacements):
-    if not replacements:
-        return []
+def get_html_ids():
+    all_ids = []
+    for filepath in HTML_FILES:
+        with open(filepath, encoding="utf-8") as f:
+            content = f.read()
+        all_ids.extend(re.findall(r'youtube\.com/embed/([A-Za-z0-9_-]{11})', content))
+    return all_ids
+
+
+def update_html(old_id, new_id):
     changed = []
     for filepath in HTML_FILES:
         with open(filepath, encoding="utf-8") as f:
             content = f.read()
-        original = content
-        for old_id, new_id in replacements.items():
+        if f"youtube.com/embed/{old_id}" in content:
             content = content.replace(
                 f"youtube.com/embed/{old_id}",
                 f"youtube.com/embed/{new_id}"
             )
-        if content != original:
             with open(filepath, "w", encoding="utf-8") as f:
                 f.write(content)
             changed.append(filepath)
     return changed
 
 
-def git_push(replacements):
-    msg_parts = [f"{old} -> {new}" for old, new in replacements.items()]
-    msg = "Auto-update broken streams: " + ", ".join(msg_parts)
+def git_push(messages):
+    msg = "Auto-update streams: " + "; ".join(messages)
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", msg], check=True)
     subprocess.run(["git", "push"], check=True)
@@ -122,52 +127,62 @@ def main():
     sys.stdout.reconfigure(encoding="utf-8")
     print("=== SamuiCam stream updater ===\n")
 
-    # Собираем все video ID из HTML
-    all_ids = []
-    for filepath in HTML_FILES:
-        with open(filepath, encoding="utf-8") as f:
-            content = f.read()
-        ids = re.findall(r'youtube\.com/embed/([A-Za-z0-9_-]{11})', content)
-        all_ids.extend(ids)
+    config = load_config()
+    preferred = config["preferred"]   # оригинальные ID — никогда не меняем
+    current = config["current"]       # текущие ID в HTML
 
-    print(f"Найдено {len(set(all_ids))} уникальных стримов. Проверяю...\n")
-    statuses = check_videos(all_ids)
+    # Все ID которые сейчас в HTML
+    html_ids = get_html_ids()
+    all_ids_to_check = list(set(html_ids) | set(preferred.keys()))
 
-    broken = {}
-    for vid_id, info in statuses.items():
-        if is_broken(info):
-            reason = "удалён" if info["live"] == "gone" else (
-                "embed запрещён" if not info["embeddable"] else "не в эфире"
-            )
-            broken[vid_id] = reason
+    print(f"Проверяю {len(all_ids_to_check)} стримов...\n")
+    statuses = check_videos(all_ids_to_check)
 
-    if not broken:
-        print("✅ Все стримы живые и работают. Ничего менять не нужно.")
-        return
+    git_messages = []
+    config_changed = False
 
-    print(f"⚠️  Сломанных стримов: {len(broken)}\n")
-    replacements = {}
+    for pref_id, search_query in preferred.items():
+        cur_id = current.get(pref_id, pref_id)
+        pref_status = statuses.get(pref_id, {})
+        cur_status = statuses.get(cur_id, {})
 
-    for vid_id, reason in broken.items():
-        print(f"❌ {vid_id} ({reason}) — ищу замену...")
-        new_id = find_replacement(vid_id)
-        if new_id:
-            print(f"   ✅ Нашёл замену: {new_id}")
-            replacements[vid_id] = new_id
+        # Предпочтительный ожил — возвращаемся к нему
+        if is_ok(pref_status) and cur_id != pref_id:
+            print(f"🔄 {pref_id} снова доступен! Возвращаю оригинал (заменяю {cur_id})")
+            update_html(cur_id, pref_id)
+            current[pref_id] = pref_id
+            config_changed = True
+            git_messages.append(f"restored {pref_id}")
+
+        # Текущий сломан — ищем замену
+        elif not is_ok(cur_status):
+            reason = "удалён" if cur_status.get("live") == "gone" else "embed запрещён" if not cur_status.get("embeddable") else "оффлайн"
+            print(f"❌ {cur_id} ({reason}) — ищу замену...")
+            new_id = find_replacement(search_query)
+            if new_id and new_id != cur_id:
+                print(f"   ✅ Нашёл: {new_id}")
+                update_html(cur_id, new_id)
+                current[pref_id] = new_id
+                config_changed = True
+                git_messages.append(f"{cur_id} -> {new_id}")
+            elif not new_id:
+                print(f"   ❌ Замену не нашёл")
+            else:
+                print(f"   ✅ Уже стоит лучшая версия")
+
         else:
-            print(f"   ❌ Замену не нашёл, пропускаю")
+            print(f"✅ {cur_id} — OK")
 
-    if not replacements:
-        print("\nНичего заменить не удалось.")
+    if not git_messages:
+        print("\n✅ Всё в порядке, изменений нет.")
         return
 
-    print(f"\nОбновляю HTML файлы...")
-    changed = update_html_files(replacements)
-    print(f"Изменено файлов: {len(changed)}")
+    if config_changed:
+        save_config(config)
 
-    print("Пушу на GitHub...")
-    git_push(replacements)
-    print("\n✅ Готово! Сайт обновится через ~30 секунд.")
+    print("\nПушу изменения на GitHub...")
+    git_push(git_messages)
+    print("✅ Готово! Сайт обновится через ~30 секунд.")
 
 
 if __name__ == "__main__":
