@@ -25,8 +25,8 @@
             --t2: #e8e8e8;
             --t3: #bbb;
             --t4: #999;
-            --ac: #4fc;
-            --ac-dark: #2a9a72;
+            --ac: #0d6efd;
+            --ac-dark: #0044bb;
             --overlay-hero: rgba(0,0,0,0.42);
             --overlay-card: rgba(0,0,0,0.65);
             --bg-panel: #fff;
@@ -50,7 +50,8 @@
             inset: 0;
             z-index: 0;
             overflow: hidden;
-            background: #000;
+            /* Gradient shows as fallback if YouTube iframe fails to load */
+            background: linear-gradient(160deg, #020e1f 0%, #051828 55%, #071d30 100%);
         }
         /* Push iframe up to hide YouTube title overlay (~80px), crop bottom excess */
         .bg-video iframe {
@@ -98,7 +99,8 @@
             text-transform: uppercase;
             color: var(--ac);
             margin-bottom: 20px;
-            opacity: 0.8;
+            opacity: 0.9;
+            text-shadow: 0 1px 12px rgba(0,0,0,0.9);
         }
         .hero h1 {
             font-size: clamp(32px, 6vw, 64px);
@@ -107,6 +109,7 @@
             letter-spacing: -0.5px;
             color: var(--t1);
             margin-bottom: 16px;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.95), 0 1px 6px rgba(0,0,0,0.9);
         }
         .hero h1 span { color: var(--ac); }
         .hero p {
@@ -115,6 +118,7 @@
             line-height: 1.6;
             max-width: 480px;
             margin-bottom: 40px;
+            text-shadow: 0 1px 12px rgba(0,0,0,0.95), 0 2px 24px rgba(0,0,0,0.8);
         }
 
         .hero-btns {
@@ -197,11 +201,26 @@
         }
         .hamburger:hover, .hamburger.hint { opacity: 0.85; }
 
-        @keyframes hint-pulse {
-            0%, 100% { opacity: 0.2; box-shadow: 0 0 0 0 rgba(68,255,204,0); }
-            50%       { opacity: 1;   box-shadow: 0 0 0 8px rgba(68,255,204,0.18); }
+        /* ── Spotlight overlay (shows during pulse) ── */
+        .hint-bg {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.78);
+            z-index: 1005;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.5s;
         }
-        .hamburger.pulsing { animation: hint-pulse 1.8s ease-in-out 4; }
+        .hint-bg.active { opacity: 1; }
+
+        @keyframes hint-pulse {
+            0%   { opacity: 1; box-shadow: 0 0 0 0 rgba(68,255,204,0.7); transform: scale(1); }
+            40%  { opacity: 1; box-shadow: 0 0 0 22px rgba(68,255,204,0.15); transform: scale(1.18); }
+            70%  { opacity: 1; box-shadow: 0 0 0 40px rgba(68,255,204,0); transform: scale(1.06); }
+            100% { opacity: 1; box-shadow: 0 0 0 0 rgba(68,255,204,0); transform: scale(1); }
+        }
+        .hamburger.pulsing {
+            animation: hint-pulse 1.3s ease-out 5;
+            opacity: 1 !important;
+        }
 
         /* ── Side menu ── */
         .menu-overlay {
@@ -271,6 +290,9 @@
     </div>
     <div class="bg-overlay"></div>
 
+    <!-- Spotlight overlay for first-visit hint -->
+    <div class="hint-bg" id="hintBg"></div>
+
     <!-- Hamburger -->
     <div class="hamburger" id="hamburger" onclick="toggleMenu()">☰</div>
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
@@ -286,7 +308,7 @@
         </div>
         <hr class="menu-sep">
         <div class="menu-tip">💡 Copy a view URL and paste into Wallpaper Engine</div>
-        <div class="menu-version">v.1.014</div>
+        <div class="menu-version">v.1.015</div>
     </nav>
 
     <!-- Page content -->
@@ -305,12 +327,12 @@
             <div class="card">
                 <div class="card-icon">📷</div>
                 <h3>Live Streams</h3>
-                <p>Eight cameras across Koh Samui and Koh Phangan — running 24/7 from YouTube. No account needed.</p>
+                <p>Cameras from Koh Samui, Koh Phangan, Seychelles and Maldives — running 24/7 from YouTube. No account needed.</p>
             </div>
             <div class="card">
                 <div class="card-icon">🎨</div>
                 <h3>Build Any Layout</h3>
-                <p>Open the Builder, pick any cameras, set the order and mode. Copy the link — it works in any browser or <strong>Wallpaper Engine</strong>.</p>
+                <p>Pick cameras, set order and mode, copy the link. Works in <strong>Wallpaper Engine</strong> or press <strong>F11</strong> in any browser for instant fullscreen.</p>
             </div>
             <div class="card">
                 <div class="card-icon">⚙</div>
@@ -348,9 +370,12 @@
         if (!localStorage.getItem('samui-welcome')) {
             setTimeout(() => {
                 const h = document.getElementById('hamburger');
+                const bg = document.getElementById('hintBg');
+                bg.classList.add('active');
                 h.classList.add('pulsing');
                 h.addEventListener('animationend', () => {
                     h.classList.remove('pulsing');
+                    bg.classList.remove('active');
                     localStorage.setItem('samui-welcome', '1');
                 }, { once: true });
             }, 1500);

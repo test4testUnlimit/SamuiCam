@@ -35,10 +35,10 @@
             --t2:        #555;
             --t3:        #999;
             --t4:        #bbb;
-            --ac:        #009966;
-            --ac-btn:    #009966;
-            --ac-btn-h:  #00b377;
-            --ac-dis-bg: #d8f0e8;
+            --ac:        #0d6efd;
+            --ac-btn:    #0d6efd;
+            --ac-btn-h:  #3d8bfd;
+            --ac-dis-bg: #cfe2ff;
             --ac-dis-t:  #aaa;
             --overlay:   rgba(0,0,0,0.25);
         }
@@ -89,6 +89,19 @@
         }
         .cam-card:hover { border-color: var(--bd2); }
         .cam-card.selected { border-color: var(--ac); }
+        .cam-card.dead { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
+        .cam-card.dead .cam-name::after { content: ' — offline'; color: var(--t4); font-style: italic; }
+
+        /* ── Group headers in camera grid ── */
+        .group-header {
+            grid-column: 1 / -1;
+            font-size: 10px; color: var(--t3);
+            text-transform: uppercase; letter-spacing: 1.5px;
+            padding: 8px 2px 5px;
+            border-bottom: 1px solid var(--bd);
+            margin-top: 4px;
+        }
+        .group-header:first-child { margin-top: 0; }
 
         .cam-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: var(--bg-deep); }
         .cam-info { padding: 7px 9px; display: flex; align-items: center; gap: 7px; }
@@ -234,13 +247,13 @@
             <span class="theme-icon" id="themeIcon">☀</span>
         </div>
         <hr class="menu-sep">
-        <div class="menu-tip">💡 Copy a view URL and paste into Wallpaper Engine</div>
-        <div class="menu-version">v.1.014</div>
+        <div class="menu-tip">💡 Copy a view URL → paste into Wallpaper Engine, or open in browser + press F11</div>
+        <div class="menu-version">v.1.015</div>
     </nav>
 
     <header>
         <h1>Koh Samui — Camera View Builder</h1>
-        <span class="subtitle">Pick cameras · arrange · get link · paste into Wallpaper Engine</span>
+        <span class="subtitle">Pick cameras · arrange · copy link · use in Wallpaper Engine or open fullscreen (F11) in any browser</span>
     </header>
 
     <div class="main">
@@ -288,16 +301,37 @@
     </div>
 
     <script>
-        const STREAMS = [
-            { id: "3N3ZwIB_X4Y", name: "Crystal Bay Yacht Club, Lamai" },
-            { id: "Fw9hgttWzIg", name: "Crystal Bay Beach Resort, Lamai" },
-            { id: "Tpj0cmMVOd0", name: "Baobab Cam, Lamai" },
-            { id: "UJpFtzKug7M", name: "Royal Muang Samui Villas, Choeng Mon" },
-            { id: "Kush_ZxTy2c", name: "Black Pearl, Lamai" },
-            { id: "LGNYKz4yziE", name: "Crystal Bay Yacht Club, Lamai — Panoramic" },
-            { id: "NTTtqzL5OWI", name: "Crystal Bay Beach Resort, Lamai — Panoramic" },
-            { id: "FBYUkqutqzE", name: "House of Sanskara, Koh Phangan" },
+        const STREAM_GROUPS = [
+            {
+                label: "🇹🇭 Koh Samui · Thailand",
+                streams: [
+                    { id: "3N3ZwIB_X4Y", name: "Crystal Bay Yacht Club, Lamai" },
+                    { id: "Fw9hgttWzIg", name: "Crystal Bay Beach Resort, Lamai" },
+                    { id: "Tpj0cmMVOd0", name: "Baobab Cam, Lamai" },
+                    { id: "UJpFtzKug7M", name: "Royal Muang Samui Villas, Choeng Mon" },
+                    { id: "Kush_ZxTy2c", name: "Black Pearl, Lamai" },
+                    { id: "LGNYKz4yziE", name: "Crystal Bay Yacht Club, Lamai — Panoramic" },
+                    { id: "NTTtqzL5OWI", name: "Crystal Bay Beach Resort, Lamai — Panoramic" },
+                    { id: "FBYUkqutqzE", name: "House of Sanskara, Koh Phangan" },
+                ]
+            },
+            {
+                label: "🇸🇨 Seychelles",
+                streams: [
+                    { id: "Thtj8Ht7Z_c", name: "Seychelles Ocean 4K" },
+                ]
+            },
+            {
+                label: "🇲🇻 Maldives",
+                streams: [
+                    { id: "pn3lAmLSva0", name: "Maamunagau Island, Maldives" },
+                    { id: "Mu0dzKm5ZaE", name: "Paradise Found, Maldives" },
+                    { id: "XrLz_hOBCT8", name: "Indian Ocean 4K" },
+                    { id: "_BMi3usEwi8", name: "InterContinental Resort, Maldives" },
+                ]
+            }
         ];
+        const STREAMS = STREAM_GROUPS.flatMap(g => g.streams);
 
         let selected = [];
         let mode = 'fill';
@@ -305,18 +339,25 @@
         function renderCards() {
             const list = document.getElementById('cameraList');
             list.innerHTML = '';
-            STREAMS.forEach(s => {
-                const card = document.createElement('div');
-                card.className = 'cam-card' + (selected.includes(s.id) ? ' selected' : '');
-                card.onclick = () => toggle(s.id);
-                card.innerHTML = `
-                    <img class="cam-thumb" src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg"
-                         alt="${s.name}" onerror="this.style.opacity='0.1'">
-                    <div class="cam-info">
-                        <div class="cam-check"></div>
-                        <div class="cam-name">${s.name}</div>
-                    </div>`;
-                list.appendChild(card);
+            STREAM_GROUPS.forEach(group => {
+                const hdr = document.createElement('div');
+                hdr.className = 'group-header';
+                hdr.textContent = group.label;
+                list.appendChild(hdr);
+                group.streams.forEach(s => {
+                    const card = document.createElement('div');
+                    const isDead = s.dead === true;
+                    card.className = 'cam-card' + (selected.includes(s.id) ? ' selected' : '') + (isDead ? ' dead' : '');
+                    if (!isDead) card.onclick = () => toggle(s.id);
+                    card.innerHTML = `
+                        <img class="cam-thumb" src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg"
+                             alt="${s.name}" onerror="this.style.opacity='0.1'">
+                        <div class="cam-info">
+                            <div class="cam-check"></div>
+                            <div class="cam-name">${s.name}</div>
+                        </div>`;
+                    list.appendChild(card);
+                });
             });
         }
 

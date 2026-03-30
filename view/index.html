@@ -33,9 +33,9 @@
             --t3:        #999;
             --t4:        #bbb;
             --t5:        #777;
-            --ac:        #009966;
-            --ac-dim:    rgba(0,153,102,0.06);
-            --ac-dim2:   #006644;
+            --ac:        #0d6efd;
+            --ac-dim:    rgba(13,110,253,0.07);
+            --ac-dim2:   #0044bb;
             --overlay:   rgba(0,0,0,0.3);
             --gear-bg:   rgba(255,255,255,0.55);
             --gear-c:    #222;
@@ -95,12 +95,28 @@
         .gear-btn:hover { opacity: 0.85; }
         .gear-btn.active { opacity: 1; border-color: var(--ac); color: var(--ac); }
 
+        /* ── Spotlight overlay for first-visit gear hint ── */
+        .hint-bg {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 295;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        .hint-bg.active { opacity: 1; }
+
         /* Gear pulse for first-time visitors */
         @keyframes gear-pulse {
-            0%, 100% { opacity: 0.2; box-shadow: 0 0 0 0 rgba(68,255,204,0); }
-            50%       { opacity: 1;   box-shadow: 0 0 0 10px rgba(68,255,204,0.15); border-color: rgba(68,255,204,0.5); }
+            0%   { opacity: 1; box-shadow: 0 0 0 0 rgba(68,255,204,0.7); transform: scale(1); border-color: rgba(68,255,204,0.8); }
+            40%  { opacity: 1; box-shadow: 0 0 0 20px rgba(68,255,204,0.15); transform: scale(1.22); border-color: rgba(68,255,204,0.6); }
+            70%  { opacity: 1; box-shadow: 0 0 0 38px rgba(68,255,204,0); transform: scale(1.08); }
+            100% { opacity: 1; box-shadow: 0 0 0 0 rgba(68,255,204,0); transform: scale(1); }
         }
-        .gear-btn.pulsing { animation: gear-pulse 1.8s ease-in-out 4; }
+        .gear-btn.pulsing {
+            animation: gear-pulse 1.3s ease-out 5;
+            opacity: 1 !important;
+            z-index: 300;
+        }
 
         /* ── Empty state ── */
         .empty { color: var(--t2); font-family: 'Segoe UI', system-ui, sans-serif; padding: 60px; text-align: center; }
@@ -188,11 +204,12 @@
         </div>
         <hr class="menu-sep">
         <div class="menu-tip">💡 Copy the page URL and paste into Wallpaper Engine</div>
-        <div class="menu-version">v.1.014</div>
+        <div class="menu-version">v.1.015</div>
     </nav>
 
     <div id="grid"></div>
 
+    <div class="hint-bg" id="hintBg"></div>
     <div class="gear-btn" id="gearBtn" onclick="togglePanel()" title="Controls">⚙</div>
 
     <div class="settings-panel" id="settingsPanel">
@@ -235,6 +252,11 @@
             "LGNYKz4yziE": "Crystal Bay Yacht Club — Panoramic",
             "NTTtqzL5OWI": "Crystal Bay Beach Resort — Panoramic",
             "FBYUkqutqzE": "House of Sanskara, Koh Phangan",
+            "Thtj8Ht7Z_c": "Seychelles Ocean 4K",
+            "pn3lAmLSva0": "Maamunagau Island, Maldives",
+            "Mu0dzKm5ZaE": "Paradise Found, Maldives",
+            "XrLz_hOBCT8": "Indian Ocean 4K",
+            "_BMi3usEwi8": "InterContinental Resort, Maldives",
         };
 
         const params    = new URLSearchParams(location.search);
@@ -399,9 +421,12 @@
         if (!localStorage.getItem('samui-gear-seen') && currentCams.length > 0) {
             setTimeout(() => {
                 const gear = document.getElementById('gearBtn');
+                const bg   = document.getElementById('hintBg');
+                bg.classList.add('active');
                 gear.classList.add('pulsing');
                 gear.addEventListener('animationend', () => {
                     gear.classList.remove('pulsing');
+                    bg.classList.remove('active');
                     localStorage.setItem('samui-gear-seen', '1');
                 }, { once: true });
             }, 2000);

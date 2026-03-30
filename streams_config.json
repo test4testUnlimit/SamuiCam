@@ -2,7 +2,8 @@
   "channels": {
     "UCmYyJaUxYiF5IbLx-0jFXHQ": "The Real Samui Webcam",
     "UC_cmEauzsnJ4trDXLiIug1Q": "STREETS OF THAILAND",
-    "UCegzBUd6-PYoO_v7gjJgufg": "Teleport.camera"
+    "UCegzBUd6-PYoO_v7gjJgufg": "Teleport.camera",
+    "UCmvNi1HZUP1n5UrQmn7Oiow": "Luxury Island"
   },
   "streams": {
     "crystal_bay_yacht_club": {
@@ -11,7 +12,8 @@
       "fallback": "kkVrj2cr9Ko",
       "current": "3N3ZwIB_X4Y",
       "search": "Crystal Bay Yacht Club Lamai Koh Samui Beach Webcam",
-      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ"
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
+      "location": "Koh Samui, Thailand"
     },
     "crystal_bay_yacht_club_panoramic": {
       "name": "Crystal Bay Yacht Club, Lamai — Panoramic",
@@ -19,7 +21,8 @@
       "fallback": null,
       "current": "LGNYKz4yziE",
       "search": "Crystal Bay Yacht Club Lamai Koh Samui Panoramic Webcam",
-      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ"
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
+      "location": "Koh Samui, Thailand"
     },
     "crystal_bay_beach_resort": {
       "name": "Crystal Bay Beach Resort, Lamai",
@@ -27,7 +30,8 @@
       "fallback": null,
       "current": "Fw9hgttWzIg",
       "search": "Crystal Bay Beach Resort Lamai Koh Samui Live Beach Webcam",
-      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ"
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
+      "location": "Koh Samui, Thailand"
     },
     "crystal_bay_beach_resort_panoramic": {
       "name": "Crystal Bay Beach Resort, Lamai — Panoramic",
@@ -35,7 +39,8 @@
       "fallback": null,
       "current": "NTTtqzL5OWI",
       "search": "Crystal Bay Beach Resort Panoramic Lamai Koh Samui",
-      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ"
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
+      "location": "Koh Samui, Thailand"
     },
     "baobab_cam": {
       "name": "Baobab Cam, Lamai",
@@ -43,7 +48,8 @@
       "fallback": null,
       "current": "Tpj0cmMVOd0",
       "search": "Baobab Cam Lamai Koh Samui Live Beach Webcam",
-      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ"
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
+      "location": "Koh Samui, Thailand"
     },
     "royal_muang_samui": {
       "name": "Royal Muang Samui Villas, Choeng Mon",
@@ -51,7 +57,8 @@
       "fallback": null,
       "current": "UJpFtzKug7M",
       "search": "Royal Muang Samui Villas Choeng Mon beach livestream",
-      "channel_id": "UC_cmEauzsnJ4trDXLiIug1Q"
+      "channel_id": "UC_cmEauzsnJ4trDXLiIug1Q",
+      "location": "Koh Samui, Thailand"
     },
     "black_pearl_lamai": {
       "name": "Black Pearl, Lamai",
@@ -59,15 +66,62 @@
       "fallback": null,
       "current": "Kush_ZxTy2c",
       "search": "Black Pearl Lamai beach Koh Samui Thailand",
-      "channel_id": "UC_cmEauzsnJ4trDXLiIug1Q"
+      "channel_id": "UC_cmEauzsnJ4trDXLiIug1Q",
+      "location": "Koh Samui, Thailand"
     },
     "house_of_sanskara_phangan": {
-      "name": "House of Sanskara, Koh Phangan [placeholder]",
+      "name": "House of Sanskara, Koh Phangan",
       "primary": "FBYUkqutqzE",
       "fallback": null,
       "current": "FBYUkqutqzE",
       "search": "Koh Phangan beach live webcam Thailand",
-      "channel_id": "UCegzBUd6-PYoO_v7gjJgufg"
+      "channel_id": "UCegzBUd6-PYoO_v7gjJgufg",
+      "location": "Koh Phangan, Thailand"
+    },
+    "seychelles_ocean_4k": {
+      "name": "Seychelles Ocean 4K",
+      "primary": "Thtj8Ht7Z_c",
+      "fallback": null,
+      "current": "Thtj8Ht7Z_c",
+      "search": "Seychelles Ocean 4K Luxury Island",
+      "channel_id": "UCmvNi1HZUP1n5UrQmn7Oiow",
+      "location": "Seychelles"
+    },
+    "maamunagau_island_maldives": {
+      "name": "Maamunagau Island, Maldives",
+      "primary": "pn3lAmLSva0",
+      "fallback": null,
+      "current": "pn3lAmLSva0",
+      "search": "Maldives Atoll Maamunagau Island Luxury Island",
+      "channel_id": "UCmvNi1HZUP1n5UrQmn7Oiow",
+      "location": "Maldives"
+    },
+    "paradise_found_maldives": {
+      "name": "Paradise Found, Maldives",
+      "primary": "Mu0dzKm5ZaE",
+      "fallback": null,
+      "current": "Mu0dzKm5ZaE",
+      "search": "Paradise Found Maldives Luxury Island",
+      "channel_id": "UCmvNi1HZUP1n5UrQmn7Oiow",
+      "location": "Maldives"
+    },
+    "indian_ocean_4k": {
+      "name": "Indian Ocean 4K",
+      "primary": "XrLz_hOBCT8",
+      "fallback": null,
+      "current": "XrLz_hOBCT8",
+      "search": "Most Relaxing Ocean 4K Luxury Island",
+      "channel_id": "UCmvNi1HZUP1n5UrQmn7Oiow",
+      "location": "Maldives"
+    },
+    "intercontinental_maldives": {
+      "name": "InterContinental Resort, Maldives",
+      "primary": "_BMi3usEwi8",
+      "fallback": null,
+      "current": "_BMi3usEwi8",
+      "search": "Ocean Ambience 4K Maldives InterContinental Luxury Island",
+      "channel_id": "UCmvNi1HZUP1n5UrQmn7Oiow",
+      "location": "Maldives"
     }
   }
 }
