@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Конструктор — Koh Samui</title>
+    <title>Builder — Koh Samui Webcams</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -17,28 +17,34 @@
             overflow: hidden;
         }
 
+        /* ── Header ── */
         header {
-            padding: 18px 28px 14px;
+            padding: 16px 24px 13px;
             border-bottom: 1px solid #1e1e1e;
             flex-shrink: 0;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
         header h1 {
             font-size: 15px;
             font-weight: 500;
             color: #ddd;
             letter-spacing: 0.3px;
+            white-space: nowrap;
         }
         header .subtitle {
             font-size: 12px;
             color: #444;
             flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .header-nav {
             display: flex;
             gap: 4px;
+            flex-shrink: 0;
         }
         .header-nav a {
             font-size: 12px;
@@ -52,14 +58,15 @@
         }
         .header-nav a:hover { color: #aaa; border-color: #444; }
 
+        /* ── Main layout ── */
         .main {
             display: grid;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: 1fr 296px;
             flex: 1;
             overflow: hidden;
         }
 
-        /* ── Camera list ── */
+        /* ── Camera grid ── */
         .camera-list {
             padding: 16px 20px;
             overflow-y: auto;
@@ -95,6 +102,7 @@
             gap: 7px;
         }
 
+        /* Checkbox indicator */
         .cam-check {
             width: 14px;
             height: 14px;
@@ -109,18 +117,10 @@
             font-weight: bold;
             color: transparent;
         }
-        .selected .cam-check {
-            background: #4fc;
-            border-color: #4fc;
-            color: #000;
-        }
+        .selected .cam-check { background: #4fc; border-color: #4fc; color: #000; }
         .cam-check::after { content: '✓'; }
 
-        .cam-name {
-            font-size: 11px;
-            color: #888;
-            line-height: 1.35;
-        }
+        .cam-name { font-size: 11px; color: #777; line-height: 1.35; }
         .selected .cam-name { color: #ccc; }
 
         /* ── Sidebar ── */
@@ -130,7 +130,6 @@
             flex-direction: column;
             overflow: hidden;
         }
-
         .sidebar-inner {
             padding: 18px 18px 0;
             display: flex;
@@ -157,7 +156,7 @@
         }
         .toggle-btn {
             flex: 1;
-            padding: 8px 6px;
+            padding: 9px 6px;
             background: none;
             border: none;
             color: #444;
@@ -172,7 +171,7 @@
         .toggle-btn.active { background: #1a1a1a; color: #4fc; }
         .toggle-btn.active small { color: #2a6a5a; }
 
-        /* Selected list */
+        /* Selected cameras list */
         .sel-list {
             display: flex;
             flex-direction: column;
@@ -183,43 +182,42 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            padding: 5px 7px;
+            padding: 6px 8px;
             background: #161616;
             border-radius: 3px;
             font-size: 11px;
-            color: #999;
+            color: #888;
         }
-        .sel-item-name { flex: 1; }
+        .sel-item-name { flex: 1; line-height: 1.35; }
         .sel-move {
             background: none;
             border: 1px solid #222;
             color: #444;
-            font-size: 10px;
+            font-size: 11px;
             cursor: pointer;
-            padding: 1px 4px;
-            border-radius: 2px;
+            padding: 2px 6px;
+            border-radius: 3px;
             line-height: 1.3;
             transition: all 0.15s;
             font-family: inherit;
+            min-width: 24px;
+            text-align: center;
         }
-        .sel-move:hover { border-color: #555; color: #ccc; }
-        .sel-move:disabled { opacity: 0.2; cursor: default; }
+        .sel-move:hover:not(:disabled) { border-color: #555; color: #ccc; }
+        .sel-move:disabled { opacity: 0.18; cursor: default; }
         .sel-remove {
             color: #333;
             cursor: pointer;
-            padding: 0 2px;
-            font-size: 13px;
+            padding: 0 3px;
+            font-size: 14px;
             transition: color 0.15s;
             line-height: 1;
+            flex-shrink: 0;
         }
         .sel-remove:hover { color: #f55; }
-        .empty-hint {
-            font-size: 11px;
-            color: #333;
-            padding: 8px 0;
-        }
+        .empty-hint { font-size: 11px; color: #333; padding: 8px 0; }
 
-        /* URL */
+        /* Generated URL */
         .url-box {
             background: #0d0d0d;
             border: 1px solid #1e1e1e;
@@ -230,10 +228,10 @@
             word-break: break-all;
             line-height: 1.6;
             min-height: 44px;
-            font-family: monospace;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
         }
 
-        /* Buttons */
+        /* Footer buttons */
         .sidebar-footer {
             padding: 14px 18px;
             border-top: 1px solid #1e1e1e;
@@ -242,7 +240,6 @@
             gap: 7px;
             flex-shrink: 0;
         }
-
         .btn {
             width: 100%;
             padding: 11px;
@@ -255,31 +252,42 @@
             font-weight: 500;
         }
         .btn-primary { background: #4fc; color: #000; }
-        .btn-primary:hover { background: #5fd; }
+        .btn-primary:hover { background: #6ffccc; }
         .btn-primary:disabled { background: #1a3328; color: #2a5040; cursor: default; }
-        .btn-secondary {
-            background: #161616;
-            color: #555;
-            border: 1px solid #222;
-        }
+        .btn-secondary { background: #161616; color: #555; border: 1px solid #222; }
         .btn-secondary:hover { color: #999; border-color: #333; }
+        .copy-ok { font-size: 11px; color: #4fc; text-align: center; height: 14px; }
 
-        .copy-ok {
-            font-size: 11px;
-            color: #4fc;
-            text-align: center;
-            height: 14px;
+        /* ── Mobile ── */
+        @media (max-width: 768px) {
+            body { overflow: auto; }
+            .main {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto;
+                flex: none;
+                overflow: visible;
+            }
+            .camera-list { overflow-y: visible; min-height: 300px; }
+            .sidebar {
+                border-left: none;
+                border-top: 1px solid #1e1e1e;
+                overflow: visible;
+                height: auto;
+            }
+            .sidebar-inner { overflow-y: visible; padding-bottom: 8px; }
+            .header-nav { display: none; } /* too cramped on small screens */
+            header .subtitle { display: none; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Koh Samui — конструктор обоев</h1>
-        <span class="subtitle">выбери камеры → получи ссылку → вставь в Wallpaper Engine</span>
+        <h1>Koh Samui — Wallpaper Builder</h1>
+        <span class="subtitle">Select cameras → get link → paste into Wallpaper Engine</span>
         <nav class="header-nav">
-            <a href="/index.html">⊞ 9 камер</a>
-            <a href="/180-3/index.html">▬ Панорама</a>
+            <a href="/index.html">⊞ 9 Cams</a>
+            <a href="/180-3/index.html">▬ Panorama</a>
             <a href="/180-2/360.html">◫ 2×180°</a>
         </nav>
     </header>
@@ -291,51 +299,51 @@
             <div class="sidebar-inner">
 
                 <div>
-                    <div class="section-label">Режим</div>
+                    <div class="section-label">Mode</div>
                     <div class="toggle">
                         <button class="toggle-btn" id="btnContain" onclick="setMode('contain')">
                             Contain
-                            <small>без обрезки</small>
+                            <small>no crop</small>
                         </button>
                         <button class="toggle-btn active" id="btnFill" onclick="setMode('fill')">
                             Fill
-                            <small>заполнить экран</small>
+                            <small>fill screen</small>
                         </button>
                     </div>
                 </div>
 
                 <div>
-                    <div class="section-label">Выбрано — <span id="countLabel">0</span></div>
+                    <div class="section-label">Selected — <span id="countLabel">0</span></div>
                     <div class="sel-list" id="selList">
-                        <div class="empty-hint">Кликни на камеру</div>
+                        <div class="empty-hint">Click a camera to add it</div>
                     </div>
                 </div>
 
                 <div>
-                    <div class="section-label">Ссылка</div>
+                    <div class="section-label">Link</div>
                     <div class="url-box" id="urlBox">—</div>
                 </div>
 
             </div>
 
             <div class="sidebar-footer">
-                <button class="btn btn-primary" id="copyBtn" onclick="copyUrl()" disabled>Скопировать ссылку</button>
+                <button class="btn btn-primary" id="copyBtn" onclick="copyUrl()" disabled>Copy Link</button>
                 <div class="copy-ok" id="copyOk"></div>
-                <button class="btn btn-secondary" onclick="openPreview()">Открыть превью ↗</button>
+                <button class="btn btn-secondary" onclick="openPreview()">Open Preview ↗</button>
             </div>
         </div>
     </div>
 
     <script>
         const STREAMS = [
-            { id: "3N3ZwIB_X4Y",  name: "Crystal Bay Yacht Club, Lamai" },
-            { id: "Fw9hgttWzIg",  name: "Crystal Bay Beach Resort, Lamai" },
-            { id: "Tpj0cmMVOd0",  name: "Baobab Cam, Lamai" },
-            { id: "UJpFtzKug7M",  name: "Royal Muang Samui Villas, Choeng Mon" },
-            { id: "Kush_ZxTy2c",  name: "Black Pearl, Lamai" },
-            { id: "LGNYKz4yziE",  name: "Crystal Bay Yacht Club, Lamai — Panoramic" },
-            { id: "NTTtqzL5OWI",  name: "Crystal Bay Beach Resort, Lamai — Panoramic" },
-            { id: "FBYUkqutqzE",  name: "House of Sanskara, Koh Phangan" },
+            { id: "3N3ZwIB_X4Y", name: "Crystal Bay Yacht Club, Lamai" },
+            { id: "Fw9hgttWzIg", name: "Crystal Bay Beach Resort, Lamai" },
+            { id: "Tpj0cmMVOd0", name: "Baobab Cam, Lamai" },
+            { id: "UJpFtzKug7M", name: "Royal Muang Samui Villas, Choeng Mon" },
+            { id: "Kush_ZxTy2c", name: "Black Pearl, Lamai" },
+            { id: "LGNYKz4yziE", name: "Crystal Bay Yacht Club, Lamai — Panoramic" },
+            { id: "NTTtqzL5OWI", name: "Crystal Bay Beach Resort, Lamai — Panoramic" },
+            { id: "FBYUkqutqzE", name: "House of Sanskara, Koh Phangan" },
         ];
 
         let selected = [];
@@ -366,15 +374,18 @@
 
             const listEl = document.getElementById('selList');
             if (selected.length === 0) {
-                listEl.innerHTML = '<div class="empty-hint">Кликни на камеру</div>';
+                listEl.innerHTML = '<div class="empty-hint">Click a camera to add it</div>';
             } else {
                 listEl.innerHTML = selected.map((id, i) => {
                     const s = STREAMS.find(x => x.id === id);
                     return `<div class="sel-item">
                         <span class="sel-item-name">${s ? s.name : id}</span>
-                        <button class="sel-move" onclick="moveSelected(${i}, -1)" ${i === 0 ? 'disabled' : ''}>↑</button>
-                        <button class="sel-move" onclick="moveSelected(${i}, 1)" ${i === selected.length - 1 ? 'disabled' : ''}>↓</button>
-                        <span class="sel-remove" onclick="event.stopPropagation();toggle('${id}')">×</span>
+                        <button class="sel-move" onclick="moveSelected(${i}, -1)"
+                                ${i === 0 ? 'disabled' : ''} title="Move up">↑</button>
+                        <button class="sel-move" onclick="moveSelected(${i}, 1)"
+                                ${i === selected.length - 1 ? 'disabled' : ''} title="Move down">↓</button>
+                        <span class="sel-remove" onclick="event.stopPropagation();toggle('${id}')"
+                              title="Remove">×</span>
                     </div>`;
                 }).join('');
             }
@@ -416,7 +427,7 @@
             if (!url) return;
             navigator.clipboard.writeText(url).then(() => {
                 const el = document.getElementById('copyOk');
-                el.textContent = '✓ скопировано';
+                el.textContent = '✓ Copied';
                 setTimeout(() => el.textContent = '', 2000);
             });
         }

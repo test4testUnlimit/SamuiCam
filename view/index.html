@@ -1,33 +1,23 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Самуи — камеры</title>
+    <title>Koh Samui — Live Cameras</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #000; overflow: hidden; width: 100vw; height: 100vh; }
 
-        #grid {
-            display: grid;
-            width: 100vw;
-            height: 100vh;
-        }
-        .cell {
-            overflow: hidden;
-            position: relative;
-            background: #000;
-        }
-        .cell iframe {
-            position: absolute;
-            border: none;
-        }
+        #grid { display: grid; width: 100vw; height: 100vh; }
 
-        /* ── Fade controls (contain/fill/builder) ── */
+        .cell { overflow: hidden; position: relative; background: #000; }
+        .cell iframe { position: absolute; border: none; }
+
+        /* ── Fade controls (contain / fill / builder) ── */
         .controls {
             position: fixed;
             bottom: 14px;
-            right: 56px;   /* leave room for the gear button */
+            right: 54px;
             z-index: 100;
             display: flex;
             gap: 6px;
@@ -38,42 +28,43 @@
 
         .ctrl-btn {
             background: rgba(0,0,0,0.75);
-            color: #ccc;
+            color: #bbb;
             border: 1px solid rgba(255,255,255,0.15);
-            padding: 5px 10px;
+            padding: 6px 11px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 11px;
-            font-family: sans-serif;
+            font-size: 12px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             transition: all 0.2s;
             text-decoration: none;
             line-height: 1;
+            white-space: nowrap;
         }
-        .ctrl-btn:hover { border-color: rgba(255,255,255,0.45); color: #fff; }
+        .ctrl-btn:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
         .ctrl-btn.active { border-color: #4fc; color: #4fc; }
 
-        /* ── Gear button — always visible ── */
+        /* ── Gear button — same hide behavior as hamburger ── */
         .gear-btn {
             position: fixed;
             bottom: 12px;
             right: 12px;
             z-index: 300;
-            width: 34px;
-            height: 34px;
-            background: rgba(0,0,0,0.55);
-            border: 1px solid rgba(255,255,255,0.18);
-            border-radius: 6px;
-            color: #bbb;
-            font-size: 17px;
+            width: 36px;
+            height: 36px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0.45;
-            transition: opacity 0.25s, border-color 0.2s, color 0.2s;
+            opacity: 0.2;
+            transition: opacity 0.3s, border-color 0.2s, color 0.2s;
             user-select: none;
         }
-        .gear-btn:hover { opacity: 1; border-color: rgba(255,255,255,0.45); color: #fff; }
+        .gear-btn:hover { opacity: 0.85; }
         .gear-btn.active { opacity: 1; border-color: #4fc; color: #4fc; }
 
         /* ── Hamburger ── */
@@ -86,7 +77,7 @@
             font-size: 16px;
             color: #fff;
             background: rgba(0,0,0,0.3);
-            padding: 4px 7px;
+            padding: 4px 8px;
             border-radius: 4px;
             opacity: 0.2;
             transition: opacity 0.3s;
@@ -94,6 +85,7 @@
         }
         .hamburger:hover { opacity: 0.85; }
 
+        /* ── Side menu ── */
         .menu-overlay {
             display: none;
             position: fixed;
@@ -104,7 +96,7 @@
         .side-menu {
             position: fixed;
             top: 0; left: 0;
-            width: 270px;
+            width: 260px;
             height: 100%;
             background: #1a1a1a;
             z-index: 1003;
@@ -117,39 +109,40 @@
         .side-menu.open { transform: translateX(0); }
         .menu-overlay.open { display: block; }
         .menu-title {
-            color: #aaa;
-            font-size: 11px;
+            color: #555;
+            font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            padding: 0 20px 15px;
-            border-bottom: 1px solid #333;
-            margin-bottom: 10px;
-            font-family: sans-serif;
+            padding: 0 20px 14px;
+            border-bottom: 1px solid #282828;
+            margin-bottom: 8px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
         .menu-item {
             display: block;
-            color: #999;
+            color: #888;
             text-decoration: none;
-            padding: 14px 20px;
-            font-size: 15px;
-            font-family: sans-serif;
-            transition: background 0.2s;
+            padding: 13px 20px;
+            font-size: 14px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            transition: background 0.2s, color 0.2s;
         }
-        .menu-item:hover { background: #2a2a2a; }
-        .menu-item.active { color: #4fc; border-left: 3px solid #4fc; }
-        .menu-sep { border: none; border-top: 1px solid #222; margin: 8px 0; }
+        .menu-item:hover { background: #242424; color: #ccc; }
+        .menu-item.active { color: #4fc; border-left: 3px solid #4fc; padding-left: 17px; }
+        .menu-sep { border: none; border-top: 1px solid #222; margin: 6px 0; }
         .menu-tip {
             margin-top: auto;
-            padding: 15px 20px;
-            color: #888;
-            font-size: 12px;
-            font-family: sans-serif;
-            border-top: 1px solid #333;
-            line-height: 1.5;
+            padding: 14px 20px;
+            color: #666;
+            font-size: 11px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            border-top: 1px solid #282828;
+            line-height: 1.55;
         }
 
         /* ── Empty state ── */
-        .empty { color: #fff; font-family: sans-serif; padding: 60px; text-align: center; }
+        .empty { color: #888; font-family: 'Segoe UI', system-ui, sans-serif; padding: 60px; text-align: center; }
+        .empty h2 { color: #ccc; font-weight: 400; margin-bottom: 12px; }
         .empty a { color: #4fc; }
 
         /* ── Settings panel ── */
@@ -157,18 +150,17 @@
             position: fixed;
             bottom: 56px;
             right: 12px;
-            width: 270px;
+            width: 272px;
             background: #181818;
-            border: 1px solid #2e2e2e;
+            border: 1px solid #2c2c2c;
             border-radius: 8px;
             z-index: 250;
-            font-family: sans-serif;
-            box-shadow: 0 6px 28px rgba(0,0,0,0.7);
-            /* hidden by default */
-            transform: translateY(16px);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+            transform: translateY(10px);
             opacity: 0;
             pointer-events: none;
-            transition: transform 0.22s ease, opacity 0.18s ease;
+            transition: transform 0.2s ease, opacity 0.18s ease;
         }
         .settings-panel.open {
             transform: translateY(0);
@@ -180,24 +172,17 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 11px 14px 9px;
-            border-bottom: 1px solid #262626;
+            padding: 11px 14px 10px;
+            border-bottom: 1px solid #242424;
         }
         .sp-title { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1.5px; }
-        .sp-close {
-            color: #444; cursor: pointer; font-size: 18px; line-height: 1;
-            transition: color 0.15s;
-        }
+        .sp-close { color: #444; cursor: pointer; font-size: 18px; line-height: 1; transition: color 0.15s; }
         .sp-close:hover { color: #aaa; }
 
-        .sp-section { padding: 10px 14px; border-bottom: 1px solid #222; }
+        .sp-section { padding: 10px 14px; border-bottom: 1px solid #202020; }
         .sp-section:last-child { border-bottom: none; }
 
-        .sp-label {
-            font-size: 10px; color: #444;
-            text-transform: uppercase; letter-spacing: 1.2px;
-            margin-bottom: 8px;
-        }
+        .sp-label { font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 8px; }
 
         /* Camera order list */
         .cam-list { display: flex; flex-direction: column; gap: 3px; }
@@ -209,17 +194,11 @@
             background: #111;
             border-radius: 4px;
         }
-        .cam-idx {
-            font-size: 10px;
-            color: #333;
-            width: 14px;
-            text-align: right;
-            flex-shrink: 0;
-        }
+        .cam-idx { font-size: 10px; color: #333; width: 14px; text-align: right; flex-shrink: 0; }
         .cam-row-name {
             flex: 1;
             font-size: 11px;
-            color: #aaa;
+            color: #999;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -231,21 +210,23 @@
             color: #4a4a4a;
             font-size: 11px;
             cursor: pointer;
-            padding: 2px 5px;
+            padding: 3px 6px;
             border-radius: 3px;
             transition: all 0.15s;
             line-height: 1.2;
-            font-family: sans-serif;
+            font-family: inherit;
+            min-width: 26px;
+            text-align: center;
         }
         .cam-row-btn:hover:not(:disabled) { border-color: #555; color: #ddd; }
         .cam-row-btn:disabled { opacity: 0.18; cursor: default; }
         .mirror-btn.on { border-color: #4fc; color: #4fc; }
 
-        /* Layout */
+        /* Layout selector */
         .layout-btns { display: flex; gap: 4px; }
         .layout-btn {
             flex: 1;
-            padding: 7px 4px;
+            padding: 8px 4px;
             background: none;
             border: 1px solid #252525;
             color: #555;
@@ -253,41 +234,47 @@
             cursor: pointer;
             border-radius: 4px;
             transition: all 0.15s;
-            font-family: sans-serif;
+            font-family: inherit;
             text-align: center;
             line-height: 1.3;
         }
         .layout-btn small { display: block; font-size: 9px; color: #333; margin-top: 2px; }
         .layout-btn:hover { border-color: #555; color: #ccc; }
-        .layout-btn.active {
-            border-color: #4fc;
-            color: #4fc;
-            background: rgba(68,255,204,0.04);
-        }
-        .layout-btn.active small { color: #2a7a60; }
+        .layout-btn.active { border-color: #4fc; color: #4fc; background: rgba(68,255,204,0.04); }
+        .layout-btn.active small { color: #2a7060; }
 
-        /* Copy */
+        /* Copy link */
         .sp-copy-btn {
             width: 100%;
-            padding: 9px;
+            padding: 10px;
             background: #4fc;
             color: #000;
             border: none;
             border-radius: 4px;
-            font-size: 12px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
-            font-family: sans-serif;
+            font-family: inherit;
             transition: background 0.15s;
-            letter-spacing: 0.2px;
         }
-        .sp-copy-btn:hover { background: #6ffdcc; }
-        .sp-copy-ok {
-            text-align: center;
-            font-size: 11px;
-            color: #4fc;
-            height: 16px;
-            margin-top: 6px;
+        .sp-copy-btn:hover { background: #6ffccc; }
+        .sp-copy-ok { text-align: center; font-size: 11px; color: #4fc; height: 16px; margin-top: 6px; }
+
+        /* ── Mobile ── */
+        @media (max-width: 600px) {
+            .hamburger { font-size: 20px; padding: 7px 11px; top: 44px; }
+            .gear-btn { width: 44px; height: 44px; font-size: 18px; bottom: 8px; right: 8px; }
+            .controls { right: 60px; bottom: 10px; }
+            .settings-panel {
+                right: 0; left: 0;
+                width: auto;
+                margin: 0 8px;
+                bottom: 60px;
+                border-radius: 8px;
+            }
+            .cam-row-btn { padding: 5px 8px; font-size: 13px; min-width: 30px; }
+            .layout-btn { padding: 10px 4px; font-size: 12px; }
+            .sp-copy-btn { padding: 12px; font-size: 14px; }
         }
     </style>
 </head>
@@ -296,76 +283,74 @@
     <div class="hamburger" onclick="toggleMenu()">☰</div>
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
     <nav class="side-menu" id="sideMenu">
-        <div class="menu-title">Навигация</div>
-        <a href="/builder/" class="menu-item">🎨 &nbsp;Конструктор</a>
+        <div class="menu-title">Navigation</div>
+        <a href="/builder/" class="menu-item">🎨 &nbsp;Builder</a>
         <hr class="menu-sep">
-        <a href="/index.html" class="menu-item">⊞ &nbsp;9 камер (3×3)</a>
-        <a href="/180-3/index.html" class="menu-item">▬ &nbsp;Панорама + 2 камеры</a>
-        <a href="/180-2/360.html" class="menu-item">◫ &nbsp;2 панорамных 180°</a>
-        <div class="menu-tip">💡 Скопируй URL страницы и вставь в Wallpaper Engine</div>
+        <a href="/index.html" class="menu-item">⊞ &nbsp;9 Cameras (3×3)</a>
+        <a href="/180-3/index.html" class="menu-item">▬ &nbsp;Panorama + 2 Cameras</a>
+        <a href="/180-2/360.html" class="menu-item">◫ &nbsp;2 Panoramic 180°</a>
+        <div class="menu-tip">💡 Copy the page URL and paste into Wallpaper Engine</div>
     </nav>
 
     <div id="grid"></div>
 
-    <!-- Fade controls: contain / fill / builder -->
+    <!-- Fade controls -->
     <div class="controls">
-        <button class="ctrl-btn" id="btnContain" onclick="setMode('contain')">contain</button>
-        <button class="ctrl-btn" id="btnFill" onclick="setMode('fill')">fill</button>
-        <a href="/builder/" class="ctrl-btn">← builder</a>
+        <button class="ctrl-btn" id="btnContain" onclick="setMode('contain')">Contain</button>
+        <button class="ctrl-btn" id="btnFill" onclick="setMode('fill')">Fill</button>
+        <a href="/builder/" class="ctrl-btn">← Builder</a>
     </div>
 
-    <!-- Always-visible gear button -->
-    <div class="gear-btn" id="gearBtn" onclick="togglePanel()" title="Настройки">⚙</div>
+    <!-- Gear: always visible, hides like hamburger -->
+    <div class="gear-btn" id="gearBtn" onclick="togglePanel()" title="Controls">⚙</div>
 
     <!-- Settings panel -->
     <div class="settings-panel" id="settingsPanel">
         <div class="sp-header">
-            <span class="sp-title">Пульт управления</span>
+            <span class="sp-title">Controls</span>
             <span class="sp-close" onclick="togglePanel()">×</span>
         </div>
 
         <div class="sp-section">
-            <div class="sp-label">Порядок · Отразить</div>
+            <div class="sp-label">Order · Mirror</div>
             <div class="cam-list" id="camList"></div>
         </div>
 
         <div class="sp-section">
-            <div class="sp-label">Раскладка</div>
+            <div class="sp-label">Layout</div>
             <div class="layout-btns">
                 <button class="layout-btn" id="layAuto" onclick="setLayout('auto')">
-                    ⊞ Авто
-                    <small>умная сетка</small>
+                    ⊞ Auto<small>smart grid</small>
                 </button>
                 <button class="layout-btn" id="layH" onclick="setLayout('h')">
-                    ═ Стопка
-                    <small>один столбец</small>
+                    ═ Stack<small>single column</small>
                 </button>
                 <button class="layout-btn" id="layV" onclick="setLayout('v')">
-                    ║ Ряд
-                    <small>одна строка</small>
+                    ║ Row<small>single row</small>
                 </button>
             </div>
         </div>
 
         <div class="sp-section">
-            <button class="sp-copy-btn" onclick="copyLink()">Скопировать ссылку</button>
+            <button class="sp-copy-btn" onclick="copyLink()">Copy Link</button>
             <div class="sp-copy-ok" id="copyOk"></div>
         </div>
     </div>
 
     <script>
+        /* Camera name lookup */
         const STREAMS = {
-            "3N3ZwIB_X4Y":  "Crystal Bay Yacht Club, Lamai",
-            "Fw9hgttWzIg":  "Crystal Bay Beach Resort, Lamai",
-            "Tpj0cmMVOd0":  "Baobab Cam, Lamai",
-            "UJpFtzKug7M":  "Royal Muang Samui Villas, Choeng Mon",
-            "Kush_ZxTy2c":  "Black Pearl, Lamai",
-            "LGNYKz4yziE":  "Crystal Bay Yacht Club — Панорама",
-            "NTTtqzL5OWI":  "Crystal Bay Beach Resort — Панорама",
-            "FBYUkqutqzE":  "House of Sanskara, Koh Phangan",
+            "3N3ZwIB_X4Y": "Crystal Bay Yacht Club, Lamai",
+            "Fw9hgttWzIg": "Crystal Bay Beach Resort, Lamai",
+            "Tpj0cmMVOd0": "Baobab Cam, Lamai",
+            "UJpFtzKug7M": "Royal Muang Samui Villas, Choeng Mon",
+            "Kush_ZxTy2c": "Black Pearl, Lamai",
+            "LGNYKz4yziE": "Crystal Bay Yacht Club — Panoramic",
+            "NTTtqzL5OWI": "Crystal Bay Beach Resort — Panoramic",
+            "FBYUkqutqzE": "House of Sanskara, Koh Phangan",
         };
 
-        const params = new URLSearchParams(location.search);
+        const params    = new URLSearchParams(location.search);
         let currentCams = (params.get('cams') || '').split(',').filter(Boolean);
         let mode        = params.get('mode') || 'fill';
         let layout      = params.get('layout') || 'auto';
@@ -390,7 +375,7 @@
             return { cols, rows: Math.ceil(n / cols) };
         }
 
-        /* ── Build grid (creates iframes) ── */
+        /* ── Build iframes ── */
         function buildGrid() {
             const { cols, rows } = getGrid(currentCams.length);
             grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
@@ -408,7 +393,7 @@
             });
         }
 
-        /* ── Apply mode (size/position iframes) ── */
+        /* ── Size and position iframes to match mode ── */
         function applyMode() {
             const { cols, rows } = getGrid(currentCams.length);
             const cellW = window.innerWidth  / cols;
@@ -421,7 +406,7 @@
                 if (mode === 'contain') {
                     if (cr > ratio) { iH = cellH; iW = cellH * ratio; }
                     else            { iW = cellW;  iH = cellW / ratio; }
-                } else {
+                } else { /* fill */
                     if (cr > ratio) { iW = cellW;  iH = cellW / ratio; }
                     else            { iH = cellH;  iW = cellH * ratio; }
                 }
@@ -436,13 +421,13 @@
             document.getElementById('btnFill').classList.toggle('active', mode === 'fill');
         }
 
-        /* ── URL ── */
+        /* ── URL state ── */
         function buildUrl() {
             const url = new URL(location.href);
             url.searchParams.set('cams', currentCams.join(','));
             url.searchParams.set('mode', mode);
             if (mirrorSet.size > 0)
-                url.searchParams.set('mirror', [...mirrorSet].sort((a,b)=>a-b).join(','));
+                url.searchParams.set('mirror', [...mirrorSet].sort((a, b) => a - b).join(','));
             else
                 url.searchParams.delete('mirror');
             if (layout !== 'auto') url.searchParams.set('layout', layout);
@@ -455,36 +440,28 @@
         function setMode(m) { mode = m; pushUrl(); applyMode(); }
 
         /* ── Layout ── */
-        function setLayout(l) {
-            layout = l;
-            pushUrl();
-            buildGrid();
-            applyMode();
-            renderPanel();
-        }
+        function setLayout(l) { layout = l; pushUrl(); buildGrid(); applyMode(); renderPanel(); }
 
         /* ── Reorder ── */
         function moveCamera(idx, dir) {
             const to = idx + dir;
             if (to < 0 || to >= currentCams.length) return;
             [currentCams[idx], currentCams[to]] = [currentCams[to], currentCams[idx]];
+            /* keep mirror indices in sync */
             const next = new Set();
             mirrorSet.forEach(i => {
-                if (i === idx) next.add(to);
-                else if (i === to) next.add(idx);
-                else next.add(i);
+                if      (i === idx) next.add(to);
+                else if (i === to)  next.add(idx);
+                else                next.add(i);
             });
             mirrorSet = next;
-            pushUrl();
-            buildGrid();
-            applyMode();
-            renderPanel();
+            pushUrl(); buildGrid(); applyMode(); renderPanel();
         }
 
         /* ── Mirror ── */
         function toggleMirror(idx) {
             if (mirrorSet.has(idx)) mirrorSet.delete(idx);
-            else mirrorSet.add(idx);
+            else                    mirrorSet.add(idx);
             pushUrl();
             const iframe = document.querySelectorAll('.cell iframe')[idx];
             if (iframe) iframe.style.transform = mirrorSet.has(idx) ? 'scaleX(-1)' : '';
@@ -501,20 +478,20 @@
         }
 
         function renderPanel() {
-            const list = document.getElementById('camList');
             const n    = currentCams.length;
+            const list = document.getElementById('camList');
             list.innerHTML = currentCams.map((id, i) => {
                 const name = STREAMS[id] || id;
                 return `<div class="cam-row">
-                    <span class="cam-idx">${i+1}</span>
+                    <span class="cam-idx">${i + 1}</span>
                     <span class="cam-row-name" title="${name}">${name}</span>
                     <div class="cam-row-btns">
                         <button class="cam-row-btn mirror-btn ${mirrorSet.has(i) ? 'on' : ''}"
-                                onclick="toggleMirror(${i})" title="Отразить">⇄</button>
-                        <button class="cam-row-btn" onclick="moveCamera(${i},-1)"
-                                ${i === 0 ? 'disabled' : ''}>↑</button>
-                        <button class="cam-row-btn" onclick="moveCamera(${i},1)"
-                                ${i === n-1 ? 'disabled' : ''}>↓</button>
+                                onclick="toggleMirror(${i})" title="Mirror">⇄</button>
+                        <button class="cam-row-btn" onclick="moveCamera(${i}, -1)"
+                                ${i === 0 ? 'disabled' : ''} title="Move up">↑</button>
+                        <button class="cam-row-btn" onclick="moveCamera(${i}, 1)"
+                                ${i === n - 1 ? 'disabled' : ''} title="Move down">↓</button>
                     </div>
                 </div>`;
             }).join('');
@@ -529,7 +506,7 @@
             pushUrl();
             navigator.clipboard.writeText(location.href).then(() => {
                 const el = document.getElementById('copyOk');
-                el.textContent = '✓ скопировано';
+                el.textContent = '✓ Copied';
                 setTimeout(() => el.textContent = '', 2200);
             });
         }
@@ -542,7 +519,10 @@
 
         /* ── Init ── */
         if (currentCams.length === 0) {
-            grid.innerHTML = '<div class="empty"><h2>Камеры не выбраны</h2><p style="margin-top:12px">Перейди в <a href="/builder/">конструктор</a></p></div>';
+            grid.innerHTML = `<div class="empty">
+                <h2>No cameras selected</h2>
+                <p>Go to the <a href="/builder/">Builder</a> to make a selection</p>
+            </div>`;
         } else {
             buildGrid();
             applyMode();
