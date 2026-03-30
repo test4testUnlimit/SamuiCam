@@ -1,16 +1,73 @@
 {
-  "preferred": {
-    "3N3ZwIB_X4Y": "Crystal Bay Yacht Club Lamai Koh Samui Beach Webcam",
-    "Tpj0cmMVOd0": "Baobab Cam Lamai Koh Samui Live Beach Webcam",
-    "Fw9hgttWzIg": "Crystal Bay Beach Resort Lamai Koh Samui Live Beach Webcam",
-    "NTTtqzL5OWI": "Crystal Bay Beach Resort Panoramic Lamai Koh Samui",
-    "LGNYKz4yziE": "Crystal Bay Yacht Club Lamai Koh Samui Beach Panoramic Webcam"
+  "channels": {
+    "UCmYyJaUxYiF5IbLx-0jFXHQ": "The Real Samui Webcam",
+    "UC_cmEauzsnJ4trDXLiIug1Q": "STREETS OF THAILAND",
+    "UCegzBUd6-PYoO_v7gjJgufg": "Teleport.camera"
   },
-  "current": {
-    "3N3ZwIB_X4Y": "3N3ZwIB_X4Y",
-    "Tpj0cmMVOd0": "Tpj0cmMVOd0",
-    "Fw9hgttWzIg": "Fw9hgttWzIg",
-    "NTTtqzL5OWI": "NTTtqzL5OWI",
-    "LGNYKz4yziE": "LGNYKz4yziE"
+  "streams": {
+    "crystal_bay_yacht_club": {
+      "name": "Crystal Bay Yacht Club, Lamai",
+      "primary": "3N3ZwIB_X4Y",
+      "fallback": "kkVrj2cr9Ko",
+      "current": "3N3ZwIB_X4Y",
+      "search": "Crystal Bay Yacht Club Lamai Koh Samui Beach Webcam",
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ"
+    },
+    "crystal_bay_yacht_club_panoramic": {
+      "name": "Crystal Bay Yacht Club, Lamai — Panoramic",
+      "primary": "LGNYKz4yziE",
+      "fallback": null,
+      "current": "LGNYKz4yziE",
+      "search": "Crystal Bay Yacht Club Lamai Koh Samui Panoramic Webcam",
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ"
+    },
+    "crystal_bay_beach_resort": {
+      "name": "Crystal Bay Beach Resort, Lamai",
+      "primary": "Fw9hgttWzIg",
+      "fallback": null,
+      "current": "Fw9hgttWzIg",
+      "search": "Crystal Bay Beach Resort Lamai Koh Samui Live Beach Webcam",
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ"
+    },
+    "crystal_bay_beach_resort_panoramic": {
+      "name": "Crystal Bay Beach Resort, Lamai — Panoramic",
+      "primary": "NTTtqzL5OWI",
+      "fallback": null,
+      "current": "NTTtqzL5OWI",
+      "search": "Crystal Bay Beach Resort Panoramic Lamai Koh Samui",
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ"
+    },
+    "baobab_cam": {
+      "name": "Baobab Cam, Lamai",
+      "primary": "Tpj0cmMVOd0",
+      "fallback": null,
+      "current": "Tpj0cmMVOd0",
+      "search": "Baobab Cam Lamai Koh Samui Live Beach Webcam",
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ"
+    },
+    "royal_muang_samui": {
+      "name": "Royal Muang Samui Villas, Choeng Mon",
+      "primary": "UJpFtzKug7M",
+      "fallback": null,
+      "current": "UJpFtzKug7M",
+      "search": "Royal Muang Samui Villas Choeng Mon beach livestream",
+      "channel_id": "UC_cmEauzsnJ4trDXLiIug1Q"
+    },
+    "black_pearl_lamai": {
+      "name": "Black Pearl, Lamai",
+      "primary": "Kush_ZxTy2c",
+      "fallback": null,
+      "current": "Kush_ZxTy2c",
+      "search": "Black Pearl Lamai beach Koh Samui Thailand",
+      "channel_id": "UC_cmEauzsnJ4trDXLiIug1Q"
+    },
+    "house_of_sanskara_phangan": {
+      "name": "House of Sanskara, Koh Phangan [placeholder]",
+      "primary": "FBYUkqutqzE",
+      "fallback": null,
+      "current": "FBYUkqutqzE",
+      "search": "Koh Phangan beach live webcam Thailand",
+      "channel_id": "UCegzBUd6-PYoO_v7gjJgufg"
+    }
   }
 }

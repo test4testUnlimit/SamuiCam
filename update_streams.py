@@ -6,8 +6,6 @@ import subprocess
 import sys
 from config import YOUTUBE_API_KEY
 
-CHANNEL_ID = "UCmYyJaUxYiF5IbLx-0jFXHQ"  # The Real Samui Webcam
-
 HTML_FILES = [
     "index.html",
     "180-2/360.html",
@@ -33,7 +31,9 @@ def api_get(url):
 
 
 def check_videos(video_ids):
-    unique = list(set(video_ids))
+    unique = [v for v in set(video_ids) if v]
+    if not unique:
+        return {}
     url = (
         "https://www.googleapis.com/youtube/v3/videos"
         f"?part=status,snippet&id={','.join(unique)}&key={YOUTUBE_API_KEY}"
@@ -56,48 +56,34 @@ def is_ok(info):
     return info.get("embeddable", False) and info.get("live") in ("live", "upcoming")
 
 
-def find_replacement(search_query):
-    # Сначала ищем на канале
-    params = urllib.parse.urlencode({
-        "part": "snippet",
-        "q": search_query,
-        "channelId": CHANNEL_ID,
-        "eventType": "live",
-        "type": "video",
-        "key": YOUTUBE_API_KEY,
-    })
-    data = api_get(f"https://www.googleapis.com/youtube/v3/search?{params}")
-    candidates = [item["id"]["videoId"] for item in data.get("items", [])]
-
-    # Если на канале не нашли — ищем глобально
-    if not candidates:
-        params2 = urllib.parse.urlencode({
+def find_replacement(search_query, channel_id, exclude_ids):
+    # Сначала ищем на родном канале
+    for use_channel in [True, False]:
+        params = {
             "part": "snippet",
             "q": search_query,
             "eventType": "live",
             "type": "video",
             "key": YOUTUBE_API_KEY,
-        })
-        data2 = api_get(f"https://www.googleapis.com/youtube/v3/search?{params2}")
-        candidates = [item["id"]["videoId"] for item in data2.get("items", [])]
+        }
+        if use_channel:
+            params["channelId"] = channel_id
 
-    if not candidates:
-        return None
+        url = "https://www.googleapis.com/youtube/v3/search?" + urllib.parse.urlencode(params)
+        data = api_get(url)
+        candidates = [
+            item["id"]["videoId"] for item in data.get("items", [])
+            if item["id"]["videoId"] not in exclude_ids
+        ]
+        if not candidates:
+            continue
 
-    statuses = check_videos(candidates)
-    for cid in candidates:
-        if is_ok(statuses.get(cid, {})):
-            return cid
+        statuses = check_videos(candidates)
+        for cid in candidates:
+            if is_ok(statuses.get(cid, {})):
+                return cid
+
     return None
-
-
-def get_html_ids():
-    all_ids = []
-    for filepath in HTML_FILES:
-        with open(filepath, encoding="utf-8") as f:
-            content = f.read()
-        all_ids.extend(re.findall(r'youtube\.com/embed/([A-Za-z0-9_-]{11})', content))
-    return all_ids
 
 
 def update_html(old_id, new_id):
@@ -128,50 +114,74 @@ def main():
     print("=== SamuiCam stream updater ===\n")
 
     config = load_config()
-    preferred = config["preferred"]   # оригинальные ID — никогда не меняем
-    current = config["current"]       # текущие ID в HTML
+    streams = config["streams"]
 
-    # Все ID которые сейчас в HTML
-    html_ids = get_html_ids()
-    all_ids_to_check = list(set(html_ids) | set(preferred.keys()))
+    # Собираем все ID для проверки
+    all_ids = []
+    for s in streams.values():
+        all_ids.append(s["primary"])
+        all_ids.append(s["current"])
+        if s.get("fallback"):
+            all_ids.append(s["fallback"])
 
-    print(f"Проверяю {len(all_ids_to_check)} стримов...\n")
-    statuses = check_videos(all_ids_to_check)
+    print(f"Проверяю стримы через YouTube API...\n")
+    statuses = check_videos(all_ids)
 
     git_messages = []
     config_changed = False
 
-    for pref_id, search_query in preferred.items():
-        cur_id = current.get(pref_id, pref_id)
-        pref_status = statuses.get(pref_id, {})
-        cur_status = statuses.get(cur_id, {})
+    for key, s in streams.items():
+        name = s["name"]
+        primary = s["primary"]
+        fallback = s.get("fallback")
+        current = s["current"]
+        channel_id = s["channel_id"]
+        search_query = s["search"]
 
-        # Предпочтительный ожил — возвращаемся к нему
-        if is_ok(pref_status) and cur_id != pref_id:
-            print(f"🔄 {pref_id} снова доступен! Возвращаю оригинал (заменяю {cur_id})")
-            update_html(cur_id, pref_id)
-            current[pref_id] = pref_id
+        primary_ok = is_ok(statuses.get(primary, {}))
+        current_ok = is_ok(statuses.get(current, {}))
+
+        # Если primary ожил и сейчас стоит не primary — возвращаем
+        if primary_ok and current != primary:
+            print(f"🔄 [{name}] оригинал ожил! Возвращаю {primary} (был {current})")
+            update_html(current, primary)
+            s["current"] = primary
             config_changed = True
-            git_messages.append(f"restored {pref_id}")
+            git_messages.append(f"restored {primary}")
+            continue
 
-        # Текущий сломан — ищем замену
-        elif not is_ok(cur_status):
-            reason = "удалён" if cur_status.get("live") == "gone" else "embed запрещён" if not cur_status.get("embeddable") else "оффлайн"
-            print(f"❌ {cur_id} ({reason}) — ищу замену...")
-            new_id = find_replacement(search_query)
-            if new_id and new_id != cur_id:
-                print(f"   ✅ Нашёл: {new_id}")
-                update_html(cur_id, new_id)
-                current[pref_id] = new_id
-                config_changed = True
-                git_messages.append(f"{cur_id} -> {new_id}")
-            elif not new_id:
-                print(f"   ❌ Замену не нашёл")
+        # Если текущий OK — всё хорошо
+        if current_ok:
+            print(f"✅ [{name}] {current} — OK")
+            continue
+
+        # Текущий сломан
+        reason = "удалён" if statuses.get(current, {}).get("live") == "gone" else "embed запрещён" if not statuses.get(current, {}).get("embeddable") else "оффлайн"
+        print(f"❌ [{name}] {current} ({reason})")
+
+        # Пробуем fallback если есть
+        new_id = None
+        if fallback and fallback != current:
+            fallback_ok = is_ok(statuses.get(fallback, {}))
+            if fallback_ok:
+                new_id = fallback
+                print(f"   ↩️  Переключаю на fallback: {fallback}")
+
+        # Если fallback тоже не работает — ищем новый
+        if not new_id:
+            print(f"   🔍 Ищу замену...")
+            exclude = {primary, current, fallback} - {None}
+            new_id = find_replacement(search_query, channel_id, exclude)
+            if new_id:
+                print(f"   ✅ Нашёл замену: {new_id}")
             else:
-                print(f"   ✅ Уже стоит лучшая версия")
+                print(f"   ❌ Замену не нашёл")
 
-        else:
-            print(f"✅ {cur_id} — OK")
+        if new_id:
+            update_html(current, new_id)
+            s["current"] = new_id
+            config_changed = True
+            git_messages.append(f"{current} -> {new_id} ({name})")
 
     if not git_messages:
         print("\n✅ Всё в порядке, изменений нет.")
