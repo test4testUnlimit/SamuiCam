@@ -5,6 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Koh Samui — Live Cameras</title>
     <style>
+        /* ── Theme tokens ── */
+        :root {
+            --bg-panel:  #181818;
+            --bd:        #2c2c2c;
+            --bd2:       #242424;
+            --bd3:       #202020;
+            --t1:        #ddd;
+            --t2:        #999;
+            --t3:        #555;
+            --t4:        #333;
+            --t5:        #4a4a4a;
+            --ac:        #4fc;
+            --ac-dim:    rgba(68,255,204,0.04);
+            --ac-dim2:   #2a7060;
+            --overlay:   rgba(0,0,0,0.5);
+            --gear-bg:   rgba(0,0,0,0.35);
+            --gear-c:    #fff;
+        }
+        [data-theme="light"] {
+            --bg-panel:  #ffffff;
+            --bd:        #e0e0e0;
+            --bd2:       #ebebeb;
+            --bd3:       #f0f0f0;
+            --t1:        #1a1a1a;
+            --t2:        #555;
+            --t3:        #999;
+            --t4:        #bbb;
+            --t5:        #777;
+            --ac:        #009966;
+            --ac-dim:    rgba(0,153,102,0.06);
+            --ac-dim2:   #006644;
+            --overlay:   rgba(0,0,0,0.3);
+            --gear-bg:   rgba(255,255,255,0.55);
+            --gear-c:    #222;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #000; overflow: hidden; width: 100vw; height: 100vh; }
 
@@ -14,260 +50,122 @@
 
         /* ── Hamburger ── */
         .hamburger {
-            position: fixed;
-            top: 48px;
-            left: 12px;
-            z-index: 1001;
-            cursor: pointer;
-            font-size: 16px;
-            color: #fff;
-            background: rgba(0,0,0,0.3);
-            padding: 4px 8px;
-            border-radius: 4px;
-            opacity: 0.2;
-            transition: opacity 0.3s;
-            user-select: none;
+            position: fixed; top: 48px; left: 12px; z-index: 1001;
+            cursor: pointer; font-size: 16px; color: #fff;
+            background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px;
+            opacity: 0.2; transition: opacity 0.3s; user-select: none;
         }
         .hamburger:hover { opacity: 0.85; }
 
         /* ── Side menu ── */
-        .menu-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1002;
-        }
+        .menu-overlay { display: none; position: fixed; inset: 0; background: var(--overlay); z-index: 1002; }
         .side-menu {
-            position: fixed;
-            top: 0; left: 0;
-            width: 260px;
-            height: 100%;
-            background: #1a1a1a;
-            z-index: 1003;
-            transform: translateX(-100%);
+            position: fixed; top: 0; left: 0; width: 260px; height: 100%;
+            background: var(--bg-panel); border-right: 1px solid var(--bd);
+            z-index: 1003; transform: translateX(-100%);
             transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            padding: 20px 0;
+            display: flex; flex-direction: column; padding: 20px 0;
         }
         .side-menu.open { transform: translateX(0); }
         .menu-overlay.open { display: block; }
-        .menu-title {
-            color: #555;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 0 20px 14px;
-            border-bottom: 1px solid #282828;
-            margin-bottom: 8px;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-        .menu-item {
-            display: block;
-            color: #888;
-            text-decoration: none;
-            padding: 13px 20px;
-            font-size: 14px;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            transition: background 0.2s, color 0.2s;
-        }
-        .menu-item:hover { background: #242424; color: #ccc; }
-        .menu-item.active { color: #4fc; border-left: 3px solid #4fc; padding-left: 17px; }
-        .menu-sep { border: none; border-top: 1px solid #222; margin: 6px 0; }
-        .menu-tip {
-            margin-top: auto;
-            padding: 14px 20px 10px;
-            color: #666;
-            font-size: 11px;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            border-top: 1px solid #282828;
-            line-height: 1.55;
-        }
-        .menu-version {
-            padding: 0 20px 14px;
-            color: #2e2e2e;
-            font-size: 10px;
-            font-family: 'Cascadia Code', 'Consolas', monospace;
-            text-align: right;
-            transition: color 0.3s;
-        }
-        .menu-version:hover { color: #555; }
+        .menu-title { color: var(--t3); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; padding: 0 20px 14px; border-bottom: 1px solid var(--bd); margin-bottom: 8px; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .menu-item { display: block; color: var(--t2); text-decoration: none; padding: 13px 20px; font-size: 14px; font-family: 'Segoe UI', system-ui, sans-serif; transition: background 0.2s, color 0.2s; }
+        .menu-item:hover { background: var(--bd); color: var(--t1); }
+        .menu-item.active { color: var(--ac); border-left: 3px solid var(--ac); padding-left: 17px; }
+        .menu-sep { border: none; border-top: 1px solid var(--bd); margin: 6px 0; }
+        .menu-theme { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; cursor: pointer; transition: background 0.2s; }
+        .menu-theme:hover { background: var(--bd); }
+        .menu-theme span { color: var(--t2); font-size: 13px; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .theme-icon { font-size: 15px; }
+        .menu-tip { margin-top: auto; padding: 14px 20px 8px; color: var(--t2); font-size: 11px; font-family: 'Segoe UI', system-ui, sans-serif; border-top: 1px solid var(--bd); line-height: 1.55; }
+        .menu-version { padding: 4px 20px 14px; color: var(--t2); font-size: 11px; font-family: 'Cascadia Code', 'Consolas', monospace; text-align: right; }
 
-        /* ── Gear button — same fade behavior as hamburger ── */
+        /* ── Gear button — same fade as hamburger ── */
         .gear-btn {
-            position: fixed;
-            bottom: 12px;
-            right: 12px;
-            z-index: 300;
-            width: 36px;
-            height: 36px;
-            background: rgba(0,0,0,0.35);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 5px;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.2;
-            transition: opacity 0.3s, border-color 0.2s;
+            position: fixed; bottom: 12px; right: 12px; z-index: 300;
+            width: 36px; height: 36px;
+            background: var(--gear-bg);
+            border: 1px solid rgba(128,128,128,0.18);
+            border-radius: 5px; color: var(--gear-c);
+            font-size: 16px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0.2; transition: opacity 0.3s, border-color 0.2s;
             user-select: none;
         }
         .gear-btn:hover { opacity: 0.85; }
-        .gear-btn.active { opacity: 1; border-color: #4fc; color: #4fc; }
+        .gear-btn.active { opacity: 1; border-color: var(--ac); color: var(--ac); }
+
+        /* Gear pulse for first-time visitors */
+        @keyframes gear-pulse {
+            0%, 100% { opacity: 0.2; box-shadow: 0 0 0 0 rgba(68,255,204,0); }
+            50%       { opacity: 1;   box-shadow: 0 0 0 10px rgba(68,255,204,0.15); border-color: rgba(68,255,204,0.5); }
+        }
+        .gear-btn.pulsing { animation: gear-pulse 1.8s ease-in-out 4; }
 
         /* ── Empty state ── */
-        .empty { color: #888; font-family: 'Segoe UI', system-ui, sans-serif; padding: 60px; text-align: center; }
-        .empty h2 { color: #ccc; font-weight: 400; margin-bottom: 12px; }
-        .empty a { color: #4fc; }
+        .empty { color: var(--t2); font-family: 'Segoe UI', system-ui, sans-serif; padding: 60px; text-align: center; }
+        .empty h2 { color: var(--t1); font-weight: 400; margin-bottom: 12px; }
+        .empty a { color: var(--ac); }
 
         /* ── Settings panel ── */
         .settings-panel {
-            position: fixed;
-            bottom: 56px;
-            right: 12px;
-            width: 272px;
-            background: #181818;
-            border: 1px solid #2c2c2c;
-            border-radius: 8px;
-            z-index: 250;
+            position: fixed; bottom: 56px; right: 12px; width: 272px;
+            background: var(--bg-panel); border: 1px solid var(--bd);
+            border-radius: 8px; z-index: 250;
             font-family: 'Segoe UI', system-ui, sans-serif;
             box-shadow: 0 8px 32px rgba(0,0,0,0.7);
-            transform: translateY(10px);
-            opacity: 0;
-            pointer-events: none;
+            transform: translateY(10px); opacity: 0; pointer-events: none;
             transition: transform 0.2s ease, opacity 0.18s ease;
         }
-        .settings-panel.open {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: all;
-        }
+        .settings-panel.open { transform: translateY(0); opacity: 1; pointer-events: all; }
 
-        .sp-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 11px 14px 10px;
-            border-bottom: 1px solid #242424;
-        }
-        .sp-title { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1.5px; }
-        .sp-close { color: #444; cursor: pointer; font-size: 18px; line-height: 1; transition: color 0.15s; }
-        .sp-close:hover { color: #aaa; }
+        .sp-header { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px 10px; border-bottom: 1px solid var(--bd2); }
+        .sp-title { font-size: 11px; color: var(--t3); text-transform: uppercase; letter-spacing: 1.5px; }
+        .sp-close { color: var(--t4); cursor: pointer; font-size: 18px; line-height: 1; transition: color 0.15s; }
+        .sp-close:hover { color: var(--t1); }
 
-        .sp-section { padding: 10px 14px; border-bottom: 1px solid #202020; }
+        .sp-section { padding: 10px 14px; border-bottom: 1px solid var(--bd3); }
         .sp-section:last-child { border-bottom: none; }
-        .sp-label { font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 8px; }
+        .sp-label { font-size: 10px; color: var(--t3); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 8px; }
 
         /* Mode toggle (Contain / Fill) */
-        .mode-toggle { display: flex; border: 1px solid #252525; border-radius: 4px; overflow: hidden; }
-        .mode-btn {
-            flex: 1;
-            padding: 8px 6px;
-            background: none;
-            border: none;
-            color: #555;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.15s;
-            font-family: inherit;
-            line-height: 1.3;
-            text-align: center;
-        }
-        .mode-btn small { display: block; font-size: 10px; color: #333; margin-top: 1px; }
-        .mode-btn:hover { color: #aaa; }
-        .mode-btn.active { background: #111; color: #4fc; }
-        .mode-btn.active small { color: #2a6a5a; }
+        .mode-toggle { display: flex; border: 1px solid var(--bd); border-radius: 4px; overflow: hidden; }
+        .mode-btn { flex: 1; padding: 8px 6px; background: none; border: none; color: var(--t3); font-size: 12px; cursor: pointer; transition: all 0.15s; font-family: inherit; line-height: 1.3; text-align: center; }
+        .mode-btn small { display: block; font-size: 10px; color: var(--t4); margin-top: 1px; }
+        .mode-btn:hover { color: var(--t2); }
+        .mode-btn.active { background: var(--bd3); color: var(--ac); }
+        .mode-btn.active small { color: var(--t3); }
 
-        /* Camera order list */
+        /* Camera list */
         .cam-list { display: flex; flex-direction: column; gap: 3px; }
-        .cam-row {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 5px 7px;
-            background: #111;
-            border-radius: 4px;
-        }
-        .cam-idx { font-size: 10px; color: #333; width: 14px; text-align: right; flex-shrink: 0; }
-        .cam-row-name {
-            flex: 1;
-            font-size: 11px;
-            color: #999;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .cam-row { display: flex; align-items: center; gap: 4px; padding: 5px 7px; background: rgba(0,0,0,0.25); border-radius: 4px; }
+        [data-theme="light"] .cam-row { background: var(--bd3); }
+        .cam-idx { font-size: 10px; color: var(--t4); width: 14px; text-align: right; flex-shrink: 0; }
+        .cam-row-name { flex: 1; font-size: 11px; color: var(--t2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .cam-row-btns { display: flex; gap: 2px; flex-shrink: 0; }
-        .cam-row-btn {
-            background: none;
-            border: 1px solid #252525;
-            color: #4a4a4a;
-            font-size: 11px;
-            cursor: pointer;
-            padding: 3px 6px;
-            border-radius: 3px;
-            transition: all 0.15s;
-            line-height: 1.2;
-            font-family: inherit;
-            min-width: 26px;
-            text-align: center;
-        }
-        .cam-row-btn:hover:not(:disabled) { border-color: #555; color: #ddd; }
+        .cam-row-btn { background: none; border: 1px solid var(--bd); color: var(--t5); font-size: 11px; cursor: pointer; padding: 3px 6px; border-radius: 3px; transition: all 0.15s; line-height: 1.2; font-family: inherit; min-width: 26px; text-align: center; }
+        .cam-row-btn:hover:not(:disabled) { border-color: var(--t2); color: var(--t1); }
         .cam-row-btn:disabled { opacity: 0.18; cursor: default; }
-        .mirror-btn.on { border-color: #4fc; color: #4fc; }
+        .mirror-btn.on { border-color: var(--ac); color: var(--ac); }
 
         /* Layout selector */
         .layout-btns { display: flex; gap: 4px; }
-        .layout-btn {
-            flex: 1;
-            padding: 8px 4px;
-            background: none;
-            border: 1px solid #252525;
-            color: #555;
-            font-size: 11px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.15s;
-            font-family: inherit;
-            text-align: center;
-            line-height: 1.3;
-        }
-        .layout-btn small { display: block; font-size: 9px; color: #333; margin-top: 2px; }
-        .layout-btn:hover { border-color: #555; color: #ccc; }
-        .layout-btn.active { border-color: #4fc; color: #4fc; background: rgba(68,255,204,0.04); }
-        .layout-btn.active small { color: #2a7060; }
+        .layout-btn { flex: 1; padding: 8px 4px; background: none; border: 1px solid var(--bd); color: var(--t3); font-size: 11px; cursor: pointer; border-radius: 4px; transition: all 0.15s; font-family: inherit; text-align: center; line-height: 1.3; }
+        .layout-btn small { display: block; font-size: 9px; color: var(--t4); margin-top: 2px; }
+        .layout-btn:hover { border-color: var(--t2); color: var(--t1); }
+        .layout-btn.active { border-color: var(--ac); color: var(--ac); background: var(--ac-dim); }
+        .layout-btn.active small { color: var(--ac-dim2); }
 
-        /* Copy link */
-        .sp-copy-btn {
-            width: 100%;
-            padding: 10px;
-            background: #4fc;
-            color: #000;
-            border: none;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            transition: background 0.15s;
-        }
-        .sp-copy-btn:hover { background: #6ffccc; }
-        .sp-copy-ok { text-align: center; font-size: 11px; color: #4fc; height: 16px; margin-top: 6px; }
+        /* Copy */
+        .sp-copy-btn { width: 100%; padding: 10px; background: var(--ac); color: #000; border: none; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+        .sp-copy-btn:hover { filter: brightness(1.12); }
+        .sp-copy-ok { text-align: center; font-size: 11px; color: var(--ac); height: 16px; margin-top: 6px; }
 
         /* ── Mobile ── */
         @media (max-width: 600px) {
             .hamburger { font-size: 20px; padding: 7px 11px; top: 44px; }
             .gear-btn { width: 44px; height: 44px; font-size: 18px; bottom: 8px; right: 8px; }
-            .settings-panel {
-                right: 0; left: 0;
-                width: auto;
-                margin: 0 8px;
-                bottom: 60px;
-                border-radius: 8px;
-            }
+            .settings-panel { right: 0; left: 0; width: auto; margin: 0 8px; bottom: 60px; }
             .cam-row-btn { padding: 5px 8px; font-size: 13px; min-width: 30px; }
             .layout-btn { padding: 10px 4px; font-size: 12px; }
             .sp-copy-btn { padding: 12px; font-size: 14px; }
@@ -280,58 +178,47 @@
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
     <nav class="side-menu" id="sideMenu">
         <div class="menu-title">Navigation</div>
-        <a href="/" class="menu-item">🏠 &nbsp;Home — 9 Cameras</a>
+        <a href="/"         class="menu-item">🏠 &nbsp;Home</a>
+        <a href="/9cams/"   class="menu-item">⊞ &nbsp;9 Cameras</a>
         <a href="/builder/" class="menu-item">🎨 &nbsp;Build a Camera View</a>
+        <hr class="menu-sep">
+        <div class="menu-theme" onclick="toggleTheme()">
+            <span>Theme</span>
+            <span class="theme-icon" id="themeIcon">☀</span>
+        </div>
+        <hr class="menu-sep">
         <div class="menu-tip">💡 Copy the page URL and paste into Wallpaper Engine</div>
-        <div class="menu-version">v.1.013</div>
+        <div class="menu-version">v.1.014</div>
     </nav>
 
     <div id="grid"></div>
 
-    <!-- Only visible UI element on screen: gear button -->
     <div class="gear-btn" id="gearBtn" onclick="togglePanel()" title="Controls">⚙</div>
 
-    <!-- Settings panel -->
     <div class="settings-panel" id="settingsPanel">
         <div class="sp-header">
             <span class="sp-title">Controls</span>
             <span class="sp-close" onclick="togglePanel()">×</span>
         </div>
-
         <div class="sp-section">
             <div class="sp-label">Mode</div>
             <div class="mode-toggle">
-                <button class="mode-btn" id="btnContain" onclick="setMode('contain')">
-                    Contain
-                    <small>no crop</small>
-                </button>
-                <button class="mode-btn" id="btnFill" onclick="setMode('fill')">
-                    Fill
-                    <small>fill screen</small>
-                </button>
+                <button class="mode-btn" id="btnContain" onclick="setMode('contain')">Contain<small>no crop</small></button>
+                <button class="mode-btn" id="btnFill"    onclick="setMode('fill')">Fill<small>fill screen</small></button>
             </div>
         </div>
-
         <div class="sp-section">
             <div class="sp-label">Order · Mirror</div>
             <div class="cam-list" id="camList"></div>
         </div>
-
         <div class="sp-section">
             <div class="sp-label">Layout</div>
             <div class="layout-btns">
-                <button class="layout-btn" id="layAuto" onclick="setLayout('auto')">
-                    ⊞ Auto<small>smart grid</small>
-                </button>
-                <button class="layout-btn" id="layH" onclick="setLayout('h')">
-                    ═ Stack<small>single column</small>
-                </button>
-                <button class="layout-btn" id="layV" onclick="setLayout('v')">
-                    ║ Row<small>single row</small>
-                </button>
+                <button class="layout-btn" id="layAuto" onclick="setLayout('auto')">⊞ Auto<small>smart grid</small></button>
+                <button class="layout-btn" id="layH"    onclick="setLayout('h')">═ Stack<small>single column</small></button>
+                <button class="layout-btn" id="layV"    onclick="setLayout('v')">║ Row<small>single row</small></button>
             </div>
         </div>
-
         <div class="sp-section">
             <button class="sp-copy-btn" onclick="copyLink()">Copy Link</button>
             <div class="sp-copy-ok" id="copyOk"></div>
@@ -354,19 +241,13 @@
         let currentCams = (params.get('cams') || '').split(',').filter(Boolean);
         let mode        = params.get('mode') || 'fill';
         let layout      = params.get('layout') || 'auto';
-        let mirrorSet   = new Set(
-            (params.get('mirror') || '').split(',').filter(Boolean).map(Number)
-        );
+        let mirrorSet   = new Set((params.get('mirror') || '').split(',').filter(Boolean).map(Number));
 
         const grid = document.getElementById('grid');
 
-        /* ── Grid geometry ── */
         function getColsAuto(n) {
-            if (n <= 1) return 1;
-            if (n <= 2) return 2;
-            if (n <= 3) return 3;
-            if (n <= 4) return 2;
-            return 3;
+            if (n <= 1) return 1; if (n <= 2) return 2;
+            if (n <= 3) return 3; if (n <= 4) return 2; return 3;
         }
         function getGrid(n) {
             if (layout === 'h') return { cols: 1, rows: n };
@@ -375,17 +256,16 @@
             return { cols, rows: Math.ceil(n / cols) };
         }
 
-        /* ── Build iframes ── */
         function buildGrid() {
             const { cols, rows } = getGrid(currentCams.length);
             grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
             grid.style.gridTemplateRows    = `repeat(${rows}, 1fr)`;
             grid.innerHTML = '';
             currentCams.forEach((id, i) => {
-                const cell   = document.createElement('div');
+                const cell = document.createElement('div');
                 cell.className = 'cell';
                 const iframe = document.createElement('iframe');
-                iframe.src   = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&iv_load_policy=3`;
+                iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&iv_load_policy=3`;
                 iframe.setAttribute('allowfullscreen', '');
                 if (mirrorSet.has(i)) iframe.style.transform = 'scaleX(-1)';
                 cell.appendChild(iframe);
@@ -393,14 +273,10 @@
             });
         }
 
-        /* ── Size iframes to match mode ── */
         function applyMode() {
             const { cols, rows } = getGrid(currentCams.length);
-            const cellW = window.innerWidth  / cols;
-            const cellH = window.innerHeight / rows;
-            const ratio = 16 / 9;
-            const cr    = cellW / cellH;
-
+            const cellW = window.innerWidth / cols, cellH = window.innerHeight / rows;
+            const ratio = 16 / 9, cr = cellW / cellH;
             document.querySelectorAll('.cell iframe').forEach((iframe, i) => {
                 let iW, iH;
                 if (mode === 'contain') {
@@ -410,64 +286,49 @@
                     if (cr > ratio) { iW = cellW;  iH = cellW / ratio; }
                     else            { iH = cellH;  iW = cellH * ratio; }
                 }
-                iframe.style.width  = iW + 'px';
-                iframe.style.height = iH + 'px';
-                iframe.style.top    = ((cellH - iH) / 2) + 'px';
-                iframe.style.left   = ((cellW - iW) / 2) + 'px';
+                iframe.style.width  = iW + 'px'; iframe.style.height = iH + 'px';
+                iframe.style.top  = ((cellH - iH) / 2) + 'px';
+                iframe.style.left = ((cellW - iW) / 2) + 'px';
                 iframe.style.transform = mirrorSet.has(i) ? 'scaleX(-1)' : '';
             });
-
             document.getElementById('btnContain').classList.toggle('active', mode === 'contain');
             document.getElementById('btnFill').classList.toggle('active', mode === 'fill');
         }
 
-        /* ── URL state ── */
         function buildUrl() {
             const url = new URL(location.href);
             url.searchParams.set('cams', currentCams.join(','));
             url.searchParams.set('mode', mode);
-            if (mirrorSet.size > 0)
-                url.searchParams.set('mirror', [...mirrorSet].sort((a, b) => a - b).join(','));
-            else
-                url.searchParams.delete('mirror');
+            if (mirrorSet.size > 0) url.searchParams.set('mirror', [...mirrorSet].sort((a,b)=>a-b).join(','));
+            else url.searchParams.delete('mirror');
             if (layout !== 'auto') url.searchParams.set('layout', layout);
-            else                   url.searchParams.delete('layout');
+            else url.searchParams.delete('layout');
             return url.toString();
         }
         function pushUrl() { history.replaceState({}, '', buildUrl()); }
 
-        /* ── Mode ── */
         function setMode(m) { mode = m; pushUrl(); applyMode(); }
 
-        /* ── Layout ── */
         function setLayout(l) { layout = l; pushUrl(); buildGrid(); applyMode(); renderPanel(); }
 
-        /* ── Reorder ── */
         function moveCamera(idx, dir) {
             const to = idx + dir;
             if (to < 0 || to >= currentCams.length) return;
             [currentCams[idx], currentCams[to]] = [currentCams[to], currentCams[idx]];
             const next = new Set();
-            mirrorSet.forEach(i => {
-                if      (i === idx) next.add(to);
-                else if (i === to)  next.add(idx);
-                else                next.add(i);
-            });
+            mirrorSet.forEach(i => { if (i===idx) next.add(to); else if (i===to) next.add(idx); else next.add(i); });
             mirrorSet = next;
             pushUrl(); buildGrid(); applyMode(); renderPanel();
         }
 
-        /* ── Mirror ── */
         function toggleMirror(idx) {
-            if (mirrorSet.has(idx)) mirrorSet.delete(idx);
-            else                    mirrorSet.add(idx);
+            if (mirrorSet.has(idx)) mirrorSet.delete(idx); else mirrorSet.add(idx);
             pushUrl();
             const iframe = document.querySelectorAll('.cell iframe')[idx];
             if (iframe) iframe.style.transform = mirrorSet.has(idx) ? 'scaleX(-1)' : '';
             renderPanel();
         }
 
-        /* ── Panel ── */
         function togglePanel() {
             const panel = document.getElementById('settingsPanel');
             const gear  = document.getElementById('gearBtn');
@@ -477,30 +338,24 @@
         }
 
         function renderPanel() {
-            const n    = currentCams.length;
-            const list = document.getElementById('camList');
-            list.innerHTML = currentCams.map((id, i) => {
+            const n = currentCams.length;
+            document.getElementById('camList').innerHTML = currentCams.map((id, i) => {
                 const name = STREAMS[id] || id;
                 return `<div class="cam-row">
-                    <span class="cam-idx">${i + 1}</span>
+                    <span class="cam-idx">${i+1}</span>
                     <span class="cam-row-name" title="${name}">${name}</span>
                     <div class="cam-row-btns">
-                        <button class="cam-row-btn mirror-btn ${mirrorSet.has(i) ? 'on' : ''}"
-                                onclick="toggleMirror(${i})" title="Mirror">⇄</button>
-                        <button class="cam-row-btn" onclick="moveCamera(${i}, -1)"
-                                ${i === 0 ? 'disabled' : ''} title="Move up">↑</button>
-                        <button class="cam-row-btn" onclick="moveCamera(${i}, 1)"
-                                ${i === n - 1 ? 'disabled' : ''} title="Move down">↓</button>
+                        <button class="cam-row-btn mirror-btn ${mirrorSet.has(i)?'on':''}" onclick="toggleMirror(${i})" title="Mirror">⇄</button>
+                        <button class="cam-row-btn" onclick="moveCamera(${i},-1)" ${i===0?'disabled':''}>↑</button>
+                        <button class="cam-row-btn" onclick="moveCamera(${i}, 1)" ${i===n-1?'disabled':''}>↓</button>
                     </div>
                 </div>`;
             }).join('');
-
-            document.getElementById('layAuto').classList.toggle('active', layout === 'auto');
-            document.getElementById('layH').classList.toggle('active', layout === 'h');
-            document.getElementById('layV').classList.toggle('active', layout === 'v');
+            document.getElementById('layAuto').classList.toggle('active', layout==='auto');
+            document.getElementById('layH').classList.toggle('active', layout==='h');
+            document.getElementById('layV').classList.toggle('active', layout==='v');
         }
 
-        /* ── Copy link ── */
         function copyLink() {
             pushUrl();
             navigator.clipboard.writeText(location.href).then(() => {
@@ -510,22 +365,46 @@
             });
         }
 
-        /* ── Nav menu ── */
         function toggleMenu() {
             document.getElementById('sideMenu').classList.toggle('open');
             document.getElementById('menuOverlay').classList.toggle('open');
         }
 
-        /* ── Init ── */
+        /* ── Theme ── */
+        function initTheme() {
+            const stored = localStorage.getItem('samui-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(stored || (prefersDark ? 'dark' : 'light'), false);
+        }
+        function applyTheme(t, save = true) {
+            document.documentElement.setAttribute('data-theme', t);
+            document.getElementById('themeIcon').textContent = t === 'dark' ? '☀' : '🌙';
+            if (save) localStorage.setItem('samui-theme', t);
+        }
+        function toggleTheme() {
+            const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+            applyTheme(cur === 'dark' ? 'light' : 'dark');
+        }
+        initTheme();
+
+        /* ── Init grid ── */
         if (currentCams.length === 0) {
-            grid.innerHTML = `<div class="empty">
-                <h2>No cameras selected</h2>
-                <p>Go to the <a href="/builder/">Builder</a> to create a custom view</p>
-            </div>`;
+            grid.innerHTML = `<div class="empty"><h2>No cameras selected</h2><p>Go to the <a href="/builder/">Builder</a> to create a custom view</p></div>`;
         } else {
-            buildGrid();
-            applyMode();
+            buildGrid(); applyMode();
             window.addEventListener('resize', applyMode);
+        }
+
+        /* ── Gear pulse on first visit ── */
+        if (!localStorage.getItem('samui-gear-seen') && currentCams.length > 0) {
+            setTimeout(() => {
+                const gear = document.getElementById('gearBtn');
+                gear.classList.add('pulsing');
+                gear.addEventListener('animationend', () => {
+                    gear.classList.remove('pulsing');
+                    localStorage.setItem('samui-gear-seen', '1');
+                }, { once: true });
+            }, 2000);
         }
     </script>
 </body>

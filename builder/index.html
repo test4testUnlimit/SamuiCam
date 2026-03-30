@@ -5,11 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camera View Builder — Koh Samui</title>
     <style>
+        /* ── Theme tokens ── */
+        :root {
+            --bg:        #111;
+            --bg-deep:   #0d0d0d;
+            --bg-panel:  #1a1a1a;
+            --bg-card:   #161616;
+            --bd:        #1e1e1e;
+            --bd2:       #2a2a2a;
+            --t1:        #ddd;
+            --t2:        #888;
+            --t3:        #555;
+            --t4:        #333;
+            --ac:        #4fc;
+            --ac-btn:    #4fc;
+            --ac-btn-h:  #6ffccc;
+            --ac-dis-bg: #1a3328;
+            --ac-dis-t:  #2a5040;
+            --overlay:   rgba(0,0,0,0.5);
+        }
+        [data-theme="light"] {
+            --bg:        #f4f4f4;
+            --bg-deep:   #e8e8e8;
+            --bg-panel:  #ffffff;
+            --bg-card:   #f9f9f9;
+            --bd:        #e0e0e0;
+            --bd2:       #d0d0d0;
+            --t1:        #1a1a1a;
+            --t2:        #555;
+            --t3:        #999;
+            --t4:        #bbb;
+            --ac:        #009966;
+            --ac-btn:    #009966;
+            --ac-btn-h:  #00b377;
+            --ac-dis-bg: #d8f0e8;
+            --ac-dis-t:  #aaa;
+            --overlay:   rgba(0,0,0,0.25);
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background: #111;
-            color: #fff;
+            background: var(--bg);
+            color: var(--t1);
             font-family: 'Segoe UI', system-ui, sans-serif;
             height: 100vh;
             display: flex;
@@ -19,52 +57,18 @@
 
         /* ── Header ── */
         header {
-            padding: 16px 24px 13px;
-            border-bottom: 1px solid #1e1e1e;
+            padding: 15px 20px 13px 56px; /* left padding for hamburger */
+            border-bottom: 1px solid var(--bd);
             flex-shrink: 0;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
-        header h1 {
-            font-size: 15px;
-            font-weight: 500;
-            color: #ddd;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-        }
-        header .subtitle {
-            font-size: 13px;
-            color: #888;
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .header-nav {
-            display: flex;
-            gap: 4px;
-            flex-shrink: 0;
-        }
-        .header-nav a {
-            font-size: 12px;
-            color: #555;
-            text-decoration: none;
-            padding: 5px 10px;
-            border: 1px solid #222;
-            border-radius: 4px;
-            transition: all 0.15s;
-            white-space: nowrap;
-        }
-        .header-nav a:hover { color: #aaa; border-color: #444; }
+        header h1 { font-size: 15px; font-weight: 500; color: var(--t1); letter-spacing: 0.3px; }
+        header .subtitle { font-size: 13px; color: var(--t2); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* ── Main layout ── */
-        .main {
-            display: grid;
-            grid-template-columns: 1fr 296px;
-            flex: 1;
-            overflow: hidden;
-        }
+        .main { display: grid; grid-template-columns: 1fr 296px; flex: 1; overflow: hidden; }
 
         /* ── Camera grid ── */
         .camera-list {
@@ -75,219 +79,168 @@
             gap: 10px;
             align-content: start;
         }
-
         .cam-card {
-            border: 1.5px solid #1e1e1e;
+            border: 1.5px solid var(--bd);
             border-radius: 5px;
             overflow: hidden;
             cursor: pointer;
             transition: border-color 0.15s;
-            background: #161616;
+            background: var(--bg-card);
         }
-        .cam-card:hover { border-color: #333; }
-        .cam-card.selected { border-color: #4fc; }
+        .cam-card:hover { border-color: var(--bd2); }
+        .cam-card.selected { border-color: var(--ac); }
 
-        .cam-thumb {
-            width: 100%;
-            aspect-ratio: 16/9;
-            object-fit: cover;
-            display: block;
-            background: #1a1a1a;
-        }
-
-        .cam-info {
-            padding: 7px 9px;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-
-        /* Checkbox indicator */
+        .cam-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: var(--bg-deep); }
+        .cam-info { padding: 7px 9px; display: flex; align-items: center; gap: 7px; }
         .cam-check {
-            width: 14px;
-            height: 14px;
-            border: 1.5px solid #333;
-            border-radius: 3px;
-            flex-shrink: 0;
+            width: 14px; height: 14px;
+            border: 1.5px solid var(--bd2);
+            border-radius: 3px; flex-shrink: 0;
             transition: all 0.15s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 9px;
-            font-weight: bold;
-            color: transparent;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: bold; color: transparent;
         }
-        .selected .cam-check { background: #4fc; border-color: #4fc; color: #000; }
+        .selected .cam-check { background: var(--ac); border-color: var(--ac); color: #000; }
         .cam-check::after { content: '✓'; }
-
-        .cam-name { font-size: 11px; color: #777; line-height: 1.35; }
-        .selected .cam-name { color: #ccc; }
+        .cam-name { font-size: 11px; color: var(--t2); line-height: 1.35; }
+        .selected .cam-name { color: var(--t1); }
 
         /* ── Sidebar ── */
-        .sidebar {
-            border-left: 1px solid #1e1e1e;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .sidebar-inner {
-            padding: 18px 18px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            overflow-y: auto;
-            flex: 1;
-        }
+        .sidebar { border-left: 1px solid var(--bd); display: flex; flex-direction: column; overflow: hidden; }
+        .sidebar-inner { padding: 18px 18px 0; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; flex: 1; }
 
-        .section-label {
-            font-size: 10px;
-            color: #444;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
-        }
+        .section-label { font-size: 10px; color: var(--t3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
 
         /* Mode toggle */
-        .toggle {
-            display: flex;
-            border: 1px solid #1e1e1e;
-            border-radius: 4px;
-            overflow: hidden;
-        }
+        .toggle { display: flex; border: 1px solid var(--bd); border-radius: 4px; overflow: hidden; }
         .toggle-btn {
-            flex: 1;
-            padding: 9px 6px;
-            background: none;
-            border: none;
-            color: #444;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.15s;
-            font-family: inherit;
-            line-height: 1.3;
-            text-align: center;
+            flex: 1; padding: 9px 6px;
+            background: none; border: none; color: var(--t3);
+            font-size: 12px; cursor: pointer;
+            transition: all 0.15s; font-family: inherit;
+            line-height: 1.3; text-align: center;
         }
-        .toggle-btn small { display: block; font-size: 10px; color: #333; margin-top: 2px; }
-        .toggle-btn.active { background: #1a1a1a; color: #4fc; }
-        .toggle-btn.active small { color: #2a6a5a; }
+        .toggle-btn small { display: block; font-size: 10px; color: var(--t4); margin-top: 2px; }
+        .toggle-btn.active { background: var(--bg-card); color: var(--ac); }
+        .toggle-btn.active small { color: var(--t3); }
 
-        /* Selected cameras list */
-        .sel-list {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            min-height: 40px;
-        }
+        /* Selected list */
+        .sel-list { display: flex; flex-direction: column; gap: 3px; min-height: 40px; }
         .sel-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 6px 8px;
-            background: #161616;
-            border-radius: 3px;
-            font-size: 11px;
-            color: #888;
+            display: flex; align-items: center; gap: 4px;
+            padding: 6px 8px; background: var(--bg-card);
+            border-radius: 3px; font-size: 11px; color: var(--t2);
         }
         .sel-item-name { flex: 1; line-height: 1.35; }
         .sel-move {
-            background: none;
-            border: 1px solid #222;
-            color: #444;
-            font-size: 11px;
-            cursor: pointer;
-            padding: 2px 6px;
-            border-radius: 3px;
-            line-height: 1.3;
-            transition: all 0.15s;
-            font-family: inherit;
-            min-width: 24px;
-            text-align: center;
+            background: none; border: 1px solid var(--bd);
+            color: var(--t3); font-size: 11px; cursor: pointer;
+            padding: 2px 6px; border-radius: 3px; line-height: 1.3;
+            transition: all 0.15s; font-family: inherit;
+            min-width: 24px; text-align: center;
         }
-        .sel-move:hover:not(:disabled) { border-color: #555; color: #ccc; }
+        .sel-move:hover:not(:disabled) { border-color: var(--t2); color: var(--t1); }
         .sel-move:disabled { opacity: 0.18; cursor: default; }
-        .sel-remove {
-            color: #333;
-            cursor: pointer;
-            padding: 0 3px;
-            font-size: 14px;
-            transition: color 0.15s;
-            line-height: 1;
-            flex-shrink: 0;
-        }
+        .sel-remove { color: var(--t4); cursor: pointer; padding: 0 3px; font-size: 14px; transition: color 0.15s; line-height: 1; flex-shrink: 0; }
         .sel-remove:hover { color: #f55; }
-        .empty-hint { font-size: 11px; color: #333; padding: 8px 0; }
+        .empty-hint { font-size: 11px; color: var(--t4); padding: 8px 0; }
 
-        /* Generated URL */
+        /* URL box */
         .url-box {
-            background: #0d0d0d;
-            border: 1px solid #1e1e1e;
-            border-radius: 4px;
-            padding: 9px 10px;
-            font-size: 10px;
-            color: #4fc;
-            word-break: break-all;
-            line-height: 1.6;
-            min-height: 44px;
-            font-family: 'Cascadia Code', 'Consolas', monospace;
+            background: var(--bg-deep); border: 1px solid var(--bd);
+            border-radius: 4px; padding: 9px 10px;
+            font-size: 10px; color: var(--ac);
+            word-break: break-all; line-height: 1.6;
+            min-height: 44px; font-family: 'Cascadia Code', 'Consolas', monospace;
         }
+
+        /* Gear hint */
+        .gear-hint {
+            font-size: 11px; color: var(--t3); line-height: 1.5;
+            padding: 8px 10px; background: var(--bg-card);
+            border-radius: 4px; border: 1px solid var(--bd);
+        }
+        .gear-hint strong { color: var(--t2); }
 
         /* Footer buttons */
-        .sidebar-footer {
-            padding: 14px 18px;
-            border-top: 1px solid #1e1e1e;
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-            flex-shrink: 0;
+        .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--bd); display: flex; flex-direction: column; gap: 7px; flex-shrink: 0; }
+        .btn { width: 100%; padding: 11px; border: none; border-radius: 4px; font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.15s; font-weight: 500; }
+        .btn-primary { background: var(--ac-btn); color: #000; }
+        .btn-primary:hover { background: var(--ac-btn-h); }
+        .btn-primary:disabled { background: var(--ac-dis-bg); color: var(--ac-dis-t); cursor: default; }
+        .btn-secondary { background: var(--bg-card); color: var(--t2); border: 1px solid var(--bd); }
+        .btn-secondary:hover { color: var(--t1); border-color: var(--bd2); }
+        .copy-ok { font-size: 11px; color: var(--ac); text-align: center; height: 14px; }
+
+        /* ── Hamburger ── */
+        .hamburger {
+            position: fixed; top: 14px; left: 14px; z-index: 1001;
+            cursor: pointer; font-size: 16px; color: var(--t1);
+            background: var(--bg-card);
+            border: 1px solid var(--bd);
+            padding: 5px 9px; border-radius: 5px;
+            opacity: 0.45; transition: opacity 0.3s;
+            user-select: none;
         }
-        .btn {
-            width: 100%;
-            padding: 11px;
-            border: none;
-            border-radius: 4px;
-            font-size: 13px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.15s;
-            font-weight: 500;
+        .hamburger:hover { opacity: 1; }
+
+        /* ── Side menu ── */
+        .menu-overlay { display: none; position: fixed; inset: 0; background: var(--overlay); z-index: 1002; }
+        .side-menu {
+            position: fixed; top: 0; left: 0; width: 260px; height: 100%;
+            background: var(--bg-panel); border-right: 1px solid var(--bd);
+            z-index: 1003; transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            display: flex; flex-direction: column; padding: 20px 0;
         }
-        .btn-primary { background: #4fc; color: #000; }
-        .btn-primary:hover { background: #6ffccc; }
-        .btn-primary:disabled { background: #1a3328; color: #2a5040; cursor: default; }
-        .btn-secondary { background: #161616; color: #555; border: 1px solid #222; }
-        .btn-secondary:hover { color: #999; border-color: #333; }
-        .copy-ok { font-size: 11px; color: #4fc; text-align: center; height: 14px; }
+        .side-menu.open { transform: translateX(0); }
+        .menu-overlay.open { display: block; }
+        .menu-title { color: var(--t3); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; padding: 0 20px 14px; border-bottom: 1px solid var(--bd); margin-bottom: 8px; font-family: inherit; }
+        .menu-item { display: block; color: var(--t2); text-decoration: none; padding: 13px 20px; font-size: 14px; transition: background 0.2s, color 0.2s; }
+        .menu-item:hover { background: var(--bd); color: var(--t1); }
+        .menu-item.active { color: var(--ac); border-left: 3px solid var(--ac); padding-left: 17px; }
+        .menu-sep { border: none; border-top: 1px solid var(--bd); margin: 6px 0; }
+        .menu-theme { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; cursor: pointer; transition: background 0.2s; }
+        .menu-theme:hover { background: var(--bd); }
+        .menu-theme span { color: var(--t2); font-size: 13px; }
+        .theme-icon { font-size: 15px; }
+        .menu-tip { margin-top: auto; padding: 14px 20px 8px; color: var(--t2); font-size: 11px; border-top: 1px solid var(--bd); line-height: 1.55; }
+        .menu-version { padding: 4px 20px 14px; color: var(--t2); font-size: 11px; font-family: 'Cascadia Code', 'Consolas', monospace; text-align: right; }
 
         /* ── Mobile ── */
         @media (max-width: 768px) {
             body { overflow: auto; }
-            .main {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto auto;
-                flex: none;
-                overflow: visible;
-            }
+            .main { grid-template-columns: 1fr; grid-template-rows: auto auto; flex: none; overflow: visible; }
             .camera-list { overflow-y: visible; min-height: 300px; }
-            .sidebar {
-                border-left: none;
-                border-top: 1px solid #1e1e1e;
-                overflow: visible;
-                height: auto;
-            }
+            .sidebar { border-left: none; border-top: 1px solid var(--bd); overflow: visible; height: auto; }
             .sidebar-inner { overflow-y: visible; padding-bottom: 8px; }
-            .header-nav { display: none; } /* too cramped on small screens */
             header .subtitle { display: none; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Hamburger (on all pages now) -->
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+    <nav class="side-menu" id="sideMenu">
+        <div class="menu-title">Navigation</div>
+        <a href="/"         class="menu-item">🏠 &nbsp;Home</a>
+        <a href="/9cams/"   class="menu-item">⊞ &nbsp;9 Cameras</a>
+        <a href="/builder/" class="menu-item active">🎨 &nbsp;Build a Camera View</a>
+        <hr class="menu-sep">
+        <div class="menu-theme" onclick="toggleTheme()">
+            <span>Theme</span>
+            <span class="theme-icon" id="themeIcon">☀</span>
+        </div>
+        <hr class="menu-sep">
+        <div class="menu-tip">💡 Copy a view URL and paste into Wallpaper Engine</div>
+        <div class="menu-version">v.1.014</div>
+    </nav>
+
     <header>
         <h1>Koh Samui — Camera View Builder</h1>
         <span class="subtitle">Pick cameras · arrange · get link · paste into Wallpaper Engine</span>
-        <nav class="header-nav">
-            <a href="/">🏠 Home</a>
-        </nav>
     </header>
 
     <div class="main">
@@ -300,12 +253,10 @@
                     <div class="section-label">Mode</div>
                     <div class="toggle">
                         <button class="toggle-btn" id="btnContain" onclick="setMode('contain')">
-                            Contain
-                            <small>no crop</small>
+                            Contain <small>no crop</small>
                         </button>
                         <button class="toggle-btn active" id="btnFill" onclick="setMode('fill')">
-                            Fill
-                            <small>fill screen</small>
+                            Fill <small>fill screen</small>
                         </button>
                     </div>
                 </div>
@@ -320,6 +271,10 @@
                 <div>
                     <div class="section-label">Link</div>
                     <div class="url-box" id="urlBox">—</div>
+                </div>
+
+                <div class="gear-hint">
+                    <strong>⚙ Tip:</strong> After opening the preview, use the semi-transparent gear button (bottom-right) to reorder cameras, mirror them, or change the layout on the fly.
                 </div>
 
             </div>
@@ -355,10 +310,8 @@
                 card.className = 'cam-card' + (selected.includes(s.id) ? ' selected' : '');
                 card.onclick = () => toggle(s.id);
                 card.innerHTML = `
-                    <img class="cam-thumb"
-                         src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg"
-                         alt="${s.name}"
-                         onerror="this.style.opacity='0.1'">
+                    <img class="cam-thumb" src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg"
+                         alt="${s.name}" onerror="this.style.opacity='0.1'">
                     <div class="cam-info">
                         <div class="cam-check"></div>
                         <div class="cam-name">${s.name}</div>
@@ -369,7 +322,6 @@
 
         function renderSidebar() {
             document.getElementById('countLabel').textContent = selected.length;
-
             const listEl = document.getElementById('selList');
             if (selected.length === 0) {
                 listEl.innerHTML = '<div class="empty-hint">Click a camera to add it</div>';
@@ -378,16 +330,12 @@
                     const s = STREAMS.find(x => x.id === id);
                     return `<div class="sel-item">
                         <span class="sel-item-name">${s ? s.name : id}</span>
-                        <button class="sel-move" onclick="moveSelected(${i}, -1)"
-                                ${i === 0 ? 'disabled' : ''} title="Move up">↑</button>
-                        <button class="sel-move" onclick="moveSelected(${i}, 1)"
-                                ${i === selected.length - 1 ? 'disabled' : ''} title="Move down">↓</button>
-                        <span class="sel-remove" onclick="event.stopPropagation();toggle('${id}')"
-                              title="Remove">×</span>
+                        <button class="sel-move" onclick="moveSelected(${i},-1)" ${i === 0 ? 'disabled' : ''}>↑</button>
+                        <button class="sel-move" onclick="moveSelected(${i}, 1)" ${i === selected.length-1 ? 'disabled' : ''}>↓</button>
+                        <span class="sel-remove" onclick="event.stopPropagation();toggle('${id}')">×</span>
                     </div>`;
                 }).join('');
             }
-
             const url = buildUrl();
             document.getElementById('urlBox').textContent = url || '—';
             document.getElementById('copyBtn').disabled = !url;
@@ -402,8 +350,7 @@
             const idx = selected.indexOf(id);
             if (idx === -1) selected.push(id);
             else selected.splice(idx, 1);
-            renderCards();
-            renderSidebar();
+            renderCards(); renderSidebar();
         }
 
         function moveSelected(idx, dir) {
@@ -433,6 +380,29 @@
         function openPreview() {
             const url = buildUrl();
             if (url) window.open(url, '_blank');
+        }
+
+        /* ── Theme ── */
+        function initTheme() {
+            const stored = localStorage.getItem('samui-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(stored || (prefersDark ? 'dark' : 'light'), false);
+        }
+        function applyTheme(t, save = true) {
+            document.documentElement.setAttribute('data-theme', t);
+            document.getElementById('themeIcon').textContent = t === 'dark' ? '☀' : '🌙';
+            if (save) localStorage.setItem('samui-theme', t);
+        }
+        function toggleTheme() {
+            const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+            applyTheme(cur === 'dark' ? 'light' : 'dark');
+        }
+        initTheme();
+
+        /* ── Nav menu ── */
+        function toggleMenu() {
+            document.getElementById('sideMenu').classList.toggle('open');
+            document.getElementById('menuOverlay').classList.toggle('open');
         }
 
         renderCards();
