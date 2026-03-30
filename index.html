@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Веб-камеры Самуи</title>
     <style>
-        /* Гамбургер-меню */
         .hamburger {
             position: fixed;
-            top: 15px;
-            left: 15px;
+            top: 12px;
+            left: 12px;
             z-index: 1001;
             cursor: pointer;
-            font-size: 28px;
+            font-size: 16px;
             color: #fff;
-            background: rgba(0,0,0,0.5);
-            padding: 8px 12px;
-            border-radius: 50%;
-            transition: all 0.3s;
+            background: rgba(0,0,0,0.3);
+            padding: 4px 7px;
+            border-radius: 4px;
+            opacity: 0.2;
+            transition: opacity 0.3s;
             user-select: none;
         }
-        .hamburger:hover { background: rgba(0,0,0,0.8); }
+        .hamburger:hover { opacity: 0.85; }
         .menu-overlay {
             display: none;
             position: fixed;
@@ -127,8 +127,10 @@
 
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
     <nav class="side-menu" id="sideMenu">
-        <div class="menu-title">Виды камер</div>
-        <a href="/index.html" class="menu-item active">⊞ &nbsp;9 камер (сетка 3×3)</a>
+        <div class="menu-title">Навигация</div>
+        <a href="/builder/" class="menu-item">🎨 &nbsp;Конструктор</a>
+        <hr style="border:none;border-top:1px solid #222;margin:6px 0">
+        <a href="/index.html" class="menu-item active">⊞ &nbsp;9 камер (3×3)</a>
         <a href="/180-3/index.html" class="menu-item">▬ &nbsp;Панорама + 2 камеры</a>
         <a href="/180-2/360.html" class="menu-item">◫ &nbsp;2 панорамных 180°</a>
         <div class="menu-tip">💡 Скопируй URL страницы и вставь в Wallpaper Engine</div>

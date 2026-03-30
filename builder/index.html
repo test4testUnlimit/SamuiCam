@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор — Koh Samui</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #111;
+            color: #fff;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 18px 28px 14px;
+            border-bottom: 1px solid #1e1e1e;
+            flex-shrink: 0;
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+        }
+        header h1 {
+            font-size: 15px;
+            font-weight: 500;
+            color: #ddd;
+            letter-spacing: 0.3px;
+        }
+        header span {
+            font-size: 12px;
+            color: #444;
+        }
+
+        .main {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ── Camera list ── */
+        .camera-list {
+            padding: 16px 20px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            align-content: start;
+        }
+
+        .cam-card {
+            border: 1.5px solid #1e1e1e;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.15s;
+            background: #161616;
+        }
+        .cam-card:hover { border-color: #333; }
+        .cam-card.selected { border-color: #4fc; }
+
+        .cam-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            display: block;
+            background: #1a1a1a;
+        }
+
+        .cam-info {
+            padding: 7px 9px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .cam-check {
+            width: 14px;
+            height: 14px;
+            border: 1.5px solid #333;
+            border-radius: 3px;
+            flex-shrink: 0;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: bold;
+            color: transparent;
+        }
+        .selected .cam-check {
+            background: #4fc;
+            border-color: #4fc;
+            color: #000;
+        }
+        .cam-check::after { content: '✓'; }
+
+        .cam-name {
+            font-size: 11px;
+            color: #888;
+            line-height: 1.35;
+        }
+        .selected .cam-name { color: #ccc; }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            border-left: 1px solid #1e1e1e;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-inner {
+            padding: 18px 18px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .section-label {
+            font-size: 10px;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        /* Mode toggle */
+        .toggle {
+            display: flex;
+            border: 1px solid #1e1e1e;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .toggle-btn {
+            flex: 1;
+            padding: 8px 6px;
+            background: none;
+            border: none;
+            color: #444;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+            line-height: 1.3;
+            text-align: center;
+        }
+        .toggle-btn small { display: block; font-size: 10px; color: #333; margin-top: 2px; }
+        .toggle-btn.active { background: #1a1a1a; color: #4fc; }
+        .toggle-btn.active small { color: #2a6a5a; }
+
+        /* Selected list */
+        .sel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-height: 40px;
+        }
+        .sel-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 7px;
+            background: #161616;
+            border-radius: 3px;
+            font-size: 11px;
+            color: #999;
+        }
+        .sel-remove {
+            color: #333;
+            cursor: pointer;
+            padding: 0 2px;
+            font-size: 13px;
+            transition: color 0.15s;
+            line-height: 1;
+        }
+        .sel-remove:hover { color: #f55; }
+        .empty-hint {
+            font-size: 11px;
+            color: #333;
+            padding: 8px 0;
+        }
+
+        /* URL */
+        .url-box {
+            background: #0d0d0d;
+            border: 1px solid #1e1e1e;
+            border-radius: 4px;
+            padding: 9px 10px;
+            font-size: 10px;
+            color: #4fc;
+            word-break: break-all;
+            line-height: 1.6;
+            min-height: 44px;
+            font-family: monospace;
+        }
+
+        /* Buttons */
+        .sidebar-footer {
+            padding: 14px 18px;
+            border-top: 1px solid #1e1e1e;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 11px;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+            font-weight: 500;
+        }
+        .btn-primary { background: #4fc; color: #000; }
+        .btn-primary:hover { background: #5fd; }
+        .btn-primary:disabled { background: #1a3328; color: #2a5040; cursor: default; }
+        .btn-secondary {
+            background: #161616;
+            color: #555;
+            border: 1px solid #222;
+        }
+        .btn-secondary:hover { color: #999; border-color: #333; }
+
+        .copy-ok {
+            font-size: 11px;
+            color: #4fc;
+            text-align: center;
+            height: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Koh Samui — конструктор обоев</h1>
+        <span>выбери камеры → получи ссылку → вставь в Wallpaper Engine</span>
+    </header>
+
+    <div class="main">
+        <div class="camera-list" id="cameraList"></div>
+
+        <div class="sidebar">
+            <div class="sidebar-inner">
+
+                <div>
+                    <div class="section-label">Режим</div>
+                    <div class="toggle">
+                        <button class="toggle-btn" id="btnContain" onclick="setMode('contain')">
+                            Contain
+                            <small>без обрезки</small>
+                        </button>
+                        <button class="toggle-btn active" id="btnFill" onclick="setMode('fill')">
+                            Fill
+                            <small>заполнить экран</small>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-label">Выбрано — <span id="countLabel">0</span></div>
+                    <div class="sel-list" id="selList">
+                        <div class="empty-hint">Кликни на камеру</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-label">Ссылка</div>
+                    <div class="url-box" id="urlBox">—</div>
+                </div>
+
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-primary" id="copyBtn" onclick="copyUrl()" disabled>Скопировать ссылку</button>
+                <div class="copy-ok" id="copyOk"></div>
+                <button class="btn btn-secondary" onclick="openPreview()">Открыть превью ↗</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STREAMS = [
+            { id: "3N3ZwIB_X4Y",  name: "Crystal Bay Yacht Club, Lamai" },
+            { id: "Fw9hgttWzIg",  name: "Crystal Bay Beach Resort, Lamai" },
+            { id: "Tpj0cmMVOd0",  name: "Baobab Cam, Lamai" },
+            { id: "UJpFtzKug7M",  name: "Royal Muang Samui Villas, Choeng Mon" },
+            { id: "Kush_ZxTy2c",  name: "Black Pearl, Lamai" },
+            { id: "LGNYKz4yziE",  name: "Crystal Bay Yacht Club, Lamai — Panoramic" },
+            { id: "NTTtqzL5OWI",  name: "Crystal Bay Beach Resort, Lamai — Panoramic" },
+            { id: "FBYUkqutqzE",  name: "House of Sanskara, Koh Phangan" },
+        ];
+
+        let selected = [];
+        let mode = 'fill';
+
+        function renderCards() {
+            const list = document.getElementById('cameraList');
+            list.innerHTML = '';
+            STREAMS.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'cam-card' + (selected.includes(s.id) ? ' selected' : '');
+                card.onclick = () => toggle(s.id);
+                card.innerHTML = `
+                    <img class="cam-thumb"
+                         src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg"
+                         alt="${s.name}"
+                         onerror="this.style.opacity='0.1'">
+                    <div class="cam-info">
+                        <div class="cam-check"></div>
+                        <div class="cam-name">${s.name}</div>
+                    </div>`;
+                list.appendChild(card);
+            });
+        }
+
+        function renderSidebar() {
+            document.getElementById('countLabel').textContent = selected.length;
+
+            const listEl = document.getElementById('selList');
+            if (selected.length === 0) {
+                listEl.innerHTML = '<div class="empty-hint">Кликни на камеру</div>';
+            } else {
+                listEl.innerHTML = selected.map(id => {
+                    const s = STREAMS.find(x => x.id === id);
+                    return `<div class="sel-item">
+                        <span>${s ? s.name : id}</span>
+                        <span class="sel-remove" onclick="event.stopPropagation();toggle('${id}')">×</span>
+                    </div>`;
+                }).join('');
+            }
+
+            const url = buildUrl();
+            document.getElementById('urlBox').textContent = url || '—';
+            document.getElementById('copyBtn').disabled = !url;
+        }
+
+        function buildUrl() {
+            if (!selected.length) return '';
+            return `${location.origin}/view/?cams=${selected.join(',')}&mode=${mode}`;
+        }
+
+        function toggle(id) {
+            const idx = selected.indexOf(id);
+            if (idx === -1) selected.push(id);
+            else selected.splice(idx, 1);
+            renderCards();
+            renderSidebar();
+        }
+
+        function setMode(m) {
+            mode = m;
+            document.getElementById('btnContain').classList.toggle('active', m === 'contain');
+            document.getElementById('btnFill').classList.toggle('active', m === 'fill');
+            renderSidebar();
+        }
+
+        function copyUrl() {
+            const url = buildUrl();
+            if (!url) return;
+            navigator.clipboard.writeText(url).then(() => {
+                const el = document.getElementById('copyOk');
+                el.textContent = '✓ скопировано';
+                setTimeout(() => el.textContent = '', 2000);
+            });
+        }
+
+        function openPreview() {
+            const url = buildUrl();
+            if (url) window.open(url, '_blank');
+        }
+
+        renderCards();
+        renderSidebar();
+    </script>
+</body>
+</html>
