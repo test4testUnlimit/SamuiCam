@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Веб-камеры Самуи</title>
+    <style>
+        /* Гамбургер-меню */
+        .hamburger {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            cursor: pointer;
+            font-size: 28px;
+            color: #fff;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 12px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .hamburger:hover {
+            background: rgba(0,0,0,0.8);
+            transform: scale(1.1);
+        }
+
+        /* Основные стили */
+        body {
+            margin: 0;
+            padding: 10px;
+            background: #000;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 1980px;
+            margin: 0 auto;
+            height: calc(100% - 20px);
+        }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        @media (max-width: 1980px) {
+            .grid-container {
+                padding: 5px;
+                gap: 5px;
+            }
+        }
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .hamburger {
+                font-size: 24px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/180/" class="hamburger">☰</a>
+
+    <div class="grid-container">
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/-VzKL9oeJCI?autoplay=1&mute=1&iv_load_policy=3"></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/LZSrqZ562Po?autoplay=1&mute=1&iv_load_policy=3"></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/yjjGE5Nq7AE?autoplay=1&mute=1&iv_load_policy=3"></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/9fspnEEliV8?autoplay=1&mute=1&iv_load_policy=3"></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/8gLq1Ss0PQM?autoplay=1&mute=1&iv_load_policy=3"></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/bmbsyvm0KDE?autoplay=1&mute=1&iv_load_policy=3"></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/RmP5eN7gQ6A?autoplay=1&mute=1&iv_load_policy=3"></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/Fw9hgttWzIg?autoplay=1&mute=1&iv_load_policy=3"></iframe>
+        </div>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/5FNI26lPfgE?autoplay=1&mute=1&iv_load_policy=3"></iframe>
+        </div>
+    </div>
+</body>
+</html>

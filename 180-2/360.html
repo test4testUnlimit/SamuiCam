@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Остров Самуи: веб-камеры, прямая трансляция</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            min-height: 100vh;
+        }
+
+        /* Контейнер для 180° камеры с нестандартным соотношением */
+        .main-180 {
+            position: relative;
+            width: 100vw;
+            height: 50vh; /* Стартовая высота */
+            margin: 0 -10px; /* Компенсация padding body */
+            overflow: hidden;
+        }
+
+        .main-180 iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 180%; /* Искажение ширины */
+            height: 100%;
+            transform: translate(-50%, -50%);
+            border: none;
+            aspect-ratio: 2/1; /* Форсируем соотношение 2:1 */
+        }
+
+        /* Сетка для обычных камер */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 10px;
+            max-width: 1980px;
+            margin: 0 auto;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            overflow: hidden;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-180 {
+                height: 40vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 180° камера с принудительным соотношением -->
+    <div class="main-180">
+        <iframe src="https://www.youtube.com/embed/LepRHs2meyY?autoplay=1&mute=1&iv_load_policy=3&controls=0" 
+                allowfullscreen>
+        </iframe>
+    </div>
+<!-- 180° камера с принудительным соотношением -->
+    <div class="main-180">
+        <iframe src="https://www.youtube.com/embed/zCUMfVxECg0?autoplay=1&mute=1&iv_load_policy=3&controls=0" 
+                allowfullscreen>
+        </iframe>
+    </div>
+
+    
+</body>
+</html>
