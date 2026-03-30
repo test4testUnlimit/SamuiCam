@@ -9,63 +9,8 @@
         body { background: #000; overflow: hidden; width: 100vw; height: 100vh; }
 
         #grid { display: grid; width: 100vw; height: 100vh; }
-
         .cell { overflow: hidden; position: relative; background: #000; }
         .cell iframe { position: absolute; border: none; }
-
-        /* ── Fade controls (contain / fill / builder) ── */
-        .controls {
-            position: fixed;
-            bottom: 14px;
-            right: 54px;
-            z-index: 100;
-            display: flex;
-            gap: 6px;
-            opacity: 0.15;
-            transition: opacity 0.3s;
-        }
-        .controls:hover { opacity: 1; }
-
-        .ctrl-btn {
-            background: rgba(0,0,0,0.75);
-            color: #bbb;
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 6px 11px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            transition: all 0.2s;
-            text-decoration: none;
-            line-height: 1;
-            white-space: nowrap;
-        }
-        .ctrl-btn:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
-        .ctrl-btn.active { border-color: #4fc; color: #4fc; }
-
-        /* ── Gear button — same hide behavior as hamburger ── */
-        .gear-btn {
-            position: fixed;
-            bottom: 12px;
-            right: 12px;
-            z-index: 300;
-            width: 36px;
-            height: 36px;
-            background: rgba(0,0,0,0.35);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 5px;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.2;
-            transition: opacity 0.3s, border-color 0.2s, color 0.2s;
-            user-select: none;
-        }
-        .gear-btn:hover { opacity: 0.85; }
-        .gear-btn.active { opacity: 1; border-color: #4fc; color: #4fc; }
 
         /* ── Hamburger ── */
         .hamburger {
@@ -140,6 +85,30 @@
             line-height: 1.55;
         }
 
+        /* ── Gear button — same fade behavior as hamburger ── */
+        .gear-btn {
+            position: fixed;
+            bottom: 12px;
+            right: 12px;
+            z-index: 300;
+            width: 36px;
+            height: 36px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.2;
+            transition: opacity 0.3s, border-color 0.2s;
+            user-select: none;
+        }
+        .gear-btn:hover { opacity: 0.85; }
+        .gear-btn.active { opacity: 1; border-color: #4fc; color: #4fc; }
+
         /* ── Empty state ── */
         .empty { color: #888; font-family: 'Segoe UI', system-ui, sans-serif; padding: 60px; text-align: center; }
         .empty h2 { color: #ccc; font-weight: 400; margin-bottom: 12px; }
@@ -181,8 +150,27 @@
 
         .sp-section { padding: 10px 14px; border-bottom: 1px solid #202020; }
         .sp-section:last-child { border-bottom: none; }
-
         .sp-label { font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 8px; }
+
+        /* Mode toggle (Contain / Fill) */
+        .mode-toggle { display: flex; border: 1px solid #252525; border-radius: 4px; overflow: hidden; }
+        .mode-btn {
+            flex: 1;
+            padding: 8px 6px;
+            background: none;
+            border: none;
+            color: #555;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+            line-height: 1.3;
+            text-align: center;
+        }
+        .mode-btn small { display: block; font-size: 10px; color: #333; margin-top: 1px; }
+        .mode-btn:hover { color: #aaa; }
+        .mode-btn.active { background: #111; color: #4fc; }
+        .mode-btn.active small { color: #2a6a5a; }
 
         /* Camera order list */
         .cam-list { display: flex; flex-direction: column; gap: 3px; }
@@ -264,7 +252,6 @@
         @media (max-width: 600px) {
             .hamburger { font-size: 20px; padding: 7px 11px; top: 44px; }
             .gear-btn { width: 44px; height: 44px; font-size: 18px; bottom: 8px; right: 8px; }
-            .controls { right: 60px; bottom: 10px; }
             .settings-panel {
                 right: 0; left: 0;
                 width: auto;
@@ -284,24 +271,14 @@
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
     <nav class="side-menu" id="sideMenu">
         <div class="menu-title">Navigation</div>
-        <a href="/builder/" class="menu-item">🎨 &nbsp;Builder</a>
-        <hr class="menu-sep">
-        <a href="/index.html" class="menu-item">⊞ &nbsp;9 Cameras (3×3)</a>
-        <a href="/180-3/index.html" class="menu-item">▬ &nbsp;Panorama + 2 Cameras</a>
-        <a href="/180-2/360.html" class="menu-item">◫ &nbsp;2 Panoramic 180°</a>
+        <a href="/" class="menu-item">🏠 &nbsp;Home — 9 Cameras</a>
+        <a href="/builder/" class="menu-item">🎨 &nbsp;Build a Camera View</a>
         <div class="menu-tip">💡 Copy the page URL and paste into Wallpaper Engine</div>
     </nav>
 
     <div id="grid"></div>
 
-    <!-- Fade controls -->
-    <div class="controls">
-        <button class="ctrl-btn" id="btnContain" onclick="setMode('contain')">Contain</button>
-        <button class="ctrl-btn" id="btnFill" onclick="setMode('fill')">Fill</button>
-        <a href="/builder/" class="ctrl-btn">← Builder</a>
-    </div>
-
-    <!-- Gear: always visible, hides like hamburger -->
+    <!-- Only visible UI element on screen: gear button -->
     <div class="gear-btn" id="gearBtn" onclick="togglePanel()" title="Controls">⚙</div>
 
     <!-- Settings panel -->
@@ -309,6 +286,20 @@
         <div class="sp-header">
             <span class="sp-title">Controls</span>
             <span class="sp-close" onclick="togglePanel()">×</span>
+        </div>
+
+        <div class="sp-section">
+            <div class="sp-label">Mode</div>
+            <div class="mode-toggle">
+                <button class="mode-btn" id="btnContain" onclick="setMode('contain')">
+                    Contain
+                    <small>no crop</small>
+                </button>
+                <button class="mode-btn" id="btnFill" onclick="setMode('fill')">
+                    Fill
+                    <small>fill screen</small>
+                </button>
+            </div>
         </div>
 
         <div class="sp-section">
@@ -338,7 +329,6 @@
     </div>
 
     <script>
-        /* Camera name lookup */
         const STREAMS = {
             "3N3ZwIB_X4Y": "Crystal Bay Yacht Club, Lamai",
             "Fw9hgttWzIg": "Crystal Bay Beach Resort, Lamai",
@@ -393,7 +383,7 @@
             });
         }
 
-        /* ── Size and position iframes to match mode ── */
+        /* ── Size iframes to match mode ── */
         function applyMode() {
             const { cols, rows } = getGrid(currentCams.length);
             const cellW = window.innerWidth  / cols;
@@ -406,7 +396,7 @@
                 if (mode === 'contain') {
                     if (cr > ratio) { iH = cellH; iW = cellH * ratio; }
                     else            { iW = cellW;  iH = cellW / ratio; }
-                } else { /* fill */
+                } else {
                     if (cr > ratio) { iW = cellW;  iH = cellW / ratio; }
                     else            { iH = cellH;  iW = cellH * ratio; }
                 }
@@ -447,7 +437,6 @@
             const to = idx + dir;
             if (to < 0 || to >= currentCams.length) return;
             [currentCams[idx], currentCams[to]] = [currentCams[to], currentCams[idx]];
-            /* keep mirror indices in sync */
             const next = new Set();
             mirrorSet.forEach(i => {
                 if      (i === idx) next.add(to);
@@ -521,7 +510,7 @@
         if (currentCams.length === 0) {
             grid.innerHTML = `<div class="empty">
                 <h2>No cameras selected</h2>
-                <p>Go to the <a href="/builder/">Builder</a> to make a selection</p>
+                <p>Go to the <a href="/builder/">Builder</a> to create a custom view</p>
             </div>`;
         } else {
             buildGrid();
