@@ -23,38 +23,63 @@
             border: none;
         }
 
-        /* Controls */
+        /* ── Fade controls (contain/fill/builder) ── */
         .controls {
             position: fixed;
-            bottom: 12px;
-            right: 12px;
+            bottom: 14px;
+            right: 56px;   /* leave room for the gear button */
             z-index: 100;
             display: flex;
             gap: 6px;
-            opacity: 0.2;
+            opacity: 0.15;
             transition: opacity 0.3s;
         }
         .controls:hover { opacity: 1; }
 
         .ctrl-btn {
-            background: rgba(0,0,0,0.7);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.75);
+            color: #ccc;
+            border: 1px solid rgba(255,255,255,0.15);
             padding: 5px 10px;
-            border-radius: 3px;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 11px;
             font-family: sans-serif;
             transition: all 0.2s;
             text-decoration: none;
+            line-height: 1;
         }
-        .ctrl-btn:hover { border-color: rgba(255,255,255,0.5); }
+        .ctrl-btn:hover { border-color: rgba(255,255,255,0.45); color: #fff; }
         .ctrl-btn.active { border-color: #4fc; color: #4fc; }
 
-        /* Hamburger */
+        /* ── Gear button — always visible ── */
+        .gear-btn {
+            position: fixed;
+            bottom: 12px;
+            right: 12px;
+            z-index: 300;
+            width: 34px;
+            height: 34px;
+            background: rgba(0,0,0,0.55);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 6px;
+            color: #bbb;
+            font-size: 17px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.45;
+            transition: opacity 0.25s, border-color 0.2s, color 0.2s;
+            user-select: none;
+        }
+        .gear-btn:hover { opacity: 1; border-color: rgba(255,255,255,0.45); color: #fff; }
+        .gear-btn.active { opacity: 1; border-color: #4fc; color: #4fc; }
+
+        /* ── Hamburger ── */
         .hamburger {
             position: fixed;
-            top: 12px;
+            top: 48px;
             left: 12px;
             z-index: 1001;
             cursor: pointer;
@@ -103,20 +128,16 @@
         }
         .menu-item {
             display: block;
-            color: #fff;
+            color: #999;
             text-decoration: none;
-            padding: 12px 20px;
-            font-size: 14px;
+            padding: 14px 20px;
+            font-size: 15px;
             font-family: sans-serif;
             transition: background 0.2s;
         }
         .menu-item:hover { background: #2a2a2a; }
         .menu-item.active { color: #4fc; border-left: 3px solid #4fc; }
-        .menu-sep {
-            border: none;
-            border-top: 1px solid #222;
-            margin: 8px 0;
-        }
+        .menu-sep { border: none; border-top: 1px solid #222; margin: 8px 0; }
         .menu-tip {
             margin-top: auto;
             padding: 15px 20px;
@@ -127,14 +148,147 @@
             line-height: 1.5;
         }
 
-        /* Empty state */
-        .empty {
-            color: #fff;
-            font-family: sans-serif;
-            padding: 60px;
-            text-align: center;
-        }
+        /* ── Empty state ── */
+        .empty { color: #fff; font-family: sans-serif; padding: 60px; text-align: center; }
         .empty a { color: #4fc; }
+
+        /* ── Settings panel ── */
+        .settings-panel {
+            position: fixed;
+            bottom: 56px;
+            right: 12px;
+            width: 270px;
+            background: #181818;
+            border: 1px solid #2e2e2e;
+            border-radius: 8px;
+            z-index: 250;
+            font-family: sans-serif;
+            box-shadow: 0 6px 28px rgba(0,0,0,0.7);
+            /* hidden by default */
+            transform: translateY(16px);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.22s ease, opacity 0.18s ease;
+        }
+        .settings-panel.open {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .sp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 14px 9px;
+            border-bottom: 1px solid #262626;
+        }
+        .sp-title { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1.5px; }
+        .sp-close {
+            color: #444; cursor: pointer; font-size: 18px; line-height: 1;
+            transition: color 0.15s;
+        }
+        .sp-close:hover { color: #aaa; }
+
+        .sp-section { padding: 10px 14px; border-bottom: 1px solid #222; }
+        .sp-section:last-child { border-bottom: none; }
+
+        .sp-label {
+            font-size: 10px; color: #444;
+            text-transform: uppercase; letter-spacing: 1.2px;
+            margin-bottom: 8px;
+        }
+
+        /* Camera order list */
+        .cam-list { display: flex; flex-direction: column; gap: 3px; }
+        .cam-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 7px;
+            background: #111;
+            border-radius: 4px;
+        }
+        .cam-idx {
+            font-size: 10px;
+            color: #333;
+            width: 14px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .cam-row-name {
+            flex: 1;
+            font-size: 11px;
+            color: #aaa;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cam-row-btns { display: flex; gap: 2px; flex-shrink: 0; }
+        .cam-row-btn {
+            background: none;
+            border: 1px solid #252525;
+            color: #4a4a4a;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 2px 5px;
+            border-radius: 3px;
+            transition: all 0.15s;
+            line-height: 1.2;
+            font-family: sans-serif;
+        }
+        .cam-row-btn:hover:not(:disabled) { border-color: #555; color: #ddd; }
+        .cam-row-btn:disabled { opacity: 0.18; cursor: default; }
+        .mirror-btn.on { border-color: #4fc; color: #4fc; }
+
+        /* Layout */
+        .layout-btns { display: flex; gap: 4px; }
+        .layout-btn {
+            flex: 1;
+            padding: 7px 4px;
+            background: none;
+            border: 1px solid #252525;
+            color: #555;
+            font-size: 11px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.15s;
+            font-family: sans-serif;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .layout-btn small { display: block; font-size: 9px; color: #333; margin-top: 2px; }
+        .layout-btn:hover { border-color: #555; color: #ccc; }
+        .layout-btn.active {
+            border-color: #4fc;
+            color: #4fc;
+            background: rgba(68,255,204,0.04);
+        }
+        .layout-btn.active small { color: #2a7a60; }
+
+        /* Copy */
+        .sp-copy-btn {
+            width: 100%;
+            padding: 9px;
+            background: #4fc;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: sans-serif;
+            transition: background 0.15s;
+            letter-spacing: 0.2px;
+        }
+        .sp-copy-btn:hover { background: #6ffdcc; }
+        .sp-copy-ok {
+            text-align: center;
+            font-size: 11px;
+            color: #4fc;
+            height: 16px;
+            margin-top: 6px;
+        }
     </style>
 </head>
 <body>
@@ -153,96 +307,241 @@
 
     <div id="grid"></div>
 
+    <!-- Fade controls: contain / fill / builder -->
     <div class="controls">
         <button class="ctrl-btn" id="btnContain" onclick="setMode('contain')">contain</button>
         <button class="ctrl-btn" id="btnFill" onclick="setMode('fill')">fill</button>
         <a href="/builder/" class="ctrl-btn">← builder</a>
     </div>
 
+    <!-- Always-visible gear button -->
+    <div class="gear-btn" id="gearBtn" onclick="togglePanel()" title="Настройки">⚙</div>
+
+    <!-- Settings panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="sp-header">
+            <span class="sp-title">Пульт управления</span>
+            <span class="sp-close" onclick="togglePanel()">×</span>
+        </div>
+
+        <div class="sp-section">
+            <div class="sp-label">Порядок · Отразить</div>
+            <div class="cam-list" id="camList"></div>
+        </div>
+
+        <div class="sp-section">
+            <div class="sp-label">Раскладка</div>
+            <div class="layout-btns">
+                <button class="layout-btn" id="layAuto" onclick="setLayout('auto')">
+                    ⊞ Авто
+                    <small>умная сетка</small>
+                </button>
+                <button class="layout-btn" id="layH" onclick="setLayout('h')">
+                    ═ Стопка
+                    <small>один столбец</small>
+                </button>
+                <button class="layout-btn" id="layV" onclick="setLayout('v')">
+                    ║ Ряд
+                    <small>одна строка</small>
+                </button>
+            </div>
+        </div>
+
+        <div class="sp-section">
+            <button class="sp-copy-btn" onclick="copyLink()">Скопировать ссылку</button>
+            <div class="sp-copy-ok" id="copyOk"></div>
+        </div>
+    </div>
+
     <script>
+        const STREAMS = {
+            "3N3ZwIB_X4Y":  "Crystal Bay Yacht Club, Lamai",
+            "Fw9hgttWzIg":  "Crystal Bay Beach Resort, Lamai",
+            "Tpj0cmMVOd0":  "Baobab Cam, Lamai",
+            "UJpFtzKug7M":  "Royal Muang Samui Villas, Choeng Mon",
+            "Kush_ZxTy2c":  "Black Pearl, Lamai",
+            "LGNYKz4yziE":  "Crystal Bay Yacht Club — Панорама",
+            "NTTtqzL5OWI":  "Crystal Bay Beach Resort — Панорама",
+            "FBYUkqutqzE":  "House of Sanskara, Koh Phangan",
+        };
+
         const params = new URLSearchParams(location.search);
-        const cams = (params.get('cams') || '').split(',').filter(Boolean);
-        let mode = params.get('mode') || 'fill';
+        let currentCams = (params.get('cams') || '').split(',').filter(Boolean);
+        let mode        = params.get('mode') || 'fill';
+        let layout      = params.get('layout') || 'auto';
+        let mirrorSet   = new Set(
+            (params.get('mirror') || '').split(',').filter(Boolean).map(Number)
+        );
 
         const grid = document.getElementById('grid');
 
-        function getCols(n) {
+        /* ── Grid geometry ── */
+        function getColsAuto(n) {
             if (n <= 1) return 1;
             if (n <= 2) return 2;
             if (n <= 3) return 3;
             if (n <= 4) return 2;
-            if (n <= 6) return 3;
             return 3;
         }
+        function getGrid(n) {
+            if (layout === 'h') return { cols: 1, rows: n };
+            if (layout === 'v') return { cols: n, rows: 1 };
+            const cols = getColsAuto(n);
+            return { cols, rows: Math.ceil(n / cols) };
+        }
 
+        /* ── Build grid (creates iframes) ── */
         function buildGrid() {
-            const cols = getCols(cams.length);
-            const rows = Math.ceil(cams.length / cols);
+            const { cols, rows } = getGrid(currentCams.length);
             grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-            grid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+            grid.style.gridTemplateRows    = `repeat(${rows}, 1fr)`;
             grid.innerHTML = '';
-            cams.forEach(id => {
-                const cell = document.createElement('div');
+            currentCams.forEach((id, i) => {
+                const cell   = document.createElement('div');
                 cell.className = 'cell';
                 const iframe = document.createElement('iframe');
-                iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&iv_load_policy=3`;
+                iframe.src   = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&iv_load_policy=3`;
                 iframe.setAttribute('allowfullscreen', '');
+                if (mirrorSet.has(i)) iframe.style.transform = 'scaleX(-1)';
                 cell.appendChild(iframe);
                 grid.appendChild(cell);
             });
         }
 
+        /* ── Apply mode (size/position iframes) ── */
         function applyMode() {
-            const cols = getCols(cams.length);
-            const rows = Math.ceil(cams.length / cols);
-            const cellW = window.innerWidth / cols;
+            const { cols, rows } = getGrid(currentCams.length);
+            const cellW = window.innerWidth  / cols;
             const cellH = window.innerHeight / rows;
             const ratio = 16 / 9;
-            const cellRatio = cellW / cellH;
+            const cr    = cellW / cellH;
 
-            document.querySelectorAll('.cell iframe').forEach(iframe => {
-                let iframeW, iframeH;
+            document.querySelectorAll('.cell iframe').forEach((iframe, i) => {
+                let iW, iH;
                 if (mode === 'contain') {
-                    if (cellRatio > ratio) {
-                        iframeH = cellH;
-                        iframeW = cellH * ratio;
-                    } else {
-                        iframeW = cellW;
-                        iframeH = cellW / ratio;
-                    }
-                } else { // fill
-                    if (cellRatio > ratio) {
-                        iframeW = cellW;
-                        iframeH = cellW / ratio;
-                    } else {
-                        iframeH = cellH;
-                        iframeW = cellH * ratio;
-                    }
+                    if (cr > ratio) { iH = cellH; iW = cellH * ratio; }
+                    else            { iW = cellW;  iH = cellW / ratio; }
+                } else {
+                    if (cr > ratio) { iW = cellW;  iH = cellW / ratio; }
+                    else            { iH = cellH;  iW = cellH * ratio; }
                 }
-                iframe.style.width = iframeW + 'px';
-                iframe.style.height = iframeH + 'px';
-                iframe.style.top = ((cellH - iframeH) / 2) + 'px';
-                iframe.style.left = ((cellW - iframeW) / 2) + 'px';
+                iframe.style.width  = iW + 'px';
+                iframe.style.height = iH + 'px';
+                iframe.style.top    = ((cellH - iH) / 2) + 'px';
+                iframe.style.left   = ((cellW - iW) / 2) + 'px';
+                iframe.style.transform = mirrorSet.has(i) ? 'scaleX(-1)' : '';
             });
 
             document.getElementById('btnContain').classList.toggle('active', mode === 'contain');
             document.getElementById('btnFill').classList.toggle('active', mode === 'fill');
         }
 
-        function setMode(m) {
-            mode = m;
+        /* ── URL ── */
+        function buildUrl() {
             const url = new URL(location.href);
-            url.searchParams.set('mode', m);
-            history.replaceState({}, '', url);
+            url.searchParams.set('cams', currentCams.join(','));
+            url.searchParams.set('mode', mode);
+            if (mirrorSet.size > 0)
+                url.searchParams.set('mirror', [...mirrorSet].sort((a,b)=>a-b).join(','));
+            else
+                url.searchParams.delete('mirror');
+            if (layout !== 'auto') url.searchParams.set('layout', layout);
+            else                   url.searchParams.delete('layout');
+            return url.toString();
+        }
+        function pushUrl() { history.replaceState({}, '', buildUrl()); }
+
+        /* ── Mode ── */
+        function setMode(m) { mode = m; pushUrl(); applyMode(); }
+
+        /* ── Layout ── */
+        function setLayout(l) {
+            layout = l;
+            pushUrl();
+            buildGrid();
             applyMode();
+            renderPanel();
         }
 
+        /* ── Reorder ── */
+        function moveCamera(idx, dir) {
+            const to = idx + dir;
+            if (to < 0 || to >= currentCams.length) return;
+            [currentCams[idx], currentCams[to]] = [currentCams[to], currentCams[idx]];
+            const next = new Set();
+            mirrorSet.forEach(i => {
+                if (i === idx) next.add(to);
+                else if (i === to) next.add(idx);
+                else next.add(i);
+            });
+            mirrorSet = next;
+            pushUrl();
+            buildGrid();
+            applyMode();
+            renderPanel();
+        }
+
+        /* ── Mirror ── */
+        function toggleMirror(idx) {
+            if (mirrorSet.has(idx)) mirrorSet.delete(idx);
+            else mirrorSet.add(idx);
+            pushUrl();
+            const iframe = document.querySelectorAll('.cell iframe')[idx];
+            if (iframe) iframe.style.transform = mirrorSet.has(idx) ? 'scaleX(-1)' : '';
+            renderPanel();
+        }
+
+        /* ── Panel ── */
+        function togglePanel() {
+            const panel = document.getElementById('settingsPanel');
+            const gear  = document.getElementById('gearBtn');
+            const open  = panel.classList.toggle('open');
+            gear.classList.toggle('active', open);
+            if (open) renderPanel();
+        }
+
+        function renderPanel() {
+            const list = document.getElementById('camList');
+            const n    = currentCams.length;
+            list.innerHTML = currentCams.map((id, i) => {
+                const name = STREAMS[id] || id;
+                return `<div class="cam-row">
+                    <span class="cam-idx">${i+1}</span>
+                    <span class="cam-row-name" title="${name}">${name}</span>
+                    <div class="cam-row-btns">
+                        <button class="cam-row-btn mirror-btn ${mirrorSet.has(i) ? 'on' : ''}"
+                                onclick="toggleMirror(${i})" title="Отразить">⇄</button>
+                        <button class="cam-row-btn" onclick="moveCamera(${i},-1)"
+                                ${i === 0 ? 'disabled' : ''}>↑</button>
+                        <button class="cam-row-btn" onclick="moveCamera(${i},1)"
+                                ${i === n-1 ? 'disabled' : ''}>↓</button>
+                    </div>
+                </div>`;
+            }).join('');
+
+            document.getElementById('layAuto').classList.toggle('active', layout === 'auto');
+            document.getElementById('layH').classList.toggle('active', layout === 'h');
+            document.getElementById('layV').classList.toggle('active', layout === 'v');
+        }
+
+        /* ── Copy link ── */
+        function copyLink() {
+            pushUrl();
+            navigator.clipboard.writeText(location.href).then(() => {
+                const el = document.getElementById('copyOk');
+                el.textContent = '✓ скопировано';
+                setTimeout(() => el.textContent = '', 2200);
+            });
+        }
+
+        /* ── Nav menu ── */
         function toggleMenu() {
             document.getElementById('sideMenu').classList.toggle('open');
             document.getElementById('menuOverlay').classList.toggle('open');
         }
 
-        if (cams.length === 0) {
+        /* ── Init ── */
+        if (currentCams.length === 0) {
             grid.innerHTML = '<div class="empty"><h2>Камеры не выбраны</h2><p style="margin-top:12px">Перейди в <a href="/builder/">конструктор</a></p></div>';
         } else {
             buildGrid();
