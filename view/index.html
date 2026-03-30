@@ -77,13 +77,22 @@
         .menu-sep { border: none; border-top: 1px solid #222; margin: 6px 0; }
         .menu-tip {
             margin-top: auto;
-            padding: 14px 20px;
+            padding: 14px 20px 10px;
             color: #666;
             font-size: 11px;
             font-family: 'Segoe UI', system-ui, sans-serif;
             border-top: 1px solid #282828;
             line-height: 1.55;
         }
+        .menu-version {
+            padding: 0 20px 14px;
+            color: #2e2e2e;
+            font-size: 10px;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+            text-align: right;
+            transition: color 0.3s;
+        }
+        .menu-version:hover { color: #555; }
 
         /* ── Gear button — same fade behavior as hamburger ── */
         .gear-btn {
@@ -274,6 +283,7 @@
         <a href="/" class="menu-item">🏠 &nbsp;Home — 9 Cameras</a>
         <a href="/builder/" class="menu-item">🎨 &nbsp;Build a Camera View</a>
         <div class="menu-tip">💡 Copy the page URL and paste into Wallpaper Engine</div>
+        <div class="menu-version">v.1.013</div>
     </nav>
 
     <div id="grid"></div>

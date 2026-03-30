@@ -66,13 +66,22 @@
         .menu-item.active { color: #4fc; border-left: 3px solid #4fc; }
         .menu-tip {
             margin-top: auto;
-            padding: 15px 20px;
+            padding: 15px 20px 10px;
             color: #888;
             font-size: 12px;
             font-family: sans-serif;
             border-top: 1px solid #333;
             line-height: 1.5;
         }
+        .menu-version {
+            padding: 0 20px 14px;
+            color: #2e2e2e;
+            font-size: 10px;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+            text-align: right;
+            transition: color 0.3s;
+        }
+        .menu-version:hover { color: #555; }
 
         /* Основные стили */
         body {
@@ -131,6 +140,7 @@
         <a href="/" class="menu-item active">🏠 &nbsp;Home — 9 Cameras</a>
         <a href="/builder/" class="menu-item">🎨 &nbsp;Build a Camera View</a>
         <div class="menu-tip">💡 Copy the page URL and paste into Wallpaper Engine</div>
+        <div class="menu-version">v.1.013</div>
     </nav>
 
     <div class="grid-container">
