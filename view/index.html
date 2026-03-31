@@ -46,7 +46,7 @@
 
         #grid { display: grid; width: 100vw; height: 100vh; }
         .cell { overflow: hidden; position: relative; background: #000; }
-        .cell iframe { position: absolute; border: none; }
+        .cell iframe { position: absolute; border: none; top: 0; left: 0; width: 100%; height: 100%; }
 
         /* ── Hamburger ── */
         .hamburger {
@@ -306,7 +306,6 @@
                 const iframe = document.createElement('iframe');
                 iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&iv_load_policy=3`;
                 iframe.setAttribute('allowfullscreen', '');
-                if (mirrorSet.has(i)) iframe.style.transform = 'scaleX(-1)';
                 cell.appendChild(iframe);
                 grid.appendChild(cell);
             });
@@ -318,22 +317,15 @@
             cells.forEach((cell, i) => {
                 const iframe = cell.querySelector('iframe');
                 if (!iframe) return;
-                const rect = cell.getBoundingClientRect();
-                const cellW = rect.width, cellH = rect.height;
-                const cr = cellW / cellH;
-                let iW, iH;
-                if (mode === 'contain') {
-                    if (cr > ratio) { iH = cellH; iW = cellH * ratio; }
-                    else            { iW = cellW;  iH = cellW / ratio; }
-                } else {
-                    if (cr > ratio) { iW = Math.ceil(cellW);  iH = Math.ceil(cellW / ratio); }
-                    else            { iH = Math.ceil(cellH);  iW = Math.ceil(cellH * ratio); }
-                }
-                iframe.style.width  = iW + 'px';
-                iframe.style.height = iH + 'px';
-                iframe.style.top  = Math.floor((cellH - iH) / 2) + 'px';
-                iframe.style.left = Math.floor((cellW - iW) / 2) + 'px';
-                iframe.style.transform = mirrorSet.has(i) ? 'scaleX(-1)' : '';
+                const { width: cW, height: cH } = cell.getBoundingClientRect();
+                const cr = (cW && cH) ? cW / cH : ratio;
+                const scale = (mode === 'fill')
+                    ? (cr > ratio ? cr / ratio : ratio / cr)
+                    : 1;
+                const parts = [];
+                if (scale > 1.001) parts.push(`scale(${scale.toFixed(4)})`);
+                if (mirrorSet.has(i)) parts.push('scaleX(-1)');
+                iframe.style.transform = parts.join(' ');
             });
             document.getElementById('btnContain').classList.toggle('active', mode === 'contain');
             document.getElementById('btnFill').classList.toggle('active', mode === 'fill');
@@ -368,8 +360,7 @@
         function toggleMirror(idx) {
             if (mirrorSet.has(idx)) mirrorSet.delete(idx); else mirrorSet.add(idx);
             pushUrl();
-            const iframe = document.querySelectorAll('.cell iframe')[idx];
-            if (iframe) iframe.style.transform = mirrorSet.has(idx) ? 'scaleX(-1)' : '';
+            applyMode();
             renderPanel();
         }
 
