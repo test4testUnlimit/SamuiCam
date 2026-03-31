@@ -38,7 +38,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             background: #000;
             color: var(--t1);
             min-height: 100vh;
@@ -168,6 +168,7 @@
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 10px;
             padding: 24px 22px;
+            -webkit-backdrop-filter: blur(6px);
             backdrop-filter: blur(6px);
         }
         .card-icon { font-size: 22px; margin-bottom: 10px; }
@@ -197,13 +198,13 @@
             border-radius: 5px;
             opacity: 0.2;
             transition: opacity 0.3s;
-            user-select: none;
+            user-select: none; -webkit-user-select: none;
         }
         .hamburger:hover, .hamburger.hint { opacity: 0.85; }
 
         /* ── Spotlight overlay (shows during pulse) ── */
         .hint-bg {
-            position: fixed; inset: 0;
+            position: fixed; top: 0; right: 0; bottom: 0; left: 0; inset: 0;
             background: rgba(0,0,0,0.78);
             z-index: 1005;
             opacity: 0; pointer-events: none;
@@ -224,7 +225,7 @@
 
         /* ── Side menu ── */
         .menu-overlay {
-            display: none; position: fixed; inset: 0;
+            display: none; position: fixed; top: 0; right: 0; bottom: 0; left: 0; inset: 0;
             background: rgba(0,0,0,0.55); z-index: 1011;
         }
         .side-menu {
@@ -276,7 +277,7 @@
         .menu-version {
             padding: 4px 20px 14px;
             color: var(--menu-t2); font-size: 11px;
-            font-family: 'Cascadia Code', 'Consolas', monospace;
+            font-family: 'Cascadia Code', 'Consolas', 'Monaco', 'Menlo', monospace;
             text-align: right;
         }
     </style>
@@ -308,7 +309,7 @@
         </div>
         <hr class="menu-sep">
         <div class="menu-tip">💡 Copy a view URL and paste into Wallpaper Engine</div>
-        <div class="menu-version">v.1.018</div>
+        <div class="menu-version">v.1.021</div>
     </nav>
 
     <!-- Page content -->
