@@ -5,50 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camera View Builder — Koh Samui</title>
     <style>
-        /* ── Theme tokens ── */
+        /* ── Design tokens ── */
         :root {
-            --bg:        #111;
-            --bg-deep:   #0d0d0d;
-            --bg-panel:  #1a1a1a;
-            --bg-card:   #161616;
-            --bd:        #1e1e1e;
-            --bd2:       #2a2a2a;
-            --t1:        #ddd;
-            --t2:        #888;
-            --t3:        #555;
-            --t4:        #333;
-            --ac:        #4fc;
-            --ac-btn:    #4fc;
-            --ac-btn-h:  #6ffccc;
-            --ac-dis-bg: #1a3328;
-            --ac-dis-t:  #2a5040;
-            --overlay:   rgba(0,0,0,0.5);
+            --bg:   #111;
+            --bg2:  #1a1a1a;
+            --bg3:  #222;
+            --bd:   #2a2a2a;
+            --t1:   #ddd;
+            --t2:   #888;
+            --t3:   #444;
+            --ac:   #4fc;
         }
         [data-theme="light"] {
-            --bg:        #f4f4f4;
-            --bg-deep:   #e8e8e8;
-            --bg-panel:  #ffffff;
-            --bg-card:   #f9f9f9;
-            --bd:        #e0e0e0;
-            --bd2:       #d0d0d0;
-            --t1:        #1a1a1a;
-            --t2:        #555;
-            --t3:        #999;
-            --t4:        #bbb;
-            --ac:        #0d6efd;
-            --ac-btn:    #0d6efd;
-            --ac-btn-h:  #3d8bfd;
-            --ac-dis-bg: #cfe2ff;
-            --ac-dis-t:  #aaa;
-            --overlay:   rgba(0,0,0,0.25);
+            --bg:   #f0f0f0;
+            --bg2:  #fff;
+            --bg3:  #e8e8e8;
+            --bd:   #ddd;
+            --t1:   #111;
+            --t2:   #555;
+            --t3:   #aaa;
+            --ac:   #0d6efd;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--t1);
-            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -57,458 +41,529 @@
 
         /* ── Header ── */
         header {
-            padding: 15px 20px 13px 56px; /* left padding for hamburger */
+            padding: 13px 20px 11px 56px;
             border-bottom: 1px solid var(--bd);
             flex-shrink: 0;
             display: flex;
-            align-items: center;
+            align-items: baseline;
             gap: 12px;
         }
-        header h1 { font-size: 15px; font-weight: 500; color: var(--t1); letter-spacing: 0.3px; }
-        header .subtitle { font-size: 13px; color: var(--t2); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        header h1 { font-size: 15px; font-weight: 500; color: var(--t1); }
+        header p  { font-size: 12px; color: var(--t2); }
 
-        /* ── Main layout ── */
-        .main { display: grid; grid-template-columns: 1fr 300px; flex: 1; overflow: hidden; }
-
-        /* ── Camera grid ── */
-        .camera-list {
-            padding: 16px 20px;
-            overflow-y: auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 10px;
-            align-content: start;
-            min-height: 0;
+        /* ── Two-column layout ── */
+        .layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
         }
-        .cam-card {
-            border: 1.5px solid var(--bd);
+
+        /* ── Left: camera grid ── */
+        .cam-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 20px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Each geo group is its own section */
+        .group h2 {
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--t2);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--bd);
+            margin-bottom: 12px;
+        }
+        .group-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 10px;
+        }
+
+        /* ── Camera card ── */
+        .card {
+            cursor: pointer;
             border-radius: 8px;
             overflow: hidden;
-            cursor: pointer;
-            position: relative;
-            align-self: start;       /* stop grid row from stretching the card */
-            transition: transform 0.18s, box-shadow 0.18s, border-color 0.15s;
-            background: var(--bg-card);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+            border: 2px solid transparent;
+            background: #000;
+            transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
         }
-        /* Intrinsic 16:9 ratio — padding-top % is always % of element's WIDTH.
-           56.25% = 9/16. Works in all browsers, no aspect-ratio quirks. */
-        .cam-card::before {
-            content: '';
-            display: block;
-            padding-top: 56.25%;
+        .card:hover {
+            border-color: var(--bd);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
         }
-        .cam-card:hover { border-color: var(--bd2); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.55); }
-        .cam-card.selected { border-color: var(--ac); box-shadow: 0 0 0 1px var(--ac), 0 4px 16px rgba(68,255,204,0.15); }
-        [data-theme="light"] .cam-card { box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
-        [data-theme="light"] .cam-card:hover { box-shadow: 0 6px 16px rgba(0,0,0,0.18); }
-        [data-theme="light"] .cam-card.selected { box-shadow: 0 0 0 1px var(--ac), 0 4px 12px rgba(13,110,253,0.15); }
-        .cam-card.dead { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
-        .cam-card.dead .cam-name::after { content: ' — offline'; font-style: italic; opacity: 0.7; }
+        .card.on {
+            border-color: var(--ac);
+        }
 
-        /* ── Group headers in camera grid ── */
-        .group-header {
-            grid-column: 1 / -1;
-            font-size: 11px; color: var(--t2);
-            text-transform: uppercase; letter-spacing: 1.8px;
-            padding: 10px 0 6px;
-            border-bottom: 1px solid var(--bd);
-            margin-top: 12px;
-            display: flex; align-items: center; gap: 8px;
+        /* img on a replaced element: aspect-ratio works perfectly here */
+        .card img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
         }
-        .group-header::before {
-            content: '';
-            width: 3px; height: 13px;
-            background: var(--ac);
-            border-radius: 2px;
+
+        .card-name {
+            padding: 7px 10px 8px;
+            font-size: 12px;
+            color: var(--t2);
+            background: var(--bg2);
+            line-height: 1.35;
+            transition: color 0.15s;
+        }
+        .card.on .card-name { color: var(--t1); }
+
+        /* ── Right: sidebar ── */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            border-left: 1px solid var(--bd);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .sidebar-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .sidebar-footer {
+            border-top: 1px solid var(--bd);
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             flex-shrink: 0;
         }
-        .group-header:first-child { margin-top: 0; }
 
-        .cam-thumb { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: var(--bg-deep); }
-        .cam-info {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            padding: 22px 10px 8px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.82));
+        /* Section label */
+        .lbl {
+            font-size: 10px;
+            color: var(--t3);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 7px;
         }
-        .cam-check {
-            position: absolute; top: 7px; right: 7px;
-            width: 18px; height: 18px;
-            border: 1.5px solid rgba(255,255,255,0.45);
-            border-radius: 50%; flex-shrink: 0;
-            transition: all 0.15s;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 9px; font-weight: bold; color: transparent;
-            background: rgba(0,0,0,0.25);
-        }
-        .selected .cam-check { background: var(--ac); border-color: var(--ac); color: #000; }
-        .cam-check::after { content: '✓'; }
-        .cam-name { font-size: 11px; color: #fff; line-height: 1.3; text-shadow: 0 1px 4px rgba(0,0,0,0.9); }
-        .selected .cam-name { color: #fff; }
-
-        /* ── Sidebar ── */
-        .sidebar { border-left: 1px solid var(--bd); display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
-        .sidebar-inner { padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; flex: 1; min-height: 0; }
-
-        .section-label { font-size: 10px; color: var(--t3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
 
         /* Mode toggle */
-        .toggle { display: flex; border: 1px solid var(--bd); border-radius: 4px; overflow: hidden; }
-        .toggle-btn {
-            flex: 1; padding: 9px 6px;
-            background: none; border: none; color: var(--t3);
-            font-size: 12px; cursor: pointer;
-            transition: all 0.15s; font-family: inherit;
-            line-height: 1.3; text-align: center;
+        .mode-row {
+            display: flex;
+            border: 1px solid var(--bd);
+            border-radius: 5px;
+            overflow: hidden;
         }
-        .toggle-btn small { display: block; font-size: 10px; color: var(--t4); margin-top: 2px; }
-        .toggle-btn.active { background: var(--bg-card); color: var(--ac); }
-        .toggle-btn.active small { color: var(--t3); }
+        .mode-row button {
+            flex: 1;
+            padding: 8px 6px;
+            background: none;
+            border: none;
+            color: var(--t2);
+            font-size: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            line-height: 1.4;
+            text-align: center;
+            transition: background 0.15s, color 0.15s;
+        }
+        .mode-row button small { display: block; font-size: 10px; color: var(--t3); }
+        .mode-row button.on { background: var(--bg3); color: var(--ac); }
 
         /* Selected list */
-        .sel-list { display: flex; flex-direction: column; gap: 3px; min-height: 40px; }
+        .sel-empty { font-size: 12px; color: var(--t3); padding: 4px 0; }
         .sel-item {
-            display: flex; align-items: center; gap: 4px;
-            padding: 6px 8px; background: var(--bg-card);
-            border-radius: 3px; font-size: 11px; color: var(--t2);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--bd);
         }
-        .sel-item-name { flex: 1; line-height: 1.35; }
-        .sel-move {
-            background: none; border: 1px solid var(--bd);
-            color: var(--t3); font-size: 11px; cursor: pointer;
-            padding: 2px 6px; border-radius: 3px; line-height: 1.3;
-            transition: all 0.15s; font-family: inherit;
-            min-width: 24px; text-align: center;
-        }
-        .sel-move:hover:not(:disabled) { border-color: var(--t2); color: var(--t1); }
-        .sel-move:disabled { opacity: 0.18; cursor: default; }
-        .sel-remove { color: var(--t4); cursor: pointer; padding: 0 3px; font-size: 14px; transition: color 0.15s; line-height: 1; flex-shrink: 0; }
-        .sel-remove:hover { color: #f55; }
-        .empty-hint { font-size: 11px; color: var(--t4); padding: 8px 0; }
+        .sel-item:last-child { border-bottom: none; }
+        .sel-num  { font-size: 11px; color: var(--t3); width: 16px; flex-shrink: 0; }
+        .sel-name { flex: 1; font-size: 12px; color: var(--t2); line-height: 1.3; }
+        .sel-mv   { background: none; border: 1px solid var(--bd); color: var(--t3); font-size: 11px;
+                    cursor: pointer; padding: 2px 6px; border-radius: 3px; font-family: inherit;
+                    transition: all 0.15s; }
+        .sel-mv:hover:not(:disabled) { border-color: var(--t2); color: var(--t1); }
+        .sel-mv:disabled { opacity: 0.2; cursor: default; }
+        .sel-rm   { color: var(--t3); cursor: pointer; font-size: 18px; line-height: 1;
+                    padding: 0 2px; transition: color 0.12s; flex-shrink: 0; }
+        .sel-rm:hover { color: #f55; }
 
-        /* URL box */
+        /* URL display */
         .url-box {
-            background: var(--bg-deep); border: 1px solid var(--bd);
-            border-radius: 4px; padding: 9px 10px;
-            font-size: 10px; color: var(--ac);
-            word-break: break-all; line-height: 1.6;
-            min-height: 44px; font-family: 'Cascadia Code', 'Consolas', 'Monaco', 'Menlo', monospace;
+            font-family: 'Cascadia Code', 'Consolas', 'Monaco', 'Menlo', monospace;
+            font-size: 11px;
+            color: var(--ac);
+            background: var(--bg2);
+            border: 1px solid var(--bd);
+            border-radius: 4px;
+            padding: 8px 10px;
+            word-break: break-all;
+            line-height: 1.55;
+            min-height: 44px;
         }
 
-        /* Gear hint */
-        .gear-hint {
-            font-size: 11px; color: var(--t3); line-height: 1.5;
-            padding: 8px 10px; background: var(--bg-card);
-            border-radius: 4px; border: 1px solid var(--bd);
+        /* Buttons */
+        .btn-p {
+            width: 100%; padding: 11px; border: none; border-radius: 5px;
+            background: var(--ac); color: #000; font-size: 13px; font-weight: 600;
+            cursor: pointer; font-family: inherit; transition: filter 0.15s;
         }
-        .gear-hint strong { color: var(--t2); }
-
-        /* Footer buttons */
-        .sidebar-footer { padding: 14px 18px; border-top: 1px solid var(--bd); display: flex; flex-direction: column; gap: 7px; flex-shrink: 0; }
-        .btn { width: 100%; padding: 11px; border: none; border-radius: 4px; font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.15s; font-weight: 500; }
-        .btn-primary { background: var(--ac-btn); color: #000; }
-        .btn-primary:hover { background: var(--ac-btn-h); }
-        .btn-primary:disabled { background: var(--ac-dis-bg); color: var(--ac-dis-t); cursor: default; }
-        .btn-secondary { background: var(--bg-card); color: var(--t2); border: 1px solid var(--bd); }
-        .btn-secondary:hover { color: var(--t1); border-color: var(--bd2); }
+        .btn-p:hover { filter: brightness(1.1); }
+        .btn-p:disabled { opacity: 0.3; cursor: default; filter: none; }
+        .btn-s {
+            width: 100%; padding: 10px; border: 1px solid var(--bd); border-radius: 5px;
+            background: none; color: var(--t2); font-size: 13px;
+            cursor: pointer; font-family: inherit; transition: all 0.15s;
+        }
+        .btn-s:hover { color: var(--t1); border-color: var(--t2); }
         .copy-ok { font-size: 11px; color: var(--ac); text-align: center; height: 14px; }
 
         /* ── Hamburger ── */
         .hamburger {
-            position: fixed; top: 14px; left: 14px; z-index: 1001;
-            cursor: pointer; font-size: 16px; color: var(--t1);
-            background: var(--bg-card);
-            border: 1px solid var(--bd);
+            position: fixed; top: 13px; left: 14px; z-index: 200;
+            cursor: pointer; font-size: 15px; color: var(--t1);
+            background: var(--bg2); border: 1px solid var(--bd);
             padding: 5px 9px; border-radius: 5px;
-            opacity: 0.45; transition: opacity 0.3s;
+            opacity: 0.5; transition: opacity 0.2s;
             user-select: none; -webkit-user-select: none;
         }
         .hamburger:hover { opacity: 1; }
 
         /* ── Side menu ── */
-        .menu-overlay { display: none; position: fixed; top: 0; right: 0; bottom: 0; left: 0; inset: 0; background: var(--overlay); z-index: 1002; }
+        .menu-bg {
+            display: none;
+            position: fixed; top: 0; right: 0; bottom: 0; left: 0; inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 201;
+        }
+        .menu-bg.open { display: block; }
         .side-menu {
-            position: fixed; top: 0; left: 0; width: 260px; height: 100%;
-            background: var(--bg-panel); border-right: 1px solid var(--bd);
-            z-index: 1003; transform: translateX(-100%);
-            transition: transform 0.3s ease;
-            display: flex; flex-direction: column; padding: 20px 0;
+            position: fixed; top: 0; left: 0; width: 240px; height: 100%;
+            background: var(--bg2); border-right: 1px solid var(--bd);
+            z-index: 202;
+            transform: translateX(-100%);
+            transition: transform 0.28s ease;
+            display: flex; flex-direction: column;
+            padding: 20px 0;
         }
         .side-menu.open { transform: translateX(0); }
-        .menu-overlay.open { display: block; }
-        .menu-title { color: var(--t3); font-size: 10px; text-transform: uppercase; letter-spacing: 2px; padding: 0 20px 14px; border-bottom: 1px solid var(--bd); margin-bottom: 8px; font-family: inherit; }
-        .menu-item { display: block; color: var(--t2); text-decoration: none; padding: 13px 20px; font-size: 14px; transition: background 0.2s, color 0.2s; }
-        .menu-item:hover { background: var(--bd); color: var(--t1); }
-        .menu-item.active { color: var(--ac); border-left: 3px solid var(--ac); padding-left: 17px; }
-        .menu-sep { border: none; border-top: 1px solid var(--bd); margin: 6px 0; }
-        .menu-theme { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; cursor: pointer; transition: background 0.2s; }
-        .menu-theme:hover { background: var(--bd); }
-        .menu-theme span { color: var(--t2); font-size: 13px; }
-        .theme-icon { font-size: 15px; }
-        .menu-tip { margin-top: auto; padding: 14px 20px 8px; color: var(--t2); font-size: 11px; border-top: 1px solid var(--bd); line-height: 1.55; }
-        .menu-version { padding: 4px 20px 14px; color: var(--t2); font-size: 11px; font-family: 'Cascadia Code', 'Consolas', 'Monaco', 'Menlo', monospace; text-align: right; }
+        .menu-hd   { color: var(--t3); font-size: 10px; text-transform: uppercase; letter-spacing: 2px;
+                     padding: 0 18px 12px; border-bottom: 1px solid var(--bd); margin-bottom: 6px; }
+        .menu-a    { display: block; color: var(--t2); text-decoration: none; padding: 12px 18px;
+                     font-size: 14px; transition: background 0.15s, color 0.15s; }
+        .menu-a:hover { background: var(--bg3); color: var(--t1); }
+        .menu-a.on { color: var(--ac); border-left: 3px solid var(--ac); padding-left: 15px; }
+        .menu-sep  { border: none; border-top: 1px solid var(--bd); margin: 4px 0; }
+        .menu-th   { display: flex; align-items: center; justify-content: space-between;
+                     padding: 11px 18px; cursor: pointer; transition: background 0.15s; }
+        .menu-th:hover { background: var(--bg3); }
+        .menu-th span { color: var(--t2); font-size: 13px; }
+        .menu-tip  { margin-top: auto; padding: 12px 18px 6px; color: var(--t2); font-size: 11px;
+                     border-top: 1px solid var(--bd); line-height: 1.5; }
+        .menu-ver  { padding: 4px 18px 12px; color: var(--t3); font-size: 11px;
+                     font-family: 'Cascadia Code','Consolas','Monaco','Menlo',monospace;
+                     text-align: right; }
 
         /* ── Mobile ── */
-        @media (max-width: 768px) {
-            body { overflow: auto; }
-            .main { grid-template-columns: 1fr; grid-template-rows: auto auto; flex: none; overflow: visible; }
-            .camera-list { overflow-y: visible; min-height: 300px; }
-            .sidebar { border-left: none; border-top: 1px solid var(--bd); overflow: visible; height: auto; }
-            .sidebar-inner { overflow-y: visible; padding-bottom: 8px; }
-            header .subtitle { display: none; }
+        @media (max-width: 700px) {
+            body { height: auto; overflow: auto; }
+            .layout { flex-direction: column; overflow: visible; }
+            .cam-area  { overflow-y: visible; }
+            .sidebar   { width: 100%; border-left: none; border-top: 1px solid var(--bd); }
+            .sidebar-body { overflow-y: visible; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Hamburger (on all pages now) -->
-    <div class="hamburger" id="hamburger" onclick="toggleMenu()">☰</div>
-    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
-    <nav class="side-menu" id="sideMenu">
-        <div class="menu-title">Navigation</div>
-        <a href="/"         class="menu-item">🏠 &nbsp;Home</a>
-        <a href="/9cams/"   class="menu-item">⊞ &nbsp;9 Cameras</a>
-        <a href="/builder/" class="menu-item active">🎨 &nbsp;Build a Camera View</a>
-        <hr class="menu-sep">
-        <div class="menu-theme" onclick="toggleTheme()">
-            <span>Theme</span>
-            <span class="theme-icon" id="themeIcon">☀</span>
+<!-- Nav -->
+<div class="hamburger" onclick="toggleMenu()">☰</div>
+<div class="menu-bg" id="menuBg" onclick="toggleMenu()"></div>
+<nav class="side-menu" id="sideMenu">
+    <div class="menu-hd">Navigation</div>
+    <a href="/"         class="menu-a">🏠 &nbsp;Home</a>
+    <a href="/9cams/"   class="menu-a">⊞ &nbsp;9 Cameras</a>
+    <a href="/builder/" class="menu-a on">🎨 &nbsp;Build a View</a>
+    <hr class="menu-sep">
+    <div class="menu-th" onclick="toggleTheme()">
+        <span>Theme</span>
+        <span id="themeIcon">☀</span>
+    </div>
+    <hr class="menu-sep">
+    <div class="menu-tip">💡 Copy a link → paste into Wallpaper Engine, or open fullscreen with F11</div>
+    <div class="menu-ver">v.1.022</div>
+</nav>
+
+<!-- Header -->
+<header>
+    <h1>Camera View Builder</h1>
+    <p>Pick cameras · set order · copy link</p>
+</header>
+
+<!-- Main -->
+<div class="layout">
+
+    <!-- Left: camera cards -->
+    <div class="cam-area" id="camArea"></div>
+
+    <!-- Right: sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-body">
+
+            <div>
+                <div class="lbl">Mode</div>
+                <div class="mode-row">
+                    <button id="btnContain" onclick="setMode('contain')">
+                        Contain <small>bars, no crop</small>
+                    </button>
+                    <button id="btnFill" class="on" onclick="setMode('fill')">
+                        Fill <small>fills screen</small>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <div class="lbl">Selected — <span id="selCount">0</span></div>
+                <div id="selList"><div class="sel-empty">Click a camera to add it</div></div>
+            </div>
+
+            <div>
+                <div class="lbl">Link</div>
+                <div class="url-box" id="urlBox">—</div>
+            </div>
+
         </div>
-        <hr class="menu-sep">
-        <div class="menu-tip">💡 Copy a view URL → paste into Wallpaper Engine, or open in browser + press F11</div>
-        <div class="menu-version">v.1.022</div>
-    </nav>
-
-    <header>
-        <h1>Koh Samui — Camera View Builder</h1>
-        <span class="subtitle">Pick cameras · arrange · copy link · use in Wallpaper Engine or open fullscreen (F11) in any browser</span>
-    </header>
-
-    <div class="main">
-        <div class="camera-list" id="cameraList"></div>
-
-        <div class="sidebar">
-            <div class="sidebar-inner">
-
-                <div>
-                    <div class="section-label">Mode</div>
-                    <div class="toggle">
-                        <button class="toggle-btn" id="btnContain" onclick="setMode('contain')">
-                            Contain <small>no crop</small>
-                        </button>
-                        <button class="toggle-btn active" id="btnFill" onclick="setMode('fill')">
-                            Fill <small>fill screen</small>
-                        </button>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="section-label">Selected — <span id="countLabel">0</span></div>
-                    <div class="sel-list" id="selList">
-                        <div class="empty-hint">Click a camera to add it</div>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="section-label">Link</div>
-                    <div class="url-box" id="urlBox">—</div>
-                </div>
-
-                <div class="gear-hint">
-                    <strong>⚙ Tip:</strong> After opening the preview, use the semi-transparent gear button (bottom-right) to reorder cameras, mirror them, or change the layout on the fly.
-                </div>
-
-            </div>
-
-            <div class="sidebar-footer">
-                <button class="btn btn-primary" id="copyBtn" onclick="copyUrl()" disabled>Copy Link</button>
-                <div class="copy-ok" id="copyOk"></div>
-                <button class="btn btn-secondary" onclick="openPreview()">Open Preview ↗</button>
-            </div>
+        <div class="sidebar-footer">
+            <button class="btn-p" id="copyBtn" onclick="copyUrl()" disabled>Copy Link</button>
+            <div class="copy-ok" id="copyOk"></div>
+            <button class="btn-s" onclick="openPreview()">Open Preview ↗</button>
         </div>
     </div>
 
-    <script>
-        const STREAM_GROUPS = [
-            {
-                label: "🇹🇭 Koh Samui · Thailand",
-                streams: [
-                    { id: "3N3ZwIB_X4Y", name: "Crystal Bay Yacht Club, Lamai" },
-                    { id: "Fw9hgttWzIg", name: "Crystal Bay Beach Resort, Lamai" },
-                    { id: "Tpj0cmMVOd0", name: "Baobab Cam, Lamai" },
-                    { id: "UJpFtzKug7M", name: "Royal Muang Samui Villas, Choeng Mon" },
-                    { id: "Kush_ZxTy2c", name: "Black Pearl, Lamai" },
-                    { id: "LGNYKz4yziE", name: "Crystal Bay Yacht Club, Lamai — Panoramic" },
-                    { id: "NTTtqzL5OWI", name: "Crystal Bay Beach Resort, Lamai — Panoramic" },
-                    { id: "FBYUkqutqzE", name: "House of Sanskara, Koh Phangan" },
-                    { id: "x73IEW0fOo0", name: "Floating Lotus · Big Buddha, Koh Samui" },
-                    { id: "wP6hpWgPJ98", name: "Banyan Tree Samui" },
-                    { id: "Sm9y8G0TLXI", name: "No Stress Restaurant, Lamai" },
-                ]
-            },
-            {
-                label: "🇸🇨 Seychelles",
-                streams: [
-                    { id: "Thtj8Ht7Z_c", name: "Seychelles Ocean 4K" },
-                ]
-            },
-            {
-                label: "🇲🇻 Maldives",
-                streams: [
-                    { id: "pn3lAmLSva0", name: "Maamunagau Island, Maldives" },
-                    { id: "Mu0dzKm5ZaE", name: "Paradise Found, Maldives" },
-                    { id: "XrLz_hOBCT8", name: "Indian Ocean 4K" },
-                    { id: "_BMi3usEwi8", name: "InterContinental Resort, Maldives" },
-                ]
-            },
-            {
-                label: "🇺🇸 Hawaii",
-                streams: [
-                    { id: "X0idnu7HUmI", name: "Sheraton Waikiki, Hawaii" },
-                    { id: "YcEf_y0Ct14", name: "Napili Sunset Resort, Maui" },
-                ]
-            },
-            {
-                label: "🌴 Caribbean",
-                streams: [
-                    { id: "vxHKAImxUHk", name: "Simpson Bay Beach, Saint Martin" },
-                ]
-            },
-            {
-                label: "🇵🇭 Philippines",
-                streams: [
-                    { id: "UDAZWxehMAI", name: "Mayon Volcano, Philippines" },
-                ]
-            },
-            {
-                label: "🇨🇭 Europe · Alps",
-                streams: [
-                    { id: "enYFXf8u7Lc", name: "Swiss Alps Panorama" },
-                ]
-            },
-            {
-                label: "🛸 Space",
-                streams: [
-                    { id: "vytmBNhc9ig", name: "NASA ISS — Earth from Space" },
-                ]
-            }
-        ];
-        const STREAMS = STREAM_GROUPS.flatMap(g => g.streams);
+</div>
 
-        let selected = [];
-        let mode = 'fill';
+<script>
+    /* ── Stream data ── */
+    const GROUPS = [
+        {
+            label: "🇹🇭 Koh Samui · Thailand",
+            cams: [
+                { id: "3N3ZwIB_X4Y", name: "Crystal Bay Yacht Club, Lamai" },
+                { id: "Fw9hgttWzIg", name: "Crystal Bay Beach Resort, Lamai" },
+                { id: "Tpj0cmMVOd0", name: "Baobab Cam, Lamai" },
+                { id: "UJpFtzKug7M", name: "Royal Muang Samui Villas, Choeng Mon" },
+                { id: "Kush_ZxTy2c", name: "Black Pearl, Lamai" },
+                { id: "LGNYKz4yziE", name: "Crystal Bay Yacht Club — Panoramic" },
+                { id: "NTTtqzL5OWI", name: "Crystal Bay Beach Resort — Panoramic" },
+                { id: "FBYUkqutqzE", name: "House of Sanskara, Koh Phangan" },
+                { id: "x73IEW0fOo0", name: "Floating Lotus · Big Buddha, Koh Samui" },
+                { id: "wP6hpWgPJ98", name: "Banyan Tree Samui" },
+                { id: "Sm9y8G0TLXI", name: "No Stress Restaurant, Lamai" },
+            ]
+        },
+        {
+            label: "🇸🇨 Seychelles",
+            cams: [
+                { id: "Thtj8Ht7Z_c", name: "Seychelles Ocean 4K" },
+            ]
+        },
+        {
+            label: "🇲🇻 Maldives",
+            cams: [
+                { id: "pn3lAmLSva0", name: "Maamunagau Island, Maldives" },
+                { id: "Mu0dzKm5ZaE", name: "Paradise Found, Maldives" },
+                { id: "XrLz_hOBCT8", name: "Indian Ocean 4K" },
+                { id: "_BMi3usEwi8", name: "InterContinental Resort, Maldives" },
+            ]
+        },
+        {
+            label: "🇺🇸 Hawaii",
+            cams: [
+                { id: "X0idnu7HUmI", name: "Sheraton Waikiki, Oahu" },
+                { id: "YcEf_y0Ct14", name: "Napili Sunset Resort, Maui" },
+            ]
+        },
+        {
+            label: "🌴 Caribbean",
+            cams: [
+                { id: "vxHKAImxUHk", name: "Simpson Bay Beach, Saint Martin" },
+            ]
+        },
+        {
+            label: "🇵🇭 Philippines",
+            cams: [
+                { id: "UDAZWxehMAI", name: "Mayon Volcano, Philippines" },
+            ]
+        },
+        {
+            label: "🇨🇭 Europe · Alps",
+            cams: [
+                { id: "enYFXf8u7Lc", name: "Swiss Alps Panorama" },
+            ]
+        },
+        {
+            label: "🛸 Space",
+            cams: [
+                { id: "vytmBNhc9ig", name: "NASA ISS — Earth from Space" },
+            ]
+        }
+    ];
 
-        function renderCards() {
-            const list = document.getElementById('cameraList');
-            list.innerHTML = '';
-            STREAM_GROUPS.forEach(group => {
-                const hdr = document.createElement('div');
-                hdr.className = 'group-header';
-                hdr.textContent = group.label;
-                list.appendChild(hdr);
-                group.streams.forEach(s => {
-                    const card = document.createElement('div');
-                    const isDead = s.dead === true;
-                    card.className = 'cam-card' + (selected.includes(s.id) ? ' selected' : '') + (isDead ? ' dead' : '');
-                    if (!isDead) card.onclick = () => toggle(s.id);
-                    card.innerHTML = `
-                        <img class="cam-thumb" src="https://img.youtube.com/vi/${s.id}/mqdefault.jpg"
-                             alt="${s.name}" loading="lazy"
-                             onerror="this.src='https://img.youtube.com/vi/${s.id}/hqdefault.jpg'">
-                        <div class="cam-info"><div class="cam-name">${s.name}</div></div>
-                        <div class="cam-check"></div>`;
-                    list.appendChild(card);
-                });
+    const ALL_CAMS = GROUPS.flatMap(g => g.cams);
+
+    let selected = [];   /* array of cam IDs in chosen order */
+    let mode     = 'fill';
+
+    /* ── Render camera grid ── */
+    function renderGrid() {
+        const area = document.getElementById('camArea');
+        area.innerHTML = '';
+
+        GROUPS.forEach(g => {
+            const section = document.createElement('section');
+            section.className = 'group';
+
+            const h2 = document.createElement('h2');
+            h2.textContent = g.label;
+            section.appendChild(h2);
+
+            const grid = document.createElement('div');
+            grid.className = 'group-grid';
+
+            g.cams.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'card' + (selected.includes(c.id) ? ' on' : '');
+                card.onclick = () => toggle(c.id);
+
+                const img = document.createElement('img');
+                img.src  = `https://img.youtube.com/vi/${c.id}/mqdefault.jpg`;
+                img.alt  = c.name;
+                img.loading = 'lazy';
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = `https://img.youtube.com/vi/${c.id}/hqdefault.jpg`;
+                };
+
+                const name = document.createElement('div');
+                name.className = 'card-name';
+                name.textContent = c.name;
+
+                card.appendChild(img);
+                card.appendChild(name);
+                grid.appendChild(card);
             });
+
+            section.appendChild(grid);
+            area.appendChild(section);
+        });
+    }
+
+    /* ── Render sidebar ── */
+    function renderSidebar() {
+        document.getElementById('selCount').textContent = selected.length;
+        const list = document.getElementById('selList');
+
+        if (!selected.length) {
+            list.innerHTML = '<div class="sel-empty">Click a camera to add it</div>';
+        } else {
+            list.innerHTML = selected.map((id, i) => {
+                const cam  = ALL_CAMS.find(c => c.id === id);
+                const name = cam ? cam.name : id;
+                const last = i === selected.length - 1;
+                return `<div class="sel-item">
+                    <span class="sel-num">${i + 1}</span>
+                    <span class="sel-name">${name}</span>
+                    <button class="sel-mv" onclick="move(${i},-1)" ${i === 0 ? 'disabled' : ''}>↑</button>
+                    <button class="sel-mv" onclick="move(${i}, 1)" ${last  ? 'disabled' : ''}>↓</button>
+                    <span class="sel-rm" onclick="toggle('${id}')">×</span>
+                </div>`;
+            }).join('');
         }
 
-        function renderSidebar() {
-            document.getElementById('countLabel').textContent = selected.length;
-            const listEl = document.getElementById('selList');
-            if (selected.length === 0) {
-                listEl.innerHTML = '<div class="empty-hint">Click a camera to add it</div>';
-            } else {
-                listEl.innerHTML = selected.map((id, i) => {
-                    const s = STREAMS.find(x => x.id === id);
-                    return `<div class="sel-item">
-                        <span class="sel-item-name">${s ? s.name : id}</span>
-                        <button class="sel-move" onclick="moveSelected(${i},-1)" ${i === 0 ? 'disabled' : ''}>↑</button>
-                        <button class="sel-move" onclick="moveSelected(${i}, 1)" ${i === selected.length-1 ? 'disabled' : ''}>↓</button>
-                        <span class="sel-remove" onclick="event.stopPropagation();toggle('${id}')">×</span>
-                    </div>`;
-                }).join('');
-            }
-            const url = buildUrl();
-            document.getElementById('urlBox').textContent = url || '—';
-            document.getElementById('copyBtn').disabled = !url;
-        }
+        const url = buildUrl();
+        document.getElementById('urlBox').textContent = url || '—';
+        document.getElementById('copyBtn').disabled   = !url;
+    }
 
-        function buildUrl() {
-            if (!selected.length) return '';
-            return `${location.origin}/view/?cams=${selected.join(',')}&mode=${mode}`;
-        }
+    /* ── Actions ── */
+    function buildUrl() {
+        if (!selected.length) return '';
+        return `${location.origin}/view/?cams=${selected.join(',')}&mode=${mode}`;
+    }
 
-        function toggle(id) {
-            const idx = selected.indexOf(id);
-            if (idx === -1) selected.push(id);
-            else selected.splice(idx, 1);
-            renderCards(); renderSidebar();
-        }
-
-        function moveSelected(idx, dir) {
-            const to = idx + dir;
-            if (to < 0 || to >= selected.length) return;
-            [selected[idx], selected[to]] = [selected[to], selected[idx]];
-            renderSidebar();
-        }
-
-        function setMode(m) {
-            mode = m;
-            document.getElementById('btnContain').classList.toggle('active', m === 'contain');
-            document.getElementById('btnFill').classList.toggle('active', m === 'fill');
-            renderSidebar();
-        }
-
-        function copyUrl() {
-            const url = buildUrl();
-            if (!url) return;
-            navigator.clipboard.writeText(url).then(() => {
-                const el = document.getElementById('copyOk');
-                el.textContent = '✓ Copied';
-                setTimeout(() => el.textContent = '', 2000);
-            }).catch(() => {});
-        }
-
-        function openPreview() {
-            const url = buildUrl();
-            if (url) window.open(url, '_blank');
-        }
-
-        /* ── Theme ── */
-        function initTheme() {
-            const stored = localStorage.getItem('samui-theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            applyTheme(stored || (prefersDark ? 'dark' : 'light'), false);
-        }
-        function applyTheme(t, save = true) {
-            document.documentElement.setAttribute('data-theme', t);
-            document.getElementById('themeIcon').textContent = t === 'dark' ? '☀' : '🌙';
-            if (save) localStorage.setItem('samui-theme', t);
-        }
-        function toggleTheme() {
-            const cur = document.documentElement.getAttribute('data-theme') || 'dark';
-            applyTheme(cur === 'dark' ? 'light' : 'dark');
-        }
-        initTheme();
-
-        /* ── Nav menu ── */
-        function toggleMenu() {
-            document.getElementById('sideMenu').classList.toggle('open');
-            document.getElementById('menuOverlay').classList.toggle('open');
-        }
-
-        renderCards();
+    function toggle(id) {
+        const i = selected.indexOf(id);
+        if (i === -1) selected.push(id);
+        else selected.splice(i, 1);
+        renderGrid();
         renderSidebar();
-    </script>
+    }
+
+    function move(idx, dir) {
+        const to = idx + dir;
+        if (to < 0 || to >= selected.length) return;
+        [selected[idx], selected[to]] = [selected[to], selected[idx]];
+        renderSidebar();
+    }
+
+    function setMode(m) {
+        mode = m;
+        document.getElementById('btnContain').classList.toggle('on', m === 'contain');
+        document.getElementById('btnFill').classList.toggle('on',    m === 'fill');
+        renderSidebar();
+    }
+
+    function copyUrl() {
+        const url = buildUrl();
+        if (!url) return;
+        navigator.clipboard.writeText(url).then(() => {
+            const el = document.getElementById('copyOk');
+            el.textContent = '✓ Copied';
+            setTimeout(() => el.textContent = '', 2000);
+        }).catch(() => {});
+    }
+
+    function openPreview() {
+        const url = buildUrl();
+        if (url) window.open(url, '_blank');
+    }
+
+    /* ── Theme ── */
+    function applyTheme(t, save = true) {
+        document.documentElement.setAttribute('data-theme', t);
+        document.getElementById('themeIcon').textContent = t === 'dark' ? '☀' : '🌙';
+        if (save) localStorage.setItem('samui-theme', t);
+    }
+    function toggleTheme() {
+        const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+        applyTheme(cur === 'dark' ? 'light' : 'dark');
+    }
+    (function () {
+        const s = localStorage.getItem('samui-theme');
+        applyTheme(s || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'), false);
+    })();
+
+    /* ── Nav menu ── */
+    function toggleMenu() {
+        document.getElementById('sideMenu').classList.toggle('open');
+        document.getElementById('menuBg').classList.toggle('open');
+    }
+
+    /* ── Init ── */
+    renderGrid();
+    renderSidebar();
+</script>
 </body>
 </html>
