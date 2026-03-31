@@ -78,6 +78,7 @@
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 10px;
             align-content: start;
+            min-height: 0;
         }
         .cam-card {
             border: 1.5px solid var(--bd);
@@ -119,8 +120,8 @@
         .selected .cam-name { color: var(--t1); }
 
         /* ── Sidebar ── */
-        .sidebar { border-left: 1px solid var(--bd); display: flex; flex-direction: column; overflow: hidden; }
-        .sidebar-inner { padding: 18px 18px 0; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; flex: 1; }
+        .sidebar { border-left: 1px solid var(--bd); display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+        .sidebar-inner { padding: 18px 18px 0; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; flex: 1; min-height: 0; }
 
         .section-label { font-size: 10px; color: var(--t3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
 
@@ -248,7 +249,7 @@
         </div>
         <hr class="menu-sep">
         <div class="menu-tip">💡 Copy a view URL → paste into Wallpaper Engine, or open in browser + press F11</div>
-        <div class="menu-version">v.1.015</div>
+        <div class="menu-version">v.1.016</div>
     </nav>
 
     <header>
@@ -313,6 +314,9 @@
                     { id: "LGNYKz4yziE", name: "Crystal Bay Yacht Club, Lamai — Panoramic" },
                     { id: "NTTtqzL5OWI", name: "Crystal Bay Beach Resort, Lamai — Panoramic" },
                     { id: "FBYUkqutqzE", name: "House of Sanskara, Koh Phangan" },
+                    { id: "x73IEW0fOo0", name: "Floating Lotus · Big Buddha, Koh Samui" },
+                    { id: "wP6hpWgPJ98", name: "Banyan Tree Samui" },
+                    { id: "Sm9y8G0TLXI", name: "No Stress Restaurant, Lamai" },
                 ]
             },
             {
@@ -328,6 +332,37 @@
                     { id: "Mu0dzKm5ZaE", name: "Paradise Found, Maldives" },
                     { id: "XrLz_hOBCT8", name: "Indian Ocean 4K" },
                     { id: "_BMi3usEwi8", name: "InterContinental Resort, Maldives" },
+                ]
+            },
+            {
+                label: "🇺🇸 Hawaii",
+                streams: [
+                    { id: "X0idnu7HUmI", name: "Sheraton Waikiki, Hawaii" },
+                    { id: "YcEf_y0Ct14", name: "Napili Sunset Resort, Maui" },
+                ]
+            },
+            {
+                label: "🌴 Caribbean",
+                streams: [
+                    { id: "vxHKAImxUHk", name: "Simpson Bay Beach, Saint Martin" },
+                ]
+            },
+            {
+                label: "🇵🇭 Philippines",
+                streams: [
+                    { id: "UDAZWxehMAI", name: "Mayon Volcano, Philippines" },
+                ]
+            },
+            {
+                label: "🇨🇭 Europe · Alps",
+                streams: [
+                    { id: "enYFXf8u7Lc", name: "Swiss Alps Panorama" },
+                ]
+            },
+            {
+                label: "🛸 Space",
+                streams: [
+                    { id: "vytmBNhc9ig", name: "NASA ISS — Earth from Space" },
                 ]
             }
         ];

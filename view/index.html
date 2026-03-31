@@ -204,7 +204,7 @@
         </div>
         <hr class="menu-sep">
         <div class="menu-tip">💡 Copy the page URL and paste into Wallpaper Engine</div>
-        <div class="menu-version">v.1.015</div>
+        <div class="menu-version">v.1.016</div>
     </nav>
 
     <div id="grid"></div>
@@ -244,6 +244,7 @@
 
     <script>
         const STREAMS = {
+            // 🇹🇭 Koh Samui
             "3N3ZwIB_X4Y": "Crystal Bay Yacht Club, Lamai",
             "Fw9hgttWzIg": "Crystal Bay Beach Resort, Lamai",
             "Tpj0cmMVOd0": "Baobab Cam, Lamai",
@@ -252,11 +253,27 @@
             "LGNYKz4yziE": "Crystal Bay Yacht Club — Panoramic",
             "NTTtqzL5OWI": "Crystal Bay Beach Resort — Panoramic",
             "FBYUkqutqzE": "House of Sanskara, Koh Phangan",
+            "x73IEW0fOo0": "Floating Lotus · Big Buddha, Koh Samui",
+            "wP6hpWgPJ98": "Banyan Tree Samui",
+            "Sm9y8G0TLXI": "No Stress Restaurant, Lamai",
+            // 🇸🇨 Seychelles
             "Thtj8Ht7Z_c": "Seychelles Ocean 4K",
+            // 🇲🇻 Maldives
             "pn3lAmLSva0": "Maamunagau Island, Maldives",
             "Mu0dzKm5ZaE": "Paradise Found, Maldives",
             "XrLz_hOBCT8": "Indian Ocean 4K",
             "_BMi3usEwi8": "InterContinental Resort, Maldives",
+            // 🇺🇸 Hawaii
+            "X0idnu7HUmI": "Sheraton Waikiki, Hawaii",
+            "YcEf_y0Ct14": "Napili Sunset Resort, Maui",
+            // 🌴 Caribbean
+            "vxHKAImxUHk": "Simpson Bay Beach, Saint Martin",
+            // 🇵🇭 Philippines
+            "UDAZWxehMAI": "Mayon Volcano, Philippines",
+            // 🇨🇭 Europe
+            "enYFXf8u7Lc": "Swiss Alps Panorama",
+            // 🛸 Space
+            "vytmBNhc9ig": "NASA ISS — Earth from Space",
         };
 
         const params    = new URLSearchParams(location.search);
@@ -296,21 +313,26 @@
         }
 
         function applyMode() {
-            const { cols, rows } = getGrid(currentCams.length);
-            const cellW = window.innerWidth / cols, cellH = window.innerHeight / rows;
-            const ratio = 16 / 9, cr = cellW / cellH;
-            document.querySelectorAll('.cell iframe').forEach((iframe, i) => {
+            const cells = document.querySelectorAll('.cell');
+            const ratio = 16 / 9;
+            cells.forEach((cell, i) => {
+                const iframe = cell.querySelector('iframe');
+                if (!iframe) return;
+                const rect = cell.getBoundingClientRect();
+                const cellW = rect.width, cellH = rect.height;
+                const cr = cellW / cellH;
                 let iW, iH;
                 if (mode === 'contain') {
                     if (cr > ratio) { iH = cellH; iW = cellH * ratio; }
                     else            { iW = cellW;  iH = cellW / ratio; }
                 } else {
-                    if (cr > ratio) { iW = cellW;  iH = cellW / ratio; }
-                    else            { iH = cellH;  iW = cellH * ratio; }
+                    if (cr > ratio) { iW = Math.ceil(cellW);  iH = Math.ceil(cellW / ratio); }
+                    else            { iH = Math.ceil(cellH);  iW = Math.ceil(cellH * ratio); }
                 }
-                iframe.style.width  = iW + 'px'; iframe.style.height = iH + 'px';
-                iframe.style.top  = ((cellH - iH) / 2) + 'px';
-                iframe.style.left = ((cellW - iW) / 2) + 'px';
+                iframe.style.width  = iW + 'px';
+                iframe.style.height = iH + 'px';
+                iframe.style.top  = Math.floor((cellH - iH) / 2) + 'px';
+                iframe.style.left = Math.floor((cellW - iW) / 2) + 'px';
                 iframe.style.transform = mirrorSet.has(i) ? 'scaleX(-1)' : '';
             });
             document.getElementById('btnContain').classList.toggle('active', mode === 'contain');
