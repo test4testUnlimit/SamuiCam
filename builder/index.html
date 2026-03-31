@@ -75,7 +75,7 @@
             padding: 16px 20px;
             overflow-y: auto;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 10px;
             align-content: start;
             min-height: 0;
@@ -404,8 +404,9 @@
                     card.className = 'cam-card' + (selected.includes(s.id) ? ' selected' : '') + (isDead ? ' dead' : '');
                     if (!isDead) card.onclick = () => toggle(s.id);
                     card.innerHTML = `
-                        <img class="cam-thumb" src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg"
-                             alt="${s.name}" loading="lazy" onerror="this.style.opacity='0.1'">
+                        <img class="cam-thumb" src="https://img.youtube.com/vi/${s.id}/mqdefault.jpg"
+                             alt="${s.name}" loading="lazy"
+                             onerror="this.src='https://img.youtube.com/vi/${s.id}/hqdefault.jpg'">
                         <div class="cam-info"><div class="cam-name">${s.name}</div></div>
                         <div class="cam-check"></div>`;
                     list.appendChild(card);
