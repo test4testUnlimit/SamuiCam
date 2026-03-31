@@ -68,7 +68,7 @@
         header .subtitle { font-size: 13px; color: var(--t2); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* ── Main layout ── */
-        .main { display: grid; grid-template-columns: 1fr 296px; flex: 1; overflow: hidden; }
+        .main { display: grid; grid-template-columns: 1fr 300px; flex: 1; overflow: hidden; }
 
         /* ── Camera grid ── */
         .camera-list {
@@ -82,46 +82,65 @@
         }
         .cam-card {
             border: 1.5px solid var(--bd);
-            border-radius: 5px;
+            border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
-            transition: border-color 0.15s;
+            position: relative;
+            transition: transform 0.18s, box-shadow 0.18s, border-color 0.15s;
             background: var(--bg-card);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.35);
         }
-        .cam-card:hover { border-color: var(--bd2); }
-        .cam-card.selected { border-color: var(--ac); }
+        .cam-card:hover { border-color: var(--bd2); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.55); }
+        .cam-card.selected { border-color: var(--ac); box-shadow: 0 0 0 1px var(--ac), 0 4px 16px rgba(68,255,204,0.15); }
+        [data-theme="light"] .cam-card { box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
+        [data-theme="light"] .cam-card:hover { box-shadow: 0 6px 16px rgba(0,0,0,0.18); }
+        [data-theme="light"] .cam-card.selected { box-shadow: 0 0 0 1px var(--ac), 0 4px 12px rgba(13,110,253,0.15); }
         .cam-card.dead { opacity: 0.38; cursor: not-allowed; pointer-events: none; }
-        .cam-card.dead .cam-name::after { content: ' — offline'; color: var(--t4); font-style: italic; }
+        .cam-card.dead .cam-name::after { content: ' — offline'; font-style: italic; opacity: 0.7; }
 
         /* ── Group headers in camera grid ── */
         .group-header {
             grid-column: 1 / -1;
-            font-size: 10px; color: var(--t3);
-            text-transform: uppercase; letter-spacing: 1.5px;
-            padding: 8px 2px 5px;
+            font-size: 11px; color: var(--t2);
+            text-transform: uppercase; letter-spacing: 1.8px;
+            padding: 10px 0 6px;
             border-bottom: 1px solid var(--bd);
-            margin-top: 4px;
+            margin-top: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .group-header::before {
+            content: '';
+            width: 3px; height: 13px;
+            background: var(--ac);
+            border-radius: 2px;
+            flex-shrink: 0;
         }
         .group-header:first-child { margin-top: 0; }
 
         .cam-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: var(--bg-deep); }
-        .cam-info { padding: 7px 9px; display: flex; align-items: center; gap: 7px; }
+        .cam-info {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 22px 10px 8px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.82));
+        }
         .cam-check {
-            width: 14px; height: 14px;
-            border: 1.5px solid var(--bd2);
-            border-radius: 3px; flex-shrink: 0;
+            position: absolute; top: 7px; right: 7px;
+            width: 18px; height: 18px;
+            border: 1.5px solid rgba(255,255,255,0.45);
+            border-radius: 50%; flex-shrink: 0;
             transition: all 0.15s;
             display: flex; align-items: center; justify-content: center;
             font-size: 9px; font-weight: bold; color: transparent;
+            background: rgba(0,0,0,0.25);
         }
         .selected .cam-check { background: var(--ac); border-color: var(--ac); color: #000; }
         .cam-check::after { content: '✓'; }
-        .cam-name { font-size: 11px; color: var(--t2); line-height: 1.35; }
-        .selected .cam-name { color: var(--t1); }
+        .cam-name { font-size: 11px; color: #fff; line-height: 1.3; text-shadow: 0 1px 4px rgba(0,0,0,0.9); }
+        .selected .cam-name { color: #fff; }
 
         /* ── Sidebar ── */
         .sidebar { border-left: 1px solid var(--bd); display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
-        .sidebar-inner { padding: 18px 18px 0; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; flex: 1; min-height: 0; }
+        .sidebar-inner { padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; flex: 1; min-height: 0; }
 
         .section-label { font-size: 10px; color: var(--t3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
 
@@ -249,7 +268,7 @@
         </div>
         <hr class="menu-sep">
         <div class="menu-tip">💡 Copy a view URL → paste into Wallpaper Engine, or open in browser + press F11</div>
-        <div class="menu-version">v.1.016</div>
+        <div class="menu-version">v.1.018</div>
     </nav>
 
     <header>
@@ -304,7 +323,7 @@
     <script>
         const STREAM_GROUPS = [
             {
-                label: "☀️ Koh Samui · Thailand",
+                label: "🇹🇭 Koh Samui · Thailand",
                 streams: [
                     { id: "3N3ZwIB_X4Y", name: "Crystal Bay Yacht Club, Lamai" },
                     { id: "Fw9hgttWzIg", name: "Crystal Bay Beach Resort, Lamai" },
@@ -320,13 +339,13 @@
                 ]
             },
             {
-                label: "🌊 Seychelles",
+                label: "🇸🇨 Seychelles",
                 streams: [
                     { id: "Thtj8Ht7Z_c", name: "Seychelles Ocean 4K" },
                 ]
             },
             {
-                label: "🐠 Maldives",
+                label: "🇲🇻 Maldives",
                 streams: [
                     { id: "pn3lAmLSva0", name: "Maamunagau Island, Maldives" },
                     { id: "Mu0dzKm5ZaE", name: "Paradise Found, Maldives" },
@@ -335,7 +354,7 @@
                 ]
             },
             {
-                label: "🌺 Hawaii",
+                label: "🇺🇸 Hawaii",
                 streams: [
                     { id: "X0idnu7HUmI", name: "Sheraton Waikiki, Hawaii" },
                     { id: "YcEf_y0Ct14", name: "Napili Sunset Resort, Maui" },
@@ -348,13 +367,13 @@
                 ]
             },
             {
-                label: "🌋 Philippines",
+                label: "🇵🇭 Philippines",
                 streams: [
                     { id: "UDAZWxehMAI", name: "Mayon Volcano, Philippines" },
                 ]
             },
             {
-                label: "⛰️ Europe · Alps",
+                label: "🇨🇭 Europe · Alps",
                 streams: [
                     { id: "enYFXf8u7Lc", name: "Swiss Alps Panorama" },
                 ]
@@ -386,11 +405,9 @@
                     if (!isDead) card.onclick = () => toggle(s.id);
                     card.innerHTML = `
                         <img class="cam-thumb" src="https://img.youtube.com/vi/${s.id}/hqdefault.jpg"
-                             alt="${s.name}" onerror="this.style.opacity='0.1'">
-                        <div class="cam-info">
-                            <div class="cam-check"></div>
-                            <div class="cam-name">${s.name}</div>
-                        </div>`;
+                             alt="${s.name}" loading="lazy" onerror="this.style.opacity='0.1'">
+                        <div class="cam-info"><div class="cam-name">${s.name}</div></div>
+                        <div class="cam-check"></div>`;
                     list.appendChild(card);
                 });
             });
@@ -450,7 +467,7 @@
                 const el = document.getElementById('copyOk');
                 el.textContent = '✓ Copied';
                 setTimeout(() => el.textContent = '', 2000);
-            });
+            }).catch(() => {});
         }
 
         function openPreview() {

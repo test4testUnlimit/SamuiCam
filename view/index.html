@@ -45,7 +45,7 @@
         body { background: #000; overflow: hidden; width: 100vw; height: 100vh; }
 
         #grid { display: grid; width: 100vw; height: 100vh; }
-        .cell { overflow: hidden; position: relative; background: #000; }
+        .cell { overflow: hidden; position: relative; background: #000; will-change: transform; }
         .cell iframe { position: absolute; border: none; top: 0; left: 0; width: 100%; height: 100%; }
 
         /* ── Hamburger ── */
@@ -204,7 +204,7 @@
         </div>
         <hr class="menu-sep">
         <div class="menu-tip">💡 Copy the page URL and paste into Wallpaper Engine</div>
-        <div class="menu-version">v.1.016</div>
+        <div class="menu-version">v.1.018</div>
     </nav>
 
     <div id="grid"></div>
@@ -305,6 +305,7 @@
                 cell.className = 'cell';
                 const iframe = document.createElement('iframe');
                 iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&iv_load_policy=3`;
+                iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
                 iframe.setAttribute('allowfullscreen', '');
                 cell.appendChild(iframe);
                 grid.appendChild(cell);
@@ -397,7 +398,7 @@
                 const el = document.getElementById('copyOk');
                 el.textContent = '✓ Copied';
                 setTimeout(() => el.textContent = '', 2200);
-            });
+            }).catch(() => {});
         }
 
         function toggleMenu() {
