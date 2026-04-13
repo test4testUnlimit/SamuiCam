@@ -180,6 +180,7 @@
         .cam-row-btn:hover:not(:disabled) { border-color: var(--t2); color: var(--t1); }
         .cam-row-btn:disabled { opacity: 0.18; cursor: default; }
         .mirror-btn.on { border-color: var(--ac); color: var(--ac); }
+        .remove-btn:hover:not(:disabled) { border-color: #f55 !important; color: #f55 !important; }
 
         /* Layout selector */
         .layout-btns { display: flex; gap: 4px; }
@@ -408,6 +409,14 @@
             pushUrl(); buildGrid(); applyMode(); renderPanel();
         }
 
+        function removeCamera(idx) {
+            currentCams.splice(idx, 1);
+            const next = new Set();
+            mirrorSet.forEach(i => { if (i !== idx) next.add(i > idx ? i - 1 : i); });
+            mirrorSet = next;
+            pushUrl(); buildGrid(); applyMode(); renderPanel();
+        }
+
         function toggleMirror(idx) {
             if (mirrorSet.has(idx)) mirrorSet.delete(idx); else mirrorSet.add(idx);
             pushUrl();
@@ -434,6 +443,7 @@
                         <button class="cam-row-btn mirror-btn ${mirrorSet.has(i)?'on':''}" onclick="toggleMirror(${i})" title="Mirror">⇄</button>
                         <button class="cam-row-btn" onclick="moveCamera(${i},-1)" ${i===0?'disabled':''}>↑</button>
                         <button class="cam-row-btn" onclick="moveCamera(${i}, 1)" ${i===n-1?'disabled':''}>↓</button>
+                        <button class="cam-row-btn remove-btn" onclick="removeCamera(${i})" title="Remove">✕</button>
                     </div>
                 </div>`;
             }).join('');

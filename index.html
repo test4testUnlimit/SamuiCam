@@ -285,9 +285,8 @@
 <body>
 
     <!-- Background: Crystal Bay Yacht Club, cropped to hide YouTube UI -->
-    <div class="bg-video">
-        <iframe src="https://www.youtube.com/embed/3N3ZwIB_X4Y?autoplay=1&mute=1&controls=0&loop=1&playlist=3N3ZwIB_X4Y&iv_load_policy=3&disablekb=1&modestbranding=1"
-                allowfullscreen allow="autoplay"></iframe>
+    <div class="bg-video" id="bgVideoWrap">
+        <div id="bg-player"></div>
     </div>
     <div class="bg-overlay"></div>
 
@@ -342,6 +341,30 @@
     </div>
 
     <script>
+        /* ── Background video — YouTube IFrame API for cross-browser autoplay ── */
+        var bgPlayer;
+        window.onYouTubeIframeAPIReady = function() {
+            bgPlayer = new YT.Player('bg-player', {
+                videoId: '3N3ZwIB_X4Y',
+                playerVars: {
+                    autoplay: 1,
+                    mute: 1,
+                    controls: 0,
+                    loop: 1,
+                    playlist: '3N3ZwIB_X4Y',
+                    iv_load_policy: 3,
+                    disablekb: 1,
+                    modestbranding: 1
+                },
+                events: {
+                    onReady: function(e) {
+                        e.target.mute();
+                        e.target.playVideo();
+                    }
+                }
+            });
+        };
+
         /* ── Theme ── */
         function initTheme() {
             const stored = localStorage.getItem('samui-theme');
@@ -380,5 +403,6 @@
             }, 1500);
         }
     </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
