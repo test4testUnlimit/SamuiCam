@@ -51,7 +51,7 @@
             position: absolute; bottom: 10px; left: 10px; z-index: 10;
             font-family: 'Segoe UI', system-ui, sans-serif;
             font-size: clamp(9px, 1.2vw, 13px);
-            color: rgba(255,255,255,0.45);
+            color: rgba(255,255,255,0.22);
             text-shadow: 0 1px 4px rgba(0,0,0,0.8);
             letter-spacing: 0.03em;
             pointer-events: none;
@@ -60,7 +60,10 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: calc(100% - 20px);
+            display: flex; align-items: center; gap: 5px;
         }
+        .cam-dot { font-size: 0.7em; }
+        .cam-dot-warn { color: rgba(255,180,0,0.7); }
 
         /* ── Hamburger ── */
         .hamburger {
@@ -293,9 +296,10 @@
         const CAM_REDIRECTS = {};
         // ══ END CAM_REDIRECTS ══
 
-        const params    = new URLSearchParams(location.search);
-        let currentCams = (params.get('cams') || '').split(',').filter(Boolean)
-            .map(id => CAM_REDIRECTS[id] || id); // silently remap old IDs
+        const params     = new URLSearchParams(location.search);
+        const rawCams    = (params.get('cams') || '').split(',').filter(Boolean);
+        const redirected = new Set(rawCams.filter(id => CAM_REDIRECTS[id]));
+        let currentCams  = rawCams.map(id => CAM_REDIRECTS[id] || id);
         let mode        = params.get('mode') || 'fill';
         let layout      = params.get('layout') || 'auto';
         let mirrorSet   = new Set((params.get('mirror') || '').split(',').filter(Boolean).map(Number));
@@ -328,7 +332,8 @@
                 cell.appendChild(iframe);
                 const label = document.createElement('div');
                 label.className = 'cam-label';
-                label.textContent = STREAMS[id] || id;
+                const wasRedirected = redirected.has(rawCams[i]);
+                label.innerHTML = (wasRedirected ? '<span class="cam-dot cam-dot-warn">●</span>' : '') + (STREAMS[id] || id);
                 cell.appendChild(label);
                 grid.appendChild(cell);
             });
