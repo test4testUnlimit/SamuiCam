@@ -349,7 +349,7 @@
                 const cell = document.createElement('div');
                 cell.className = 'cell';
                 const iframe = document.createElement('iframe');
-                iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&iv_load_policy=3`;
+                iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&iv_load_policy=3&controls=0`;
                 iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
                 iframe.setAttribute('allowfullscreen', '');
                 cell.appendChild(iframe);
