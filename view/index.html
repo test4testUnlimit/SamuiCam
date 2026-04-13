@@ -299,10 +299,33 @@
         const params     = new URLSearchParams(location.search);
         const rawCams    = (params.get('cams') || '').split(',').filter(Boolean);
         const redirected = new Set(rawCams.filter(id => CAM_REDIRECTS[id]));
-        let currentCams  = rawCams.map(id => CAM_REDIRECTS[id] || id);
-        let mode        = params.get('mode') || 'fill';
-        let layout      = params.get('layout') || 'auto';
-        let mirrorSet   = new Set((params.get('mirror') || '').split(',').filter(Boolean).map(Number));
+        const camPool    = rawCams.map(id => CAM_REDIRECTS[id] || id);
+        const isRandom   = params.get('random') === '1';
+        const rotateMin  = parseInt(params.get('rotate')) || 0;
+        const showN      = parseInt(params.get('show'))   || 0;
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length-1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i+1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+        function slicePool(pool, offset) {
+            if (!showN || showN >= pool.length) return [...pool];
+            const out = [];
+            for (let i = 0; i < showN; i++) out.push(pool[(offset + i) % pool.length]);
+            return out;
+        }
+
+        if (isRandom) camPool.sort(() => Math.random() - 0.5);
+        let rotOffset   = 0;
+        let currentCams = slicePool(camPool, 0);
+
+        let mode      = params.get('mode') || 'fill';
+        let layout    = params.get('layout') || 'auto';
+        let mirrorSet = new Set((params.get('mirror') || '').split(',').filter(Boolean).map(Number));
 
         const grid = document.getElementById('grid');
 
@@ -456,6 +479,18 @@
         } else {
             buildGrid(); applyMode();
             window.addEventListener('resize', applyMode);
+            if (rotateMin > 0) {
+                setInterval(() => {
+                    if (isRandom) {
+                        camPool.sort(() => Math.random() - 0.5);
+                        rotOffset = 0;
+                    } else {
+                        rotOffset = (rotOffset + (showN || camPool.length)) % camPool.length;
+                    }
+                    currentCams = slicePool(camPool, rotOffset);
+                    buildGrid(); applyMode();
+                }, rotateMin * 60 * 1000);
+            }
         }
 
         /* ── Gear pulse on first visit ── */

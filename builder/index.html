@@ -233,6 +233,14 @@
         .btn-s:hover { color: var(--t1); border-color: var(--t2); }
         .copy-ok { font-size: 11px; color: var(--ac); text-align: center; height: 14px; }
 
+        /* ── Playback options ── */
+        .play-opts { display: flex; flex-direction: column; gap: 9px; }
+        .play-row  { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--t2); }
+        .play-row input[type="checkbox"] { accent-color: var(--ac); cursor: pointer; width: 13px; height: 13px; }
+        .play-num  { width: 42px; padding: 3px 4px; background: var(--bg2); border: 1px solid var(--bd);
+                     border-radius: 3px; color: var(--t1); font-size: 12px; font-family: inherit; text-align: center; }
+        .play-num:focus { outline: 1px solid var(--ac); border-color: var(--ac); }
+
         /* ── Hamburger ── */
         .hamburger {
             position: fixed; top: 13px; left: 14px; z-index: 200;
@@ -342,6 +350,27 @@
             </div>
 
             <div>
+                <div class="lbl">Playback</div>
+                <div class="play-opts">
+                    <label class="play-row">
+                        <input type="checkbox" id="chkRandom" onchange="updatePlay()">
+                        <span>🔀 Random order on load</span>
+                    </label>
+                    <label class="play-row">
+                        <input type="checkbox" id="chkRotate" onchange="updatePlay()">
+                        <span>🔄 Rotate every</span>
+                        <input type="number" id="rotateMin" value="10" min="1" max="999" class="play-num" oninput="updatePlay()">
+                        <span>min</span>
+                    </label>
+                    <div class="play-row" id="showRow" style="display:none;padding-left:19px">
+                        <span>show</span>
+                        <input type="number" id="showN" value="1" min="1" max="20" class="play-num" oninput="updatePlay()">
+                        <span style="color:var(--t3)">at a time</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
                 <div class="lbl">Link</div>
                 <div class="url-box" id="urlBox">—</div>
             </div>
@@ -426,7 +455,19 @@
     const ALL_CAMS = GROUPS.flatMap(g => g.cams);
 
     let selected = [];   /* array of cam IDs in chosen order */
-    let mode     = 'fill';
+    let mode       = 'fill';
+    let playRandom = false;
+    let playRotate = 0;
+    let playShow   = 0;
+
+    function updatePlay() {
+        playRandom = document.getElementById('chkRandom').checked;
+        const rotOn = document.getElementById('chkRotate').checked;
+        playRotate  = rotOn ? (parseInt(document.getElementById('rotateMin').value) || 10) : 0;
+        playShow    = rotOn ? (parseInt(document.getElementById('showN').value)    || 0)  : 0;
+        document.getElementById('showRow').style.display = rotOn ? '' : 'none';
+        renderSidebar();
+    }
 
     /* ── Render camera grid ── */
     function renderGrid() {
@@ -502,7 +543,13 @@
     /* ── Actions ── */
     function buildUrl() {
         if (!selected.length) return '';
-        return `${location.origin}/view/?cams=${selected.join(',')}&mode=${mode}`;
+        let url = `${location.origin}/view/?cams=${selected.join(',')}&mode=${mode}`;
+        if (playRandom) url += '&random=1';
+        if (playRotate > 0) {
+            url += `&rotate=${playRotate}`;
+            if (playShow > 0 && playShow < selected.length) url += `&show=${playShow}`;
+        }
+        return url;
     }
 
     function toggle(id) {
