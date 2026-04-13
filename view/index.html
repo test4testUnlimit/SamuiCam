@@ -275,8 +275,13 @@
             "vytmBNhc9ig": "NASA ISS — Earth from Space",
         };
 
+        // ══ CAM REDIRECTS — old ID → new ID (auto-maintained by update_streams.py) ══
+        const CAM_REDIRECTS = {};
+        // ══ END CAM_REDIRECTS ══
+
         const params    = new URLSearchParams(location.search);
-        let currentCams = (params.get('cams') || '').split(',').filter(Boolean);
+        let currentCams = (params.get('cams') || '').split(',').filter(Boolean)
+            .map(id => CAM_REDIRECTS[id] || id); // silently remap old IDs
         let mode        = params.get('mode') || 'fill';
         let layout      = params.get('layout') || 'auto';
         let mirrorSet   = new Set((params.get('mirror') || '').split(',').filter(Boolean).map(Number));
