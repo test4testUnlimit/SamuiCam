@@ -121,6 +121,10 @@
             background: var(--bg2);
             line-height: 1.35;
             transition: color 0.15s;
+            height: 48px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
         }
         .card.on .card-name { color: var(--t1); }
 
@@ -610,8 +614,25 @@
         document.getElementById('menuBg').classList.toggle('open');
     }
 
+    /* ── Shrink font on card-name if text overflows fixed 48px height ── */
+    function fitCardNames() {
+        document.querySelectorAll('.card-name').forEach(el => {
+            el.style.fontSize = '';
+            el.style.height   = 'auto';
+            el.style.overflow = 'visible';
+            let fs = 12;
+            while (el.offsetHeight > 48 && fs > 8) {
+                fs -= 0.5;
+                el.style.fontSize = fs + 'px';
+            }
+            el.style.height   = '';
+            el.style.overflow = '';
+        });
+    }
+
     /* ── Init ── */
     renderGrid();
+    fitCardNames();
     renderSidebar();
 </script>
 </body>
