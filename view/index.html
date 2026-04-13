@@ -47,6 +47,20 @@
         #grid { display: grid; width: 100vw; height: 100vh; }
         .cell { overflow: hidden; position: relative; background: #000; will-change: transform; }
         .cell iframe { position: absolute; border: none; top: 0; left: 0; width: 100%; height: 100%; }
+        .cam-label {
+            position: absolute; bottom: 10px; left: 10px; z-index: 10;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: clamp(9px, 1.2vw, 13px);
+            color: rgba(255,255,255,0.45);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+            letter-spacing: 0.03em;
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: calc(100% - 20px);
+        }
 
         /* ── Hamburger ── */
         .hamburger {
@@ -312,6 +326,10 @@
                 iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
                 iframe.setAttribute('allowfullscreen', '');
                 cell.appendChild(iframe);
+                const label = document.createElement('div');
+                label.className = 'cam-label';
+                label.textContent = CAM_NAMES[id] || id;
+                cell.appendChild(label);
                 grid.appendChild(cell);
             });
         }
