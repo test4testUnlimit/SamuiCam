@@ -217,6 +217,15 @@
       "search": "NASA ISS Earth from Space live stream",
       "channel_id": "UCLA_DiR1FfKNvjuUpBHmylQ",
       "location": "Space"
+    },
+    "maho_beach_sint_maarten": {
+      "name": "Maho Beach, Sint Maarten",
+      "primary": "npUbNrVT2NU",
+      "fallback": null,
+      "current": "npUbNrVT2NU",
+      "search": "Maho Beach, Sint Maarten live webcam",
+      "channel_id": "UCRjMuOBDCfSsCNIe2p0_tdg",
+      "location": "Sint Maarten, Caribbean"
     }
   }
 }
