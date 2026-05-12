@@ -1,13 +1,14 @@
 {
   "channels": {
     "UCmYyJaUxYiF5IbLx-0jFXHQ": "The Real Samui Webcam",
-    "UC_cmEauzsnJ4trDXLiIug1Q": "STREETS OF THAILAND",
+    "UC_cmEauzsnJ4trDXLiIug1Q": "Streets of Thailand",
     "UCegzBUd6-PYoO_v7gjJgufg": "Teleport.camera",
     "UCmvNi1HZUP1n5UrQmn7Oiow": "Luxury Island",
     "UCqPZpEsbDf7how43JbtHMJg": "Hawaii Beaches",
-    "UCo6CAkbNKCBEFDkUBBwFAFg": "Webcams Abroad",
     "UCo8T1RPfEcGDPmQK7HmBiyg": "Explore Live Cams",
-    "UCRjMuOBDCfSsCNIe2p0_tdg": "Unknown Channel"
+    "UCo6CAkbNKCBEFDkUBBwFAFg": "Webcams Abroad",
+    "UCRjMuOBDCfSsCNIe2p0_tdg": "SHOWME Caribbean",
+    "UCLA_DiR1FfKNvjuUpBHmylQ": "NASA"
   },
   "streams": {
     "crystal_bay_yacht_club": {
@@ -15,7 +16,7 @@
       "primary": "3N3ZwIB_X4Y",
       "fallback": "kkVrj2cr9Ko",
       "current": "3N3ZwIB_X4Y",
-      "search": "Crystal Bay Yacht Club Lamai Koh Samui Beach Webcam",
+      "search": "Crystal Bay Yacht Club Lamai Koh Samui live webcam",
       "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
       "location": "Koh Samui, Thailand"
     },
@@ -24,7 +25,7 @@
       "primary": "LGNYKz4yziE",
       "fallback": null,
       "current": "LGNYKz4yziE",
-      "search": "Crystal Bay Yacht Club Lamai Koh Samui Panoramic Webcam",
+      "search": "Crystal Bay Yacht Club Lamai Koh Samui panoramic live webcam",
       "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
       "location": "Koh Samui, Thailand"
     },
@@ -33,7 +34,7 @@
       "primary": "Fw9hgttWzIg",
       "fallback": null,
       "current": "Fw9hgttWzIg",
-      "search": "Crystal Bay Beach Resort Lamai Koh Samui Live Beach Webcam",
+      "search": "Crystal Bay Beach Resort Lamai Koh Samui live webcam",
       "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
       "location": "Koh Samui, Thailand"
     },
@@ -42,38 +43,38 @@
       "primary": "NTTtqzL5OWI",
       "fallback": null,
       "current": "NTTtqzL5OWI",
-      "search": "Crystal Bay Beach Resort Panoramic Lamai Koh Samui",
+      "search": "Crystal Bay Beach Resort Lamai Koh Samui panoramic live webcam",
       "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
       "location": "Koh Samui, Thailand"
     },
-    "baobab_cam": {
-      "name": "Baobab Cam, Lamai",
+    "baobab_beach_cam": {
+      "name": "Baobab Beach Cam, Lamai",
       "primary": "Tpj0cmMVOd0",
       "fallback": null,
       "current": "Tpj0cmMVOd0",
-      "search": "Baobab Cam Lamai Koh Samui Live Beach Webcam",
+      "search": "Baobab Cam Lamai Koh Samui live beach webcam",
       "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
       "location": "Koh Samui, Thailand"
     },
     "royal_muang_samui": {
-      "name": "Royal Muang Samui Villas, Choeng Mon",
+      "name": "Royal Muang Samui, Choeng Mon",
       "primary": "UJpFtzKug7M",
       "fallback": null,
       "current": "Fw9hgttWzIg",
-      "search": "Royal Muang Samui Villas Choeng Mon beach livestream",
+      "search": "Royal Muang Samui Villas Choeng Mon beach live webcam",
       "channel_id": "UC_cmEauzsnJ4trDXLiIug1Q",
       "location": "Koh Samui, Thailand"
     },
-    "black_pearl_lamai": {
-      "name": "Black Pearl, Lamai",
+    "black_pearl_beach": {
+      "name": "Black Pearl Beach, Lamai",
       "primary": "Kush_ZxTy2c",
       "fallback": null,
       "current": "Kush_ZxTy2c",
-      "search": "Black Pearl Lamai beach Koh Samui Thailand",
+      "search": "Black Pearl Lamai beach Koh Samui live webcam",
       "channel_id": "UC_cmEauzsnJ4trDXLiIug1Q",
       "location": "Koh Samui, Thailand"
     },
-    "house_of_sanskara_phangan": {
+    "house_of_sanskara": {
       "name": "House of Sanskara, Koh Phangan",
       "primary": "FBYUkqutqzE",
       "fallback": null,
@@ -81,6 +82,24 @@
       "search": "Koh Phangan beach live webcam Thailand",
       "channel_id": "UCegzBUd6-PYoO_v7gjJgufg",
       "location": "Koh Phangan, Thailand"
+    },
+    "floating_lotus_big_buddha": {
+      "name": "Floating Lotus, Big Buddha",
+      "primary": "x73IEW0fOo0",
+      "fallback": null,
+      "current": "x73IEW0fOo0",
+      "search": "Floating Lotus Big Buddha Koh Samui live webcam",
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
+      "location": "Koh Samui, Thailand"
+    },
+    "banyan_tree_resort": {
+      "name": "Banyan Tree Resort, Samui",
+      "primary": "wP6hpWgPJ98",
+      "fallback": null,
+      "current": "wP6hpWgPJ98",
+      "search": "Banyan Tree Samui live beach webcam Thailand",
+      "channel_id": "UC_cmEauzsnJ4trDXLiIug1Q",
+      "location": "Koh Samui, Thailand"
     },
     "no_stress_restaurant": {
       "name": "No Stress Restaurant, Lamai",
@@ -91,57 +110,39 @@
       "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
       "location": "Koh Samui, Thailand"
     },
-    "floating_lotus": {
-      "name": "Floating Lotus, Big Buddha, Koh Samui",
-      "primary": "x73IEW0fOo0",
-      "fallback": null,
-      "current": "x73IEW0fOo0",
-      "search": "Floating Lotus Big Buddha Koh Samui live webcam",
-      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
-      "location": "Koh Samui, Thailand"
-    },
-    "banyan_tree_samui": {
-      "name": "Banyan Tree Samui",
-      "primary": "wP6hpWgPJ98",
-      "fallback": null,
-      "current": "wP6hpWgPJ98",
-      "search": "Banyan Tree Samui live beach webcam Thailand",
-      "channel_id": "UC_cmEauzsnJ4trDXLiIug1Q",
-      "location": "Koh Samui, Thailand"
-    },
-    "seychelles_ocean_4k": {
-      "name": "Seychelles Ocean 4K",
+    "seychelles_ocean": {
+      "name": "Seychelles Ocean, Mahé — 4K",
       "primary": "Thtj8Ht7Z_c",
       "fallback": null,
       "current": "Thtj8Ht7Z_c",
-      "search": "Seychelles Ocean 4K Luxury Island",
+      "search": "Seychelles Ocean 4K live webcam",
       "channel_id": "UCmvNi1HZUP1n5UrQmn7Oiow",
-      "location": "Seychelles"
+      "location": "Mahé, Seychelles"
     },
-    "maamunagau_island_maldives": {
-      "name": "Maamunagau Island, Maldives",
+    "maamunagau_island": {
+      "name": "Maamunagau Island, Raa Atoll",
       "primary": "pn3lAmLSva0",
       "fallback": null,
       "current": "pn3lAmLSva0",
-      "search": "Maldives Atoll Maamunagau Island Luxury Island",
+      "search": "Maamunagau Island Raa Atoll Maldives live webcam",
       "channel_id": "UCmvNi1HZUP1n5UrQmn7Oiow",
-      "location": "Maldives"
+      "location": "Raa Atoll, Maldives"
     },
-    "paradise_found_maldives": {
+    "paradise_found": {
       "name": "Paradise Found, Maldives",
       "primary": "Mu0dzKm5ZaE",
       "fallback": null,
       "current": "neprxg6F3Sc",
-      "search": "Paradise Found Maldives Luxury Island",
+      "search": "Paradise Found Maldives live webcam",
       "channel_id": "UCmvNi1HZUP1n5UrQmn7Oiow",
       "location": "Maldives"
     },
-    "indian_ocean_4k": {
-      "name": "Indian Ocean 4K",
+    "indian_ocean": {
+      "name": "Indian Ocean, Maldives — 4K",
       "primary": "XrLz_hOBCT8",
       "fallback": null,
       "current": "XrLz_hOBCT8",
-      "search": "Most Relaxing Ocean 4K Luxury Island",
+      "search": "Indian Ocean Maldives 4K live webcam",
       "channel_id": "UCmvNi1HZUP1n5UrQmn7Oiow",
       "location": "Maldives"
     },
@@ -150,7 +151,7 @@
       "primary": "_BMi3usEwi8",
       "fallback": null,
       "current": "_BMi3usEwi8",
-      "search": "Ocean Ambience 4K Maldives InterContinental Luxury Island",
+      "search": "InterContinental Resort Maldives live webcam",
       "channel_id": "UCmvNi1HZUP1n5UrQmn7Oiow",
       "location": "Maldives"
     },
@@ -161,9 +162,9 @@
       "current": "8waVy4wM1tM",
       "search": "Sheraton Waikiki Oahu Hawaii beach live webcam",
       "channel_id": "UCqPZpEsbDf7how43JbtHMJg",
-      "location": "Hawaii, USA"
+      "location": "Oahu, Hawaii, USA"
     },
-    "napili_sunset_maui": {
+    "napili_sunset_resort": {
       "name": "Napili Sunset Resort, Maui",
       "primary": "YcEf_y0Ct14",
       "fallback": null,
@@ -172,50 +173,50 @@
       "channel_id": "UCqPZpEsbDf7how43JbtHMJg",
       "location": "Maui, Hawaii, USA"
     },
-    "simpson_bay_saint_martin": {
-      "name": "Simpson Bay Beach, Saint Martin",
+    "simpson_bay_beach": {
+      "name": "Simpson Bay Beach, Sint Maarten",
       "primary": "vxHKAImxUHk",
       "fallback": null,
       "current": "vxHKAImxUHk",
-      "search": "Simpson Bay Beach Saint Martin Caribbean live webcam",
+      "search": "Simpson Bay Beach Sint Maarten Caribbean live webcam",
       "channel_id": "UCo8T1RPfEcGDPmQK7HmBiyg",
-      "location": "Saint Martin, Caribbean"
+      "location": "Sint Maarten, Caribbean"
     },
-    "mayon_volcano_philippines": {
-      "name": "Mayon Volcano, Philippines",
+    "maho_beach": {
+      "name": "Maho Beach, Sint Maarten",
+      "primary": "iSeH45R-8R0",
+      "fallback": null,
+      "current": "iSeH45R-8R0",
+      "search": "Maho Beach Princess Juliana Airport Sint Maarten live webcam",
+      "channel_id": "UCRjMuOBDCfSsCNIe2p0_tdg",
+      "location": "Sint Maarten, Caribbean"
+    },
+    "mayon_volcano": {
+      "name": "Mayon Volcano, Albay",
       "primary": "UDAZWxehMAI",
       "fallback": null,
       "current": "wLf3IMoxEWA",
-      "search": "Mayon Volcano Philippines live webcam",
+      "search": "Mayon Volcano Albay Philippines live webcam",
       "channel_id": "UCo6CAkbNKCBEFDkUBBwFAFg",
-      "location": "Philippines"
+      "location": "Albay, Philippines"
     },
-    "swiss_alps_panorama": {
-      "name": "Swiss Alps Panorama",
+    "swiss_alps": {
+      "name": "Swiss Alps, Grindelwald — Panoramic",
       "primary": "enYFXf8u7Lc",
       "fallback": null,
       "current": "enYFXf8u7Lc",
-      "search": "Swiss Alps Panorama live webcam",
+      "search": "Swiss Alps Grindelwald panoramic live webcam",
       "channel_id": "UCo6CAkbNKCBEFDkUBBwFAFg",
-      "location": "Switzerland"
+      "location": "Grindelwald, Switzerland"
     },
     "nasa_iss": {
-      "name": "NASA ISS — Earth from Space",
+      "name": "NASA ISS — Live",
       "primary": "vytmBNhc9ig",
       "fallback": null,
       "current": "vytmBNhc9ig",
       "search": "NASA ISS Earth from Space live stream",
       "channel_id": "UCLA_DiR1FfKNvjuUpBHmylQ",
       "location": "Space"
-    },
-    "maho_beach_princess_juliana_airport": {
-      "name": "Maho Beach - Princess Juliana Airport",
-      "primary": "iSeH45R-8R0",
-      "fallback": null,
-      "current": "iSeH45R-8R0",
-      "search": "Maho Beach - Princess Juliana Airport live webcam",
-      "channel_id": "UCRjMuOBDCfSsCNIe2p0_tdg",
-      "location": "Simpson Bay, Sint Maarten"
     }
   }
 }

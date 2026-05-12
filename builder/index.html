@@ -391,70 +391,71 @@
 
 <script>
     /* ── Stream data ── */
-    const GROUPS = [
-        {
-            label: "🇹🇭 Koh Samui · Thailand",
-            cams: [
-                { id: "3N3ZwIB_X4Y", name: "Crystal Bay Yacht Club, Lamai" },
-                { id: "Fw9hgttWzIg", name: "Crystal Bay Beach Resort, Lamai" },
-                { id: "Tpj0cmMVOd0", name: "Baobab Cam, Lamai" },
-                { id: "Fw9hgttWzIg", name: "Royal Muang Samui Villas, Choeng Mon" },
-                { id: "Kush_ZxTy2c", name: "Black Pearl, Lamai" },
-                { id: "LGNYKz4yziE", name: "Crystal Bay Yacht Club — Panoramic" },
-                { id: "NTTtqzL5OWI", name: "Crystal Bay Beach Resort — Panoramic" },
-                { id: "FBYUkqutqzE", name: "House of Sanskara, Koh Phangan" },
-                { id: "x73IEW0fOo0", name: "Floating Lotus · Big Buddha, Koh Samui" },
-                { id: "wP6hpWgPJ98", name: "Banyan Tree Samui" },
-                { id: "w47yvCftkWQ", name: "No Stress Restaurant, Lamai" },
-            ]
-        },
-        {
-            label: "🇸🇨 Seychelles",
-            cams: [
-                { id: "Thtj8Ht7Z_c", name: "Seychelles Ocean 4K" },
-            ]
-        },
-        {
-            label: "🇲🇻 Maldives",
-            cams: [
-                { id: "pn3lAmLSva0", name: "Maamunagau Island, Maldives" },
-                { id: "neprxg6F3Sc", name: "Paradise Found, Maldives" },
-                { id: "XrLz_hOBCT8", name: "Indian Ocean 4K" },
-                { id: "_BMi3usEwi8", name: "InterContinental Resort, Maldives" },
-            ]
-        },
-        {
-            label: "🇺🇸 Hawaii",
-            cams: [
-                { id: "8waVy4wM1tM", name: "Sheraton Waikiki, Oahu" },
-                { id: "gX7c8hzR17Y", name: "Napili Sunset Resort, Maui" },
-            ]
-        },
-        {
-            label: "🌴 Caribbean",
-            cams: [
-                { id: "vxHKAImxUHk", name: "Simpson Bay Beach, Saint Martin" },
-            ]
-        },
-        {
-            label: "🇵🇭 Philippines",
-            cams: [
-                { id: "wLf3IMoxEWA", name: "Mayon Volcano, Philippines" },
-            ]
-        },
-        {
-            label: "🇨🇭 Europe · Alps",
-            cams: [
-                { id: "enYFXf8u7Lc", name: "Swiss Alps Panorama" },
-            ]
-        },
-        {
-            label: "🛸 Space",
-            cams: [
-                { id: "vytmBNhc9ig", name: "NASA ISS — Earth from Space" },
-            ]
-        }
-    ];
+   const GROUPS = [
+    {
+        label: "🇹🇭 TH · Thailand",
+        cams: [
+            { id: "3N3ZwIB_X4Y", name: "Crystal Bay Yacht Club, Lamai" },
+            { id: "LGNYKz4yziE", name: "Crystal Bay Yacht Club, Lamai — Panoramic" },
+            { id: "Fw9hgttWzIg", name: "Crystal Bay Beach Resort, Lamai" },
+            { id: "NTTtqzL5OWI", name: "Crystal Bay Beach Resort, Lamai — Panoramic" },
+            { id: "Tpj0cmMVOd0", name: "Baobab Beach Cam, Lamai" },
+            { id: "Fw9hgttWzIg", name: "Royal Muang Samui, Choeng Mon" },
+            { id: "Kush_ZxTy2c", name: "Black Pearl Beach, Lamai" },
+            { id: "w47yvCftkWQ", name: "No Stress Restaurant, Lamai" },
+            { id: "x73IEW0fOo0", name: "Floating Lotus, Big Buddha" },
+            { id: "wP6hpWgPJ98", name: "Banyan Tree Resort, Samui" },
+            { id: "FBYUkqutqzE", name: "House of Sanskara, Koh Phangan" },
+        ]
+    },
+    {
+        label: "🇸🇨 SC · Seychelles",
+        cams: [
+            { id: "Thtj8Ht7Z_c", name: "Seychelles Ocean, Mahé — 4K" },
+        ]
+    },
+    {
+        label: "🇲🇻 MV · Maldives",
+        cams: [
+            { id: "pn3lAmLSva0", name: "Maamunagau Island, Raa Atoll" },
+            { id: "neprxg6F3Sc", name: "Paradise Found, Maldives" },
+            { id: "XrLz_hOBCT8", name: "Indian Ocean, Maldives — 4K" },
+            { id: "_BMi3usEwi8", name: "InterContinental Resort, Maldives" },
+        ]
+    },
+    {
+        label: "🇺🇸 US · Hawaii",
+        cams: [
+            { id: "8waVy4wM1tM", name: "Sheraton Waikiki, Oahu" },
+            { id: "gX7c8hzR17Y", name: "Napili Sunset Resort, Maui" },
+        ]
+    },
+    {
+        label: "🌴 Caribbean",
+        cams: [
+            { id: "vxHKAImxUHk", name: "Simpson Bay Beach, Sint Maarten" },
+            { id: "iSeH45R-8R0", name: "Maho Beach, Sint Maarten" },
+        ]
+    },
+    {
+        label: "🇵🇭 PH · Philippines",
+        cams: [
+            { id: "wLf3IMoxEWA", name: "Mayon Volcano, Albay" },
+        ]
+    },
+    {
+        label: "🇨🇭 CH · Switzerland",
+        cams: [
+            { id: "enYFXf8u7Lc", name: "Swiss Alps, Grindelwald — Panoramic" },
+        ]
+    },
+    {
+        label: "🛸 Space",
+        cams: [
+            { id: "vytmBNhc9ig", name: "NASA ISS — Live" },
+        ]
+    }
+];
 
     const ALL_CAMS = GROUPS.flatMap(g => g.cams);
 
