@@ -3,7 +3,10 @@
     "UCmYyJaUxYiF5IbLx-0jFXHQ": "The Real Samui Webcam",
     "UC_cmEauzsnJ4trDXLiIug1Q": "STREETS OF THAILAND",
     "UCegzBUd6-PYoO_v7gjJgufg": "Teleport.camera",
-    "UCmvNi1HZUP1n5UrQmn7Oiow": "Luxury Island"
+    "UCmvNi1HZUP1n5UrQmn7Oiow": "Luxury Island",
+    "UCqPZpEsbDf7how43JbtHMJg": "Hawaii Beaches",
+    "UCo6CAkbNKCBEFDkUBBwFAFg": "Webcams Abroad",
+    "UCo8T1RPfEcGDPmQK7HmBiyg": "Explore Live Cams"
   },
   "streams": {
     "crystal_bay_yacht_club": {
@@ -78,6 +81,33 @@
       "channel_id": "UCegzBUd6-PYoO_v7gjJgufg",
       "location": "Koh Phangan, Thailand"
     },
+    "no_stress_restaurant": {
+      "name": "No Stress Restaurant, Lamai",
+      "primary": "Sm9y8G0TLXI",
+      "fallback": null,
+      "current": "w47yvCftkWQ",
+      "search": "No Stress Restaurant Lamai Koh Samui live webcam",
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
+      "location": "Koh Samui, Thailand"
+    },
+    "floating_lotus": {
+      "name": "Floating Lotus, Big Buddha, Koh Samui",
+      "primary": "x73IEW0fOo0",
+      "fallback": null,
+      "current": "x73IEW0fOo0",
+      "search": "Floating Lotus Big Buddha Koh Samui live webcam",
+      "channel_id": "UCmYyJaUxYiF5IbLx-0jFXHQ",
+      "location": "Koh Samui, Thailand"
+    },
+    "banyan_tree_samui": {
+      "name": "Banyan Tree Samui",
+      "primary": "wP6hpWgPJ98",
+      "fallback": null,
+      "current": "wP6hpWgPJ98",
+      "search": "Banyan Tree Samui live beach webcam Thailand",
+      "channel_id": "UC_cmEauzsnJ4trDXLiIug1Q",
+      "location": "Koh Samui, Thailand"
+    },
     "seychelles_ocean_4k": {
       "name": "Seychelles Ocean 4K",
       "primary": "Thtj8Ht7Z_c",
@@ -122,6 +152,60 @@
       "search": "Ocean Ambience 4K Maldives InterContinental Luxury Island",
       "channel_id": "UCmvNi1HZUP1n5UrQmn7Oiow",
       "location": "Maldives"
+    },
+    "sheraton_waikiki": {
+      "name": "Sheraton Waikiki, Oahu",
+      "primary": "X0idnu7HUmI",
+      "fallback": null,
+      "current": "8waVy4wM1tM",
+      "search": "Sheraton Waikiki Oahu Hawaii beach live webcam",
+      "channel_id": "UCqPZpEsbDf7how43JbtHMJg",
+      "location": "Hawaii, USA"
+    },
+    "napili_sunset_maui": {
+      "name": "Napili Sunset Resort, Maui",
+      "primary": "YcEf_y0Ct14",
+      "fallback": null,
+      "current": "gX7c8hzR17Y",
+      "search": "Napili Sunset Resort Maui Hawaii beach live webcam",
+      "channel_id": "UCqPZpEsbDf7how43JbtHMJg",
+      "location": "Maui, Hawaii, USA"
+    },
+    "simpson_bay_saint_martin": {
+      "name": "Simpson Bay Beach, Saint Martin",
+      "primary": "vxHKAImxUHk",
+      "fallback": null,
+      "current": "vxHKAImxUHk",
+      "search": "Simpson Bay Beach Saint Martin Caribbean live webcam",
+      "channel_id": "UCo8T1RPfEcGDPmQK7HmBiyg",
+      "location": "Saint Martin, Caribbean"
+    },
+    "mayon_volcano_philippines": {
+      "name": "Mayon Volcano, Philippines",
+      "primary": "UDAZWxehMAI",
+      "fallback": null,
+      "current": "wLf3IMoxEWA",
+      "search": "Mayon Volcano Philippines live webcam",
+      "channel_id": "UCo6CAkbNKCBEFDkUBBwFAFg",
+      "location": "Philippines"
+    },
+    "swiss_alps_panorama": {
+      "name": "Swiss Alps Panorama",
+      "primary": "enYFXf8u7Lc",
+      "fallback": null,
+      "current": "enYFXf8u7Lc",
+      "search": "Swiss Alps Panorama live webcam",
+      "channel_id": "UCo6CAkbNKCBEFDkUBBwFAFg",
+      "location": "Switzerland"
+    },
+    "nasa_iss": {
+      "name": "NASA ISS — Earth from Space",
+      "primary": "vytmBNhc9ig",
+      "fallback": null,
+      "current": "vytmBNhc9ig",
+      "search": "NASA ISS Earth from Space live stream",
+      "channel_id": "UCLA_DiR1FfKNvjuUpBHmylQ",
+      "location": "Space"
     }
   }
 }
