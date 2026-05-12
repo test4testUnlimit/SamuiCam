@@ -6,7 +6,8 @@
     "UCmvNi1HZUP1n5UrQmn7Oiow": "Luxury Island",
     "UCqPZpEsbDf7how43JbtHMJg": "Hawaii Beaches",
     "UCo6CAkbNKCBEFDkUBBwFAFg": "Webcams Abroad",
-    "UCo8T1RPfEcGDPmQK7HmBiyg": "Explore Live Cams"
+    "UCo8T1RPfEcGDPmQK7HmBiyg": "Explore Live Cams",
+    "UCRjMuOBDCfSsCNIe2p0_tdg": "Unknown Channel"
   },
   "streams": {
     "crystal_bay_yacht_club": {
@@ -206,6 +207,15 @@
       "search": "NASA ISS Earth from Space live stream",
       "channel_id": "UCLA_DiR1FfKNvjuUpBHmylQ",
       "location": "Space"
+    },
+    "maho_beach_princess_juliana_airport": {
+      "name": "Maho Beach - Princess Juliana Airport",
+      "primary": "iSeH45R-8R0",
+      "fallback": null,
+      "current": "iSeH45R-8R0",
+      "search": "Maho Beach - Princess Juliana Airport live webcam",
+      "channel_id": "UCRjMuOBDCfSsCNIe2p0_tdg",
+      "location": "Simpson Bay, Sint Maarten"
     }
   }
 }
