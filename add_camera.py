@@ -85,7 +85,18 @@ def slug(name):
     s = re.sub(r'[^a-z0-9]+', '_', s)
     return s.strip('_')
 
+	
+def sanitize_name(name):
+    # Remove emojis and special characters that break JS syntax
+    # Keep: letters, digits, spaces, commas, dashes, dots, apostrophes
+    name = re.sub(r'[^\w\s,.\-\'—&()]', '', name)
+    # Collapse multiple spaces
+    name = re.sub(r'\s+', ' ', name)
+    # Remove quotes that would break JS string
+    name = name.replace('"', '').replace("'", '')
+    return name.strip()	
 
+	
 def detect_group(location):
     loc_lower = location.lower()
     for keyword, group in LOCATION_TO_GROUP.items():
@@ -245,6 +256,16 @@ def main():
     print(f"  {SUFFIX_HINT}")
     custom = input("Enter = keep original, or type your own: ").strip()
     name   = custom if custom else info['title']
+
+    # Sanitize — remove emojis and chars that break JS
+    name_clean = sanitize_name(name)
+    if name_clean != name:
+        print(f"  ℹ️  Name sanitized: '{name}' → '{name_clean}'")
+    name = name_clean
+
+    if not name:
+        print("❌ Name is empty after sanitization — please enter manually")
+        name = input("Camera name: ").strip()
 
     # ── Step 4: Location ─────────────────────────────────────
     print(f"\nLocation (used to assign the correct group):")
