@@ -1,0 +1,2 @@
+API key stored in .env file (NOT in git!)
+дома добавь его из one note заметки
