@@ -182,15 +182,6 @@
       "channel_id": "UCo8T1RPfEcGDPmQK7HmBiyg",
       "location": "Sint Maarten, Caribbean"
     },
-    "maho_beach": {
-      "name": "Maho Beach, Sint Maarten",
-      "primary": "iSeH45R-8R0",
-      "fallback": null,
-      "current": "iSeH45R-8R0",
-      "search": "Maho Beach Princess Juliana Airport Sint Maarten live webcam",
-      "channel_id": "UCRjMuOBDCfSsCNIe2p0_tdg",
-      "location": "Sint Maarten, Caribbean"
-    },
     "mayon_volcano": {
       "name": "Mayon Volcano, Albay",
       "primary": "UDAZWxehMAI",
