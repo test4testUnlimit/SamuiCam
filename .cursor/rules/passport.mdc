@@ -1,0 +1,159 @@
+---
+description: SamuiCam project passport — architecture, rules and context for AI agent. Always read this first before any task.
+alwaysApply: true
+---
+
+# SamuiCam — Project Passport
+
+## PURPOSE
+
+Web app displaying live YouTube beach webcam streams from Koh Samui, Maldives and other tropical locations. Users build custom multi-camera layouts for Wallpaper Engine or fullscreen browser. Hosted on Netlify. No backend — pure static HTML/JS + Python maintenance scripts.
+
+---
+
+## ARCHITECTURE
+
+    SamuiCam/
+    ├── index.html
+    │       Landing page. Hero + side nav menu.
+    │       Background = live YouTube IFrame API stream.
+    │       Theme toggle (dark/light), first-visit hamburger pulse.
+    │
+    ├── builder/index.html
+    │       Camera layout builder UI.
+    │       User picks cameras, order, layout mode.
+    │       Generates shareable /view/ URL with params.
+    │       Camera list format: { id: "VIDEO_ID" }
+    │       update_streams.py rewrites these IDs automatically.
+    │
+    ├── view/index.html
+    │       Viewer page. Reads URL params, renders iframes in grid.
+    │       Contains CAM_REDIRECTS block between these exact markers:
+    │           // ══ CAM_REDIRECTS — old ID → new ID ══
+    │           const CAM_REDIRECTS = { "oldId": "newId" };
+    │           // ══ END CAM_REDIRECTS ══
+    │       update_streams.py rewrites this block automatically.
+    │       Gear icon bottom-right = settings panel.
+    │
+    ├── config.py
+    │       YOUTUBE_API_KEY only. Never commit real key.
+    │
+    ├── streams_config.json
+    │       Source of truth for all streams.
+    │       Fields per stream:
+    │           primary    — original preferred video ID
+    │           fallback   — backup ID (or null)
+    │           current    — currently active video ID
+    │           search     — YouTube search query for auto-replacement
+    │           channel_id — YouTube channel ID for scoped search
+    │           location   — human label
+    │
+    ├── update_streams.py
+    │       Main maintenance script. Run manually or via cron.
+    │       Flow:
+    │           1. Load streams_config.json
+    │           2. Check all IDs via YouTube Data API v3
+    │           3. Dead stream → try fallback → search replacement
+    │           4. Primary revived → restore it
+    │           5. Update builder/index.html IDs
+    │           6. Update view/index.html CAM_REDIRECTS block
+    │           7. Save streams_config.json
+    │           8. git add . && commit && push
+    │
+    ├── check_streams.py
+    │       Read-only checker. No writes, no git.
+    │       Prints live/dead status of all IDs found in HTML files.
+    │       Use to diagnose before running update_streams.py.
+    │
+    ├── update.bat              Windows shortcut for update_streams.py
+    ├── netlify.toml            Netlify deploy config
+    ├── _debug_session/
+    │   └── PROGRESS.md         Bug tracking log between AI sessions
+    └── .claude/
+        └── settings.local.json
+
+---
+
+## KEY RULES — READ BEFORE TOUCHING ANYTHING
+
+### Rule 1 — streams_config.json is the source of truth
+- Never hardcode video IDs anywhere except here and builder/index.html
+- current = what is actually playing right now
+- primary = the desired original stream
+- Always update current when swapping IDs
+- Never rename fields — other scripts depend on exact names
+
+### Rule 2 — builder/index.html camera list format
+update_streams.py uses this regex to find and replace IDs:
+
+    \{\s*id:\s*"([^"]+)"
+
+Do not change this format or the regex will break.
+
+### Rule 3 — view/index.html CAM_REDIRECTS block
+Both markers must always be present in the file:
+
+    // ══ CAM_REDIRECTS — old ID → new ID (auto-maintained by update_streams.py) ══
+    const CAM_REDIRECTS = { "oldId": "newId" };
+    // ══ END CAM_REDIRECTS ══
+
+Removing or editing markers = breaking auto-update.
+
+### Rule 4 — YouTube embed validity
+A stream is valid only when BOTH conditions are true:
+- embeddable = true
+- liveBroadcastContent is "live" or "upcoming"
+
+Error 153 = embed disabled by channel owner.
+"gone" = deleted or private video.
+
+### Rule 5 — No backend, no dependencies
+- Pure static files. All logic is client-side JS.
+- Python scripts run locally by developer only. Not on server.
+- Python uses urllib only. Do NOT introduce requests or any other library.
+- Frontend is vanilla HTML/CSS/JS. No npm, no frameworks, no build step.
+
+### Rule 6 — API quota awareness
+- YouTube Data API v3 has daily quota limits
+- check_streams.py costs quota — use sparingly
+- update_streams.py costs quota for check + search both
+
+---
+
+## BUG FIX PROTOCOL
+
+Before starting any fix:
+1. Read _debug_session/PROGRESS.md — understand what was already done
+2. Fix the bug with minimal changes
+3. Update PROGRESS.md table with result
+
+Table format:
+
+    | # | Bug | Status | Note |
+    |---|-----|--------|------|
+    | 001 | description | FIXED | file:line — what changed |
+
+Never mark a bug CONFIRMED — that is the Tyrant's job only.
+
+---
+
+## TECH STACK
+
+- Frontend:   Vanilla HTML/CSS/JS — no frameworks, no build step
+- Video:      YouTube IFrame API — autoplay muted, loop, no controls
+- Hosting:    Netlify (static only)
+- Scripts:    Python 3.12, stdlib urllib only
+- VCS:        Git — update_streams.py auto-commits and pushes
+- API:        YouTube Data API v3
+
+---
+
+## WHAT THE AI AGENT MUST NOT DO
+
+- Must not install npm packages or introduce a build system
+- Must not change regex patterns in update_streams.py without updating all call sites
+- Must not remove CAM_REDIRECTS markers from view/index.html
+- Must not commit config.py with a real API key
+- Must not rename fields in streams_config.json
+- Must not use requests library — use urllib only
+- Must not mark bugs as CONFIRMED — only the Tyrant does that 
